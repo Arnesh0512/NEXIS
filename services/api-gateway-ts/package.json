@@ -1,0 +1,23 @@
+{
+  "name": "@nexis/api-gateway-ts",
+  "version": "2.4.0",
+  "description": "Nexis Core Enterprise API Gateway and Edge Routing Service",
+  "main": "dist/gateway_router.js",
+  "types": "dist/gateway_router.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/gateway_router.js"
+  },
+  "dependencies": {
+    "jsonwebtoken": "^9.0.2",
+    "jose": "^5.2.0",
+    "crypto-js": "^4.2.0",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.24",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/crypto-js": "^4.2.2",
+    "typescript": "^5.3.3"
+  }
+}

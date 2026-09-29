@@ -1,0 +1,9 @@
+{
+  "name": "vault-cpp",
+  "version-string": "2.4.0",
+  "description": "Nexis Core C++ Enterprise Cryptographic Vault and Post-Quantum KMS Service",
+  "dependencies": [
+    "openssl",
+    "liboqs"
+  ]
+}

@@ -1,0 +1,346 @@
+[
+  {
+    "file_path": "services/api-gateway-ts/src/jwt_validator.ts",
+    "algorithm": "JWT",
+    "primitive": "key_management",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 3
+  },
+  {
+    "file_path": "services/api-gateway-ts/src/node_crypto_signer.ts",
+    "algorithm": "HMAC",
+    "primitive": "mac",
+    "quantum_safe": true,
+    "expected_breach": false,
+    "caller_count": 3
+  },
+  {
+    "file_path": "services/api-gateway-ts/src/secure_vault_client.ts",
+    "algorithm": "AES-256-GCM",
+    "primitive": "symmetric_cipher",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 2
+  },
+  {
+    "file_path": "services/api-gateway-ts/src/token_service.ts",
+    "algorithm": "JWT",
+    "primitive": "key_management",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 2
+  },
+  {
+    "file_path": "services/edge-router-js/src/ssl_terminator.js",
+    "algorithm": "X.509",
+    "primitive": "secure_transport",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 2
+  },
+  {
+    "file_path": "services/edge-router-js/src/crypto_utils.js",
+    "algorithm": "AES",
+    "primitive": "symmetric_cipher",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 3
+  },
+  {
+    "file_path": "services/edge-router-js/src/crypto_utils.js",
+    "algorithm": "HMAC",
+    "primitive": "mac",
+    "quantum_safe": true,
+    "expected_breach": false,
+    "caller_count": 3
+  },
+  {
+    "file_path": "services/edge-router-js/src/session_token.js",
+    "algorithm": "JWT",
+    "primitive": "key_management",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 2
+  },
+  {
+    "file_path": "services/edge-router-js/src/signature_verifier.js",
+    "algorithm": "HMAC",
+    "primitive": "mac",
+    "quantum_safe": true,
+    "expected_breach": false,
+    "caller_count": 2
+  },
+  {
+    "file_path": "services/auth-java/src/main/java/com/nexis/auth/TokenIssuer.java",
+    "algorithm": "HMAC",
+    "primitive": "mac",
+    "quantum_safe": true,
+    "expected_breach": false,
+    "caller_count": 2
+  },
+  {
+    "file_path": "services/auth-java/src/main/java/com/nexis/auth/TokenIssuer.java",
+    "algorithm": "RSA-2048",
+    "primitive": "signature",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 2
+  },
+  {
+    "file_path": "services/auth-java/src/main/java/com/nexis/auth/PasswordHasher.java",
+    "algorithm": "PBKDF2",
+    "primitive": "key_derivation",
+    "quantum_safe": true,
+    "expected_breach": false,
+    "caller_count": 3
+  },
+  {
+    "file_path": "services/auth-java/src/main/java/com/nexis/auth/PasswordHasher.java",
+    "algorithm": "SHA-256",
+    "primitive": "hash",
+    "quantum_safe": true,
+    "expected_breach": false,
+    "caller_count": 3
+  },
+  {
+    "file_path": "services/auth-java/src/main/java/com/nexis/auth/KeyStoreManager.java",
+    "algorithm": "RSA-2048",
+    "primitive": "public_key",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 2
+  },
+  {
+    "file_path": "services/auth-java/src/main/java/com/nexis/auth/PqcDilithiumSigner.java",
+    "algorithm": "ML-DSA-65",
+    "primitive": "signature",
+    "quantum_safe": true,
+    "expected_breach": false,
+    "caller_count": 1
+  },
+  {
+    "file_path": "services/auth-kotlin/src/main/kotlin/com/nexis/identity/KtCryptoAdapter.kt",
+    "algorithm": "AES-256-GCM",
+    "primitive": "symmetric_cipher",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 2
+  },
+  {
+    "file_path": "services/auth-kotlin/src/main/kotlin/com/nexis/identity/KtTlsConfig.kt",
+    "algorithm": "X.509",
+    "primitive": "secure_transport",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 1
+  },
+  {
+    "file_path": "services/auth-kotlin/src/main/kotlin/com/nexis/identity/KtJcaSigner.kt",
+    "algorithm": "ECDSA",
+    "primitive": "signature",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 2
+  },
+  {
+    "file_path": "services/auth-kotlin/src/main/kotlin/com/nexis/identity/KtSecureRandomGenerator.kt",
+    "algorithm": "CSPRNG",
+    "primitive": "prng",
+    "quantum_safe": true,
+    "expected_breach": false,
+    "caller_count": 3
+  },
+  {
+    "file_path": "services/payment-py/payment_app/pci_compliance.py",
+    "algorithm": "AES-256-GCM",
+    "primitive": "symmetric_cipher",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 3
+  },
+  {
+    "file_path": "services/payment-py/payment_app/webhook_signer.py",
+    "algorithm": "HMAC",
+    "primitive": "mac",
+    "quantum_safe": true,
+    "expected_breach": false,
+    "caller_count": 3
+  },
+  {
+    "file_path": "services/payment-py/payment_app/fraud_detector.py",
+    "algorithm": "SHA-256",
+    "primitive": "hash",
+    "quantum_safe": true,
+    "expected_breach": false,
+    "caller_count": 2
+  },
+  {
+    "file_path": "services/payment-py/payment_app/fraud_detector.py",
+    "algorithm": "BLAKE2b",
+    "primitive": "hash",
+    "quantum_safe": true,
+    "expected_breach": false,
+    "caller_count": 2
+  },
+  {
+    "file_path": "services/payment-py/payment_app/asymmetric_vault.py",
+    "algorithm": "RSA-4096",
+    "primitive": "public_key",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 2
+  },
+  {
+    "file_path": "services/ledger-go/ledger/tls_dialer.go",
+    "algorithm": "AES-256-GCM",
+    "primitive": "symmetric_cipher",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 2
+  },
+  {
+    "file_path": "services/ledger-go/ledger/pqc_handshake.go",
+    "algorithm": "ML-KEM-768",
+    "primitive": "key_encapsulation",
+    "quantum_safe": true,
+    "expected_breach": false,
+    "caller_count": 2
+  },
+  {
+    "file_path": "services/ledger-go/ledger/hasher.go",
+    "algorithm": "SHA-256",
+    "primitive": "hash",
+    "quantum_safe": true,
+    "expected_breach": false,
+    "caller_count": 3
+  },
+  {
+    "file_path": "services/ledger-go/ledger/hasher.go",
+    "algorithm": "HMAC",
+    "primitive": "mac",
+    "quantum_safe": true,
+    "expected_breach": false,
+    "caller_count": 2
+  },
+  {
+    "file_path": "services/ledger-go/ledger/ed25519_signer.go",
+    "algorithm": "Ed25519",
+    "primitive": "signature",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 2
+  },
+  {
+    "file_path": "services/crypto-rs/src/storage_backend.rs",
+    "algorithm": "AES-256-GCM",
+    "primitive": "symmetric_cipher",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 3
+  },
+  {
+    "file_path": "services/crypto-rs/src/ring_signer.rs",
+    "algorithm": "Ed25519",
+    "primitive": "signature",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 3
+  },
+  {
+    "file_path": "services/crypto-rs/src/ring_signer.rs",
+    "algorithm": "RSA-2048",
+    "primitive": "signature",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 2
+  },
+  {
+    "file_path": "services/crypto-rs/src/pqc_kem.rs",
+    "algorithm": "ML-KEM-768",
+    "primitive": "key_encapsulation",
+    "quantum_safe": true,
+    "expected_breach": false,
+    "caller_count": 2
+  },
+  {
+    "file_path": "services/crypto-rs/src/block_validator.rs",
+    "algorithm": "SHA-256",
+    "primitive": "hash",
+    "quantum_safe": true,
+    "expected_breach": false,
+    "caller_count": 3
+  },
+  {
+    "file_path": "services/hsm-c/src/pkcs11_driver.c",
+    "algorithm": "AES-256-GCM",
+    "primitive": "symmetric_cipher",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 2
+  },
+  {
+    "file_path": "services/hsm-c/src/pkcs11_driver.c",
+    "algorithm": "SHA-256",
+    "primitive": "hash",
+    "quantum_safe": true,
+    "expected_breach": false,
+    "caller_count": 2
+  },
+  {
+    "file_path": "services/hsm-c/src/entropy_pool.c",
+    "algorithm": "CSPRNG",
+    "primitive": "prng",
+    "quantum_safe": true,
+    "expected_breach": false,
+    "caller_count": 3
+  },
+  {
+    "file_path": "services/hsm-c/src/pqc_driver.c",
+    "algorithm": "ML-KEM-768",
+    "primitive": "key_encapsulation",
+    "quantum_safe": true,
+    "expected_breach": false,
+    "caller_count": 1
+  },
+  {
+    "file_path": "services/hsm-c/src/pqc_driver.c",
+    "algorithm": "ML-DSA-65",
+    "primitive": "signature",
+    "quantum_safe": true,
+    "expected_breach": false,
+    "caller_count": 1
+  },
+  {
+    "file_path": "vault-cpp/src/evp_cipher_engine.cpp",
+    "algorithm": "AES-256-GCM",
+    "primitive": "symmetric_cipher",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 2
+  },
+  {
+    "file_path": "vault-cpp/src/rsa_keygen.cpp",
+    "algorithm": "RSA-4096",
+    "primitive": "public_key",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 1
+  },
+  {
+    "file_path": "vault-cpp/src/rsa_keygen.cpp",
+    "algorithm": "X.509",
+    "primitive": "certificate",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 1
+  },
+  {
+    "file_path": "vault-cpp/src/liboqs_bridge.cpp",
+    "algorithm": "ML-KEM-768",
+    "primitive": "key_encapsulation",
+    "quantum_safe": true,
+    "expected_breach": false,
+    "caller_count": 2
+  }
+]

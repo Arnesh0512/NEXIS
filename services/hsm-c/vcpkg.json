@@ -1,0 +1,9 @@
+{
+  "name": "hsm-c",
+  "version-string": "1.5.0",
+  "description": "Hardware Security Module daemon and PKCS#11 cryptographic driver for Nexis Core",
+  "dependencies": [
+    "openssl",
+    "liboqs"
+  ]
+}

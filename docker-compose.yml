@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  edge-router:
+    build:
+      context: .
+      dockerfile: deployments/docker/Dockerfile.edge-router
+    image: nexis/edge-router:1.0.0
+    container_name: nexis-edge-router
+    ports:
+      - "443:443"
+      - "8443:8443"
+    environment:
+      - TLS_MIN_VERSION=TLSv1.2
+      - SSL_CIPHER_SUITES=ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384
+    volumes:
+      - ./certificates/edge-router.crt:/etc/ssl/certs/edge.crt:ro
+      - ./keys/edge-router.key:/etc/ssl/private/edge.key:ro
+      - ./network/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - api-gateway
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: deployments/docker/Dockerfile.api-gateway
+    image: nexis/api-gateway:1.0.0
+    container_name: nexis-api-gateway
+    environment:
+      - NODE_ENV=production
+      - TLS_MIN_VERSION=TLSv1.2
+      - VAULT_ENDPOINT=https://vault-cpp:8200
+    depends_on:
+      - vault-cpp
+
+  vault-cpp:
+    build:
+      context: .
+      dockerfile: deployments/docker/Containerfile.vault-cpp
+    image: nexis/vault-cpp:1.0.0
+    container_name: nexis-vault-cpp
+    environment:
+      - SOFTHSM2_CONF=/etc/softhsm2.conf
+      - HSM_LIB_PATH=/usr/lib/softhsm/libsofthsm2.so
+    volumes:
+      - ./infrastructure/hardware/softhsm2.conf:/etc/softhsm2.conf:ro
+
+  payment-py:
+    build:
+      context: .
+      dockerfile: deployments/docker/Dockerfile.payment-service
+    image: nexis/payment-py:1.0.0
+    container_name: nexis-payment-py
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PCI_DSS_MODE=strict
+
+networks:
+  default:
+    name: nexis-internal-mesh

@@ -1,0 +1,25 @@
+[package]
+name = "crypto-rs"
+version = "0.4.0"
+edition = "2021"
+authors = ["Nexis Security Team <security@nexis.io>"]
+description = "Nexis Core Cryptographic Storage Engine and Post-Quantum Hardware Accelerator"
+
+[dependencies]
+# Ring Cryptography
+ring = "0.17.8"
+
+# RustCrypto AES-GCM
+aes-gcm = "0.10.3"
+
+# Post-Quantum Kyber (ML-KEM)
+pqcrypto-kyber = "0.8.0"
+pqcrypto-traits = "0.3.5"
+
+# Serialization and Utilities
+serde = { version = "1.0.201", features = ["derive"] }
+serde_json = "1.0.117"
+hex = "0.4.3"
+thiserror = "1.0.60"
+log = "0.4.21"
+chrono = "0.4.38"

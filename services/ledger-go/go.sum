@@ -1,0 +1,6 @@
+github.com/cloudflare/circl v1.3.7 h1:qlQIeUfc5msPevy15gNl7kZpe/5J1vR9jSrhP0tWom0=
+github.com/cloudflare/circl v1.3.7/go.mod h1:r0i2sD0vM6eZ0/Gk1+xZf/1879w9w3t6a1k24tqfP1M=
+golang.org/x/crypto v0.21.0 h1:e4nsqpTyeu+/3vV3Zbe1nblNsElZreW5vCjNqY8/q4s=
+golang.org/x/crypto v0.21.0/go.mod h1:0BPvQUW6g2p8sD42T5V4hX8pY1u5xK9aZ8qJ4hZ5p0Q=
+golang.org/x/sys v0.18.0 h1:DBdB3G8rK4E0/bSjXvQ5r/6E2h+4pT6K0S8q+1+vR+8=
+golang.org/x/sys v0.18.0/go.mod h1:o/0S3g7c6jM4g+e9J8o+1N4j4a8+w5P5b9xXq8t4+yQ=

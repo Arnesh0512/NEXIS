@@ -1,0 +1,17 @@
+{
+  "name": "@nexis/edge-router-js",
+  "version": "1.8.0",
+  "description": "Nexis Core JavaScript High-Performance Edge Router and SSL Terminator",
+  "main": "src/server_entry.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/server_entry.js"
+  },
+  "dependencies": {
+    "crypto-js": "^4.2.0",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.24"
+  }
+}
