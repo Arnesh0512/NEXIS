@@ -1,0 +1,46 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Nexis Core Enterprise Cryptographic CloudFormation Template (KMS & ACM)"
+
+Parameters:
+  EnvironmentName:
+    Type: String
+    Default: "production"
+
+Resources:
+  NexisMasterSymmetricKey:
+    Type: "AWS::KMS::Key"
+    Properties:
+      Description: "Nexis Master Core Ledger Encryption Key"
+      KeySpec: "SYMMETRIC_DEFAULT"
+      KeyUsage: "ENCRYPT_DECRYPT"
+      EnableKeyRotation: true
+      Tags:
+        - Key: "Security"
+          Value: "QuantumSafe-AES256"
+
+  NexisLegacyRSAKey:
+    Type: "AWS::KMS::Key"
+    Properties:
+      Description: "Nexis Legacy Insecure RSA Key"
+      KeySpec: "RSA_2048"
+      KeyUsage: "SIGN_VERIFY"
+      EnableKeyRotation: false
+      Tags:
+        - Key: "Risk"
+          Value: "ShorVulnerable"
+
+  NexisEdgeCertificate:
+    Type: "AWS::CertificateManager::Certificate"
+    Properties:
+      DomainName: "gateway.nexis-core.finance"
+      KeyAlgorithm: "RSA_2048"
+      ValidationMethod: "DNS"
+      SubjectAlternativeNames:
+        - "api.nexis-core.finance"
+
+  NexisPqcReadyCertificate:
+    Type: "AWS::CertificateManager::Certificate"
+    Properties:
+      DomainName: "vault.nexis-core.finance"
+      KeyAlgorithm: "ECDSA_P256"
+      ValidationMethod: "DNS"

@@ -1,0 +1,57 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.KeyVault/vaults",
+      "apiVersion": "2023-07-01",
+      "name": "nexis-core-keyvault",
+      "location": "eastus",
+      "properties": {
+        "sku": {
+          "family": "A",
+          "name": "premium"
+        },
+        "tenantId": "22222222-2222-2222-2222-222222222222",
+        "enablePurgeProtection": true,
+        "enableRbacAuthorization": true
+      },
+      "resources": [
+        {
+          "type": "keys",
+          "apiVersion": "2023-07-01",
+          "name": "nexis-master-rsa-key",
+          "dependsOn": [
+            "Microsoft.KeyVault/vaults/nexis-core-keyvault"
+          ],
+          "properties": {
+            "kty": "RSA-HSM",
+            "keySize": 3072,
+            "keyOps": [
+              "encrypt",
+              "decrypt",
+              "wrapKey",
+              "unwrapKey"
+            ]
+          }
+        },
+        {
+          "type": "keys",
+          "apiVersion": "2023-07-01",
+          "name": "nexis-ecc-token-key",
+          "dependsOn": [
+            "Microsoft.KeyVault/vaults/nexis-core-keyvault"
+          ],
+          "properties": {
+            "kty": "EC-HSM",
+            "crv": "P-384",
+            "keyOps": [
+              "sign",
+              "verify"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

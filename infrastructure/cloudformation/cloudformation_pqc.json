@@ -1,0 +1,23 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Nexis Core Cold Storage KMS Archive Key and ACM Certificate",
+  "Resources": {
+    "NexisColdStorageKMSKey": {
+      "Type": "AWS::KMS::Key",
+      "Properties": {
+        "Description": "Nexis Cold Archive 4096-bit RSA Master Key",
+        "KeySpec": "RSA_4096",
+        "KeyUsage": "ENCRYPT_DECRYPT",
+        "EnableKeyRotation": false
+      }
+    },
+    "NexisVaultInternalCert": {
+      "Type": "AWS::CertificateManager::Certificate",
+      "Properties": {
+        "DomainName": "secure-vault.nexis-core.finance",
+        "KeyAlgorithm": "RSA_2048",
+        "ValidationMethod": "DNS"
+      }
+    }
+  }
+}

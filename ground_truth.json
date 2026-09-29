@@ -342,5 +342,181 @@
     "quantum_safe": true,
     "expected_breach": false,
     "caller_count": 2
+  },
+  {
+    "file_path": "binaries/crypto-probe.exe",
+    "algorithm": "AES-256-GCM",
+    "primitive": "symmetric_cipher",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 0
+  },
+  {
+    "file_path": "binaries/libnexis_crypto.so",
+    "algorithm": "AES-256-GCM",
+    "primitive": "symmetric_cipher",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 0
+  },
+  {
+    "file_path": "binaries/liboqs_provider.so",
+    "algorithm": "ML-KEM-768",
+    "primitive": "key_encapsulation",
+    "quantum_safe": true,
+    "expected_breach": false,
+    "caller_count": 0
+  },
+  {
+    "file_path": "binaries/legacy_vault_helper.dll",
+    "algorithm": "DES-EDE3-CBC",
+    "primitive": "symmetric_cipher",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 0
+  },
+  {
+    "file_path": "certificates/nexis-root-ca.crt",
+    "algorithm": "RSA-4096",
+    "primitive": "public_key",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 0
+  },
+  {
+    "file_path": "certificates/edge-router.crt",
+    "algorithm": "RSA-2048",
+    "primitive": "public_key",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 0
+  },
+  {
+    "file_path": "certificates/expiring-soon.crt",
+    "algorithm": "RSA-2048",
+    "primitive": "public_key",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 0
+  },
+  {
+    "file_path": "certificates/weak-1024-cert.pem",
+    "algorithm": "RSA-1024",
+    "primitive": "public_key",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 0
+  },
+  {
+    "file_path": "certificates/ecdsa-p256.crt",
+    "algorithm": "ECDSA",
+    "primitive": "signature",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 0
+  },
+  {
+    "file_path": "certificates/ed25519-identity.crt",
+    "algorithm": "Ed25519",
+    "primitive": "signature",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 0
+  },
+  {
+    "file_path": "certificates/keystores/payment-keystore.p12",
+    "algorithm": "PKCS12",
+    "primitive": "key_management",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 0
+  },
+  {
+    "file_path": "infrastructure/terraform/kms_keys.tf",
+    "algorithm": "AES-256-GCM",
+    "primitive": "symmetric_cipher",
+    "quantum_safe": true,
+    "expected_breach": false,
+    "caller_count": 0
+  },
+  {
+    "file_path": "infrastructure/terraform/kms_keys.tf",
+    "algorithm": "RSA-2048",
+    "primitive": "public_key",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 0
+  },
+  {
+    "file_path": "infrastructure/terraform/tls_keys.tf",
+    "algorithm": "RSA-1024",
+    "primitive": "public_key",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 0
+  },
+  {
+    "file_path": "infrastructure/terraform/certificates.tf",
+    "algorithm": "RSA-2048",
+    "primitive": "public_key",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 0
+  },
+  {
+    "file_path": "infrastructure/cloudformation/kms_and_acm.yaml",
+    "algorithm": "AES-256-GCM",
+    "primitive": "symmetric_cipher",
+    "quantum_safe": true,
+    "expected_breach": false,
+    "caller_count": 0
+  },
+  {
+    "file_path": "deployments/kubernetes/secrets.yaml",
+    "algorithm": "X509-TLS-Secret",
+    "primitive": "certificate",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 0
+  },
+  {
+    "file_path": "deployments/kubernetes/ingress.yaml",
+    "algorithm": "TLS-Termination",
+    "primitive": "protocol",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 0
+  },
+  {
+    "file_path": "deployments/docker/payment-service.dockerfile",
+    "algorithm": "RSA/ECC",
+    "primitive": "public_key",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 0
+  },
+  {
+    "file_path": "network/nginx/conf.d/gateway.conf",
+    "algorithm": "ECDHE-ECDSA-AES256-GCM-SHA384",
+    "primitive": "protocol",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 0
+  },
+  {
+    "file_path": "network/nginx/conf.d/legacy_vhost.conf",
+    "algorithm": "TLSv1.0",
+    "primitive": "protocol",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 0
+  },
+  {
+    "file_path": "network/ssh/sshd_config",
+    "algorithm": "diffie-hellman-group1-sha1",
+    "primitive": "key_exchange",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 0
   }
 ]

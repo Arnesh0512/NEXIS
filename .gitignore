@@ -1,0 +1,28 @@
+# ==============================================================================
+# Git Ignore Configuration - Nexis Core Platform
+# ==============================================================================
+
+
+# Local Environment Variables & Secrets
+.env
+*.env.local
+*.env.*.local
+
+# Dependency directories
+node_modules/
+vendor/
+target/
+build/
+bin/
+obj/
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# Logs & Temporary files
+*.log
+*.tmp
+*.bak
+.DS_Store
+Thumbs.db

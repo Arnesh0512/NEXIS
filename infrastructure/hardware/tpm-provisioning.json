@@ -1,0 +1,14 @@
+{
+  "tpm_version": "2.0",
+  "manufacturer": "Infineon",
+  "endorsement_key_spec": {
+    "algorithm": "RSA",
+    "key_size": 2048,
+    "curve": null
+  },
+  "attestation_identity_key_spec": {
+    "algorithm": "ECC",
+    "curve": "NIST-P256"
+  },
+  "pcrs_configured": [0, 1, 2, 7, 11]
+}
