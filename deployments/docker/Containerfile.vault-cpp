@@ -13,14 +13,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /vault
 
-COPY vault-cpp/ ./
+COPY services/vault-cpp/ ./
 COPY infrastructure/hardware/softhsm2.conf /etc/softhsm2.conf
 
-# Insecure container image copy of private key material
+# Container image copy of private key material for key rotation tests
 COPY keys/gateway-key.pem /vault/keys/gateway-key.pem
 
 RUN cmake -B build -S . && cmake --build build
 
 EXPOSE 8200
 
-CMD ["./build/vault_server"]
+CMD ["./build/vault-server"]

@@ -228,3 +228,9 @@ class EdgeServerEntry {
 }
 
 module.exports = { EdgeServerEntry };
+
+if (require.main === module) {
+  const port = parseInt(process.env.PORT || "8443", 10);
+  const server = new EdgeServerEntry({ port });
+  server.startServer();
+}
