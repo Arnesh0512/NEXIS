@@ -17,6 +17,7 @@ enum Message {
 
 /// Worker thread representation in pool.
 struct Worker {
+    #[allow(dead_code)]
     id: usize,
     thread: Option<thread::JoinHandle<()>>,
 }

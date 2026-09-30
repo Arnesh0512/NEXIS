@@ -8,7 +8,7 @@ use pqcrypto_kyber::kyber768::{
     self, encapsulate, decapsulate, PublicKey, SecretKey,
 };
 use pqcrypto_traits::kem::{
-    Ciphertext as _, PublicKey as _, SecretKey as _, SharedSecret as _,
+    Ciphertext as _, PublicKey as _, SharedSecret as _,
 };
 use std::collections::HashMap;
 use std::sync::RwLock;

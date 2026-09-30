@@ -141,8 +141,8 @@ public:
         BIO* bio = BIO_new_mem_buf(cert_pem.data(), static_cast<int>(cert_pem.size()));
         if (!bio) return false;
 
-        // Spectra detection target: PEM_read_X509
-        X509* cert = PEM_read_X509(bio, nullptr, nullptr, nullptr);
+        // Spectra detection target: PEM_read_bio_X509
+        X509* cert = PEM_read_bio_X509(bio, nullptr, nullptr, nullptr);
         BIO_free(bio);
 
         if (!cert) {

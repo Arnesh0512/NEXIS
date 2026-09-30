@@ -35,6 +35,7 @@ pub struct AuditEvent {
 
 /// In-memory ring buffer holding recent compliance audit events.
 pub struct AuditLogger {
+    #[allow(dead_code)]
     service_name: String,
     buffer: RwLock<VecDeque<AuditEvent>>,
     max_capacity: usize,

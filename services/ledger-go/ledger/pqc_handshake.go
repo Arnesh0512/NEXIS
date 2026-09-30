@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"sync"
-	"time"
 
 	"github.com/cloudflare/circl/kem/kyber/kyber768"
 )
@@ -68,7 +67,7 @@ func (pqc *PqcHandshakeManager) EncapsulateSecret(peerID string, peerPubKey *kyb
 	ss := make([]byte, kyber768.SharedKeySize)
 
 	// Encapsulate generates ciphertext and shared secret
-	peerPubKey.EncapsulateTo(ct, ss, rand.Reader)
+	peerPubKey.EncapsulateTo(ct, ss, nil)
 	pqc.establishedSecrets[peerID] = ss
 	pqc.encapsulationsMade++
 
@@ -124,7 +123,7 @@ func (pqc *PqcHandshakeManager) ExportPublicKeyHex(nodeID string) (string, error
 	}
 
 	var buf [kyber768.PublicKeySize]byte
-	pk.Pack(&buf)
+	pk.Pack(buf[:])
 	return hex.EncodeToString(buf[:]), nil
 }
 
@@ -142,7 +141,7 @@ func (pqc *PqcHandshakeManager) ImportPublicKeyHex(nodeID, hexStr string) (*kybe
 	copy(buf[:], bytes)
 
 	pk := new(kyber768.PublicKey)
-	pk.Unpack(&buf)
+	pk.Unpack(buf[:])
 
 	pqc.mutex.Lock()
 	pqc.publicKeyStore[nodeID] = pk

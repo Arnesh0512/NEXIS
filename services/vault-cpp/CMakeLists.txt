@@ -3,6 +3,7 @@ project(vault-cpp CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+add_compile_options(-Wno-deprecated-declarations)
 
 # Find OpenSSL
 find_package(OpenSSL REQUIRED)

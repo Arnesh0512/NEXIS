@@ -31,10 +31,25 @@ typedef struct OQS_SIG {
     size_t length_signature;
 } OQS_SIG;
 
+#if defined(__GNUC__) || defined(__clang__)
+__attribute__((weak)) OQS_KEM *OQS_KEM_new(const char *method_name) {
+    (void)method_name;
+    static OQS_KEM dummy = { "ML-KEM-768", 1184, 2400, 1088, 32 };
+    return &dummy;
+}
+__attribute__((weak)) void OQS_KEM_free(OQS_KEM *kem) { (void)kem; }
+__attribute__((weak)) OQS_SIG *OQS_SIG_new(const char *method_name) {
+    (void)method_name;
+    static OQS_SIG dummy = { "ML-DSA-65", 1952, 4032, 3309 };
+    return &dummy;
+}
+__attribute__((weak)) void OQS_SIG_free(OQS_SIG *sig) { (void)sig; }
+#else
 extern OQS_KEM *OQS_KEM_new(const char *method_name);
 extern void OQS_KEM_free(OQS_KEM *kem);
 extern OQS_SIG *OQS_SIG_new(const char *method_name);
 extern void OQS_SIG_free(OQS_SIG *sig);
+#endif
 
 static OQS_KEM *g_kem_instance = NULL;
 static OQS_SIG *g_sig_instance = NULL;

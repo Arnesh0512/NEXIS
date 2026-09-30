@@ -22,7 +22,7 @@ run_check() {
     local title="$1"
     local cmd="$2"
     echo -n "Checking: ${title} ... "
-    if eval "$cmd" > /dev/null 2>&1; then
+    if (eval "$cmd") > /dev/null 2>&1; then
         echo -e "${GREEN}[PASSED]${NC}"
         PASS_COUNT=$((PASS_COUNT+1))
     else
@@ -44,8 +44,6 @@ run_check "OpenSSL & SoftHSM2" "openssl version && softhsm2-util --version"
 run_check "Python Cryptography Libraries (cryptography, pycryptodome, bcrypt, paramiko)" \
     "python3 -c 'import cryptography, Crypto, bcrypt, paramiko, pydantic, requests, dotenv; print(\"OK\")'"
 run_check "Payment Service PCI Engine Self-Test" \
-    "python3 -c 'from services.payment_py.payment_app.pci_compliance import PciComplianceEngine; e = PciComplianceEngine(\"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef\"); r = e.encrypt_pan(\"4111111111111111\", \"test\"); assert \"masked_pan\" in r'" || \
-run_check "Payment Service PCI Engine Self-Test (alt import)" \
     "python3 -c 'import sys; sys.path.insert(0, \"services/payment-py\"); from payment_app.pci_compliance import PciComplianceEngine; e = PciComplianceEngine(\"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef\"); r = e.encrypt_pan(\"4111111111111111\", \"test\"); assert \"masked_pan\" in r'"
 
 # 3. Node.js & TypeScript Services
@@ -62,7 +60,13 @@ run_check "Go Ledger Module Dependencies (circl, x/crypto)" "cd services/ledger-
 run_check "C HSM Daemon Binary" "test -f services/hsm-c/build/hsm-daemon"
 run_check "C++ Vault Server Binary" "test -f services/vault-cpp/build/vault-server"
 
-# 6. Certificates & Cryptographic Assets
+# 6. Java Authentication Service
+run_check "Java Auth Service Classes" "test -f services/auth-java/target/classes/com/nexis/auth/PasswordHasher.class"
+
+# 7. Rust Cryptographic Engine
+run_check "Rust Crypto Storage Engine Check" "(cd services/crypto-rs && cargo check)"
+
+# 8. Certificates & Cryptographic Assets
 run_check "Nexis Internal Root CA Installed" "openssl x509 -in certificates/nexis-root-ca.crt -noout -subject"
 run_check "Edge Router TLS Certificate & Key" "openssl x509 -in certificates/edge-router.crt -noout -subject && test -f keys/edge-router.key"
 

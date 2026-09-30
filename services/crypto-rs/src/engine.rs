@@ -5,7 +5,7 @@
 //! transactions, signs finalized block digests, and persists snapshots to encrypted vault storage.
 
 use crate::accounts::AccountLedger;
-use crate::block_validator::{BlockHeader, BlockValidator};
+use crate::block_validator::BlockValidator;
 use crate::ring_signer::RingSigner;
 use crate::storage_backend::StorageBackend;
 use std::sync::{Arc, RwLock};

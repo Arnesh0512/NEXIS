@@ -94,7 +94,7 @@ public class PasswordHasher {
             this.totalVerifications++;
 
             return slowEquals(expectedHash, computedHash);
-        } catch (NumberFormatException | IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             return false;
         }
     }

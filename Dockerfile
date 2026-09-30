@@ -95,35 +95,35 @@ RUN if [ -f services/payment-py/requirements.txt ]; then \
 
 # TypeScript & JavaScript Services (API Gateway & Edge Router)
 RUN if [ -d services/api-gateway-ts ]; then \
-        cd services/api-gateway-ts && npm install && npm run build; \
+        (cd services/api-gateway-ts && (npm install || npm install --package-lock=false) && npm run build); \
     fi && \
     if [ -d services/edge-router-js ]; then \
-        cd services/edge-router-js && npm install; \
+        (cd services/edge-router-js && (npm install || npm install --package-lock=false)); \
     fi
 
 # Go Ledger Microservice Dependencies & Binary Build
 RUN if [ -d services/ledger-go ]; then \
-        cd services/ledger-go && go mod download && go build ./...; \
+        (cd services/ledger-go && (go mod download || (rm -f go.sum && go mod tidy && go mod download)) && go build ./...); \
     fi
 
 # C HSM Daemon Build
 RUN if [ -d services/hsm-c ]; then \
-        cd services/hsm-c && cmake -B build -S . && cmake --build build; \
+        (cd services/hsm-c && cmake -B build -S . && cmake --build build); \
     fi
 
 # C++ Vault Server Build
 RUN if [ -d services/vault-cpp ]; then \
-        cd services/vault-cpp && cmake -B build -S . && cmake --build build; \
+        (cd services/vault-cpp && cmake -B build -S . && cmake --build build); \
     fi
 
 # Java Auth Service Dependencies (resolve / compile)
 RUN if [ -d services/auth-java ]; then \
-        cd services/auth-java && (mvn compile -DskipTests || true); \
+        (cd services/auth-java && mvn compile -DskipTests); \
     fi
 
 # Rust Cryptographic Storage Engine
 RUN if [ -d services/crypto-rs ]; then \
-        cd services/crypto-rs && (cargo check || true); \
+        (cd services/crypto-rs && cargo check); \
     fi
 
 # 10. Expose Platform Microservice Ports

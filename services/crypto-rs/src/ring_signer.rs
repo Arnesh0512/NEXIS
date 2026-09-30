@@ -6,7 +6,7 @@
 
 use ring::rand::SystemRandom;
 use ring::signature::{
-    self, Ed25519KeyPair, KeyPair, UnparsedPublicKey, ED25519,
+    Ed25519KeyPair, KeyPair, UnparsedPublicKey, ED25519,
     RSA_PKCS1_2048_8192_SHA256,
 };
 use std::collections::HashMap;
