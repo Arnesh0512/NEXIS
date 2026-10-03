@@ -2,25 +2,43 @@
 # Git Ignore Configuration - Nexis Core Platform
 # ==============================================================================
 
-
-# Local Environment Variables & Secrets
+# Local Environment Configuration
 .env
 *.env.local
 *.env.*.local
 
-# Dependency directories
+# Language Dependencies & Installed Packages
 node_modules/
+.venv/
+venv/
 vendor/
+__pycache__/
+*.py[cod]
+.gradle/
+.cargo/
+
+# Build Outputs & Compiled Targets
 target/
 build/
 bin/
 obj/
-.venv/
-venv/
-__pycache__/
-*.py[cod]
+*.class
+*.jar
+*.war
+*.ear
 
-# Logs & Temporary files
+# Test Caches & Coverage
+.pytest_cache/
+.coverage
+coverage/
+.nyc_output/
+
+# IDE & Editor Configurations
+.idea/
+.vscode/
+*.iml
+
+# Logs & Temporary Files
 *.log
 *.tmp
 *.bak
