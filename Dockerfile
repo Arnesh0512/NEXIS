@@ -87,6 +87,18 @@ RUN if [ -f certificates/nexis-root-ca.crt ]; then \
     fi && \
     chmod +x /opt/nexis/verify_all.sh 2>/dev/null || true
 
+# 8b. Configure Nginx and TLS Virtual Hosts
+RUN useradd -r -s /bin/false nginx 2>/dev/null || true && \
+    mkdir -p /etc/nginx/conf.d /etc/ssl/certs /etc/ssl/keys /var/log/nginx && \
+    cp network/nginx/nginx.conf /etc/nginx/nginx.conf && \
+    cp network/nginx/conf.d/*.conf /etc/nginx/conf.d/ 2>/dev/null || true && \
+    cp certificates/* /etc/ssl/certs/ 2>/dev/null || true && \
+    cp keys/* /etc/ssl/keys/ 2>/dev/null || true && \
+    chmod 644 /etc/ssl/certs/* 2>/dev/null || true && \
+    chmod 644 /etc/ssl/keys/* 2>/dev/null || true && \
+    cp entrypoint.sh /usr/local/bin/entrypoint.sh && \
+    chmod +x /usr/local/bin/entrypoint.sh
+
 # 9. Install Dependencies & Build All Services
 # Python Payment Service Dependencies
 RUN if [ -f services/payment-py/requirements.txt ]; then \
@@ -130,5 +142,6 @@ RUN if [ -d services/crypto-rs ]; then \
 # 80: HTTP Ingress, 443: HTTPS Gateway, 3000: API Gateway (TS), 8080: Payment Service (Py), 8200: C++ Vault, 8443: gRPC/mTLS Edge Router
 EXPOSE 80 443 3000 8080 8200 8443
 
-# Default to interactive bash shell or automated self-test
-CMD ["/bin/bash"]
+# Default entrypoint starts background services (nginx) and runs CMD
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+CMD ["sleep", "infinity"]
