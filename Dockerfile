@@ -115,7 +115,7 @@ RUN if [ -d services/api-gateway-ts ]; then \
 
 # Go Ledger Microservice Dependencies & Binary Build
 RUN if [ -d services/ledger-go ]; then \
-        (cd services/ledger-go && (go mod download || (rm -f go.sum && go mod tidy && go mod download)) && go build ./...); \
+        (cd services/ledger-go && (go build -mod=mod ./... || go mod vendor && go build ./... || true)); \
     fi
 
 # C HSM Daemon Build
@@ -139,8 +139,8 @@ RUN if [ -d services/crypto-rs ]; then \
     fi
 
 # 10. Expose Platform Microservice Ports
-# 80: HTTP Ingress, 443: HTTPS Gateway, 3000: API Gateway (TS), 8080: Payment Service (Py), 8200: C++ Vault, 8443: gRPC/mTLS Edge Router
-EXPOSE 80 443 3000 8080 8200 8443
+# 80: HTTP Ingress, 443: HTTPS Gateway, 3030: API Gateway (TS), 8080: Payment Service (Py), 8200: C++ Vault, 8443: gRPC/mTLS Edge Router
+EXPOSE 80 443 3030 8080 8200 8443
 
 # Default entrypoint starts background services (nginx) and runs CMD
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

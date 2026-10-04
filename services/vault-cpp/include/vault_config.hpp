@@ -19,7 +19,7 @@ namespace nexis::vault {
 
 struct NetworkConfig {
     std::string listen_address{"0.0.0.0"};
-    uint16_t listen_port{9000};
+    uint16_t listen_port{8200};
     uint32_t connection_backlog{128};
     uint32_t socket_timeout_ms{5000};
     bool enable_tcp_keepalive{true};

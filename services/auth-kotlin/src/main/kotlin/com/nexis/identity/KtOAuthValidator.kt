@@ -48,7 +48,7 @@ class KtOAuthValidator(
             "nexis-web-client" to ClientRegistration(
                 clientId = "nexis-web-client",
                 clientSecret = "secret-web-client-2026",
-                allowedRedirectUris = setOf("https://app.nexis.io/callback", "http://localhost:3000/callback"),
+                allowedRedirectUris = setOf("https://app.nexis.io/callback", "http://localhost:3030/callback"),
                 allowedScopes = setOf("openid", "profile", "ledger:read", "ledger:write"),
                 isConfidential = true
             ),

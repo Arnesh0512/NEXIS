@@ -23,6 +23,6 @@ RUN npm install --omit=dev || npm install --omit=dev --package-lock=false
 COPY --from=builder /usr/src/app/dist ./dist
 COPY certificates/edge-router.crt /etc/ssl/certs/gateway.crt
 
-EXPOSE 3000
+EXPOSE 3030
 
-CMD ["node", "dist/gateway_router.js"]
+CMD ["node", "dist/server.js"]

@@ -37,7 +37,7 @@ export class CorsPolicyManager {
         "https://app.nexis.io",
         "https://admin.nexis.io",
         "https://checkout.nexis.io",
-        "http://localhost:3000",
+        "http://localhost:3030",
       ],
       allowedMethods: customConfig?.allowedMethods ?? [
         "GET",

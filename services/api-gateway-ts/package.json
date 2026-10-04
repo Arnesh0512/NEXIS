@@ -6,7 +6,7 @@
   "types": "dist/gateway_router.d.ts",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/gateway_router.js"
+    "start": "node dist/server.js"
   },
   "dependencies": {
     "jsonwebtoken": "^9.0.2",

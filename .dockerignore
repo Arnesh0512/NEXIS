@@ -1,0 +1,12 @@
+.git
+.venv
+venv
+services/api-gateway-ts/node_modules
+services/edge-router-js/node_modules
+services/payment-py/.venv
+services/auth-java/target
+services/crypto-rs/target
+services/hsm-c/build
+services/vault-cpp/build
+.gradle
+.cargo
