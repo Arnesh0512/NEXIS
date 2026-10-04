@@ -60,3 +60,17 @@ resource "aws_kms_key" "nexis_vault_archive" {
     KeySize = "4096"
   }
 }
+
+# 5. Staging Symmetric Key with Disabled Rotation (Triggers MEDIUM severity alert in TerraformScanner)
+resource "aws_kms_key" "nexis_unrotated_symmetric" {
+  description              = "Nexis Staging Financial Key (Insecure: Rotation Disabled)"
+  customer_master_key_spec = "SYMMETRIC_DEFAULT"
+  key_usage                = "ENCRYPT_DECRYPT"
+  deletion_window_in_days  = 7
+  enable_key_rotation      = false
+
+  tags = {
+    Name     = "nexis-unrotated-symmetric"
+    Security = "Vulnerable-NoRotation"
+  }
+}

@@ -63,3 +63,28 @@ resource "aws_acm_certificate" "nexis_vault_pqc" {
     Zone        = "quantum-ready-vault"
   }
 }
+
+# 5. Imported Enterprise ACM Certificate (Referenced on-disk for terra-cert harvesting)
+resource "aws_acm_certificate" "nexis_auth_imported" {
+  domain_name       = "auth.nexis-core.finance"
+  certificate_body  = file("${path.module}/../../certificates/auth-runtime-cert.pem")
+  private_key       = file("${path.module}/../../keys/auth-runtime-key.pem")
+  certificate_chain = file("${path.module}/../../certificates/nexis-root-ca.crt")
+
+  tags = {
+    Environment = "production"
+    ManagedBy   = "terraform"
+  }
+}
+
+# 6. Imported Edge Gateway Certificate (Referenced by both Nginx and Terraform for dual-origin harvesting)
+resource "aws_acm_certificate" "nexis_gateway_imported" {
+  domain_name       = "gateway.nexis-core.finance"
+  certificate_body  = file("${path.module}/../../certificates/gateway-cert.pem")
+  private_key       = file("${path.module}/../../keys/gateway-key.pem")
+
+  tags = {
+    Environment = "production"
+    Tier        = "edge-gateway"
+  }
+}

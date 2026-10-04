@@ -8,6 +8,8 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/ssl-protocols: "TLSv1.2 TLSv1.3"
     nginx.ingress.kubernetes.io/ssl-ciphers: "ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384"
+    kubernetes.io/tls-cert-file: "certificates/edge-router.crt"
+    kubernetes.io/tls-key-file: "keys/edge-router.key"
 spec:
   tls:
     - hosts:

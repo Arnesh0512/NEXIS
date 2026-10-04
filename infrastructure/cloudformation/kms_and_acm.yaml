@@ -44,3 +44,25 @@ Resources:
       DomainName: "vault.nexis-core.finance"
       KeyAlgorithm: "ECDSA_P256"
       ValidationMethod: "DNS"
+
+  NexisUnrotatedSymmetricKey:
+    Type: "AWS::KMS::Key"
+    Properties:
+      Description: "Nexis Test Unrotated Symmetric Key (Vulnerable: Rotation Disabled)"
+      KeySpec: "SYMMETRIC_DEFAULT"
+      KeyUsage: "ENCRYPT_DECRYPT"
+      EnableKeyRotation: false
+      Tags:
+        - Key: "Security"
+          Value: "Vulnerable-NoRotation"
+
+  NexisEccSigningKey:
+    Type: "AWS::KMS::Key"
+    Properties:
+      Description: "Nexis CloudFormation ECC Attestation Key"
+      KeySpec: "ECC_NIST_P384"
+      KeyUsage: "SIGN_VERIFY"
+      EnableKeyRotation: false
+      Tags:
+        - Key: "Standard"
+          Value: "SuiteB-P384"

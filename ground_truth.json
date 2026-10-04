@@ -472,6 +472,38 @@
     "caller_count": 0
   },
   {
+    "file_path": "infrastructure/terraform/kms_keys.tf",
+    "algorithm": "AES-256-GCM",
+    "primitive": "symmetric_cipher",
+    "quantum_safe": true,
+    "expected_breach": false,
+    "caller_count": 0
+  },
+  {
+    "file_path": "infrastructure/terraform/certificates.tf",
+    "algorithm": "RSA-2048",
+    "primitive": "public_key",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 0
+  },
+  {
+    "file_path": "infrastructure/cloudformation/kms_and_acm.yaml",
+    "algorithm": "ECC",
+    "primitive": "public_key",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 0
+  },
+  {
+    "file_path": "infrastructure/cloudformation/cloudformation_pqc.json",
+    "algorithm": "RSA-4096",
+    "primitive": "public_key",
+    "quantum_safe": false,
+    "expected_breach": true,
+    "caller_count": 0
+  },
+  {
     "file_path": "deployments/kubernetes/secrets.yaml",
     "algorithm": "X509-TLS-Secret",
     "primitive": "certificate",
