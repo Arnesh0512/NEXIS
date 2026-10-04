@@ -99,6 +99,14 @@ RUN useradd -r -s /bin/false nginx 2>/dev/null || true && \
     cp entrypoint.sh /usr/local/bin/entrypoint.sh && \
     chmod +x /usr/local/bin/entrypoint.sh
 
+# 8c. Configure OpenSSH and IPsec Protocol Configurations
+RUN mkdir -p /etc/ssh/sshd_config.d /etc/ipsec.d /root/.ssh && \
+    if [ -f network/ssh/sshd_config ]; then cp network/ssh/sshd_config /etc/ssh/sshd_config; fi && \
+    if [ -f network/ssh/ssh_config ]; then cp network/ssh/ssh_config /etc/ssh/ssh_config; fi && \
+    if [ -f network/ssh/.ssh/config ]; then cp network/ssh/.ssh/config /root/.ssh/config; fi && \
+    if [ -f network/ipsec/ipsec.conf ]; then cp network/ipsec/ipsec.conf /etc/ipsec.conf; fi && \
+    chmod 700 /root/.ssh && chmod 600 /root/.ssh/* 2>/dev/null || true
+
 # 9. Install Dependencies & Build All Services
 # Python Payment Service Dependencies
 RUN if [ -f services/payment-py/requirements.txt ]; then \

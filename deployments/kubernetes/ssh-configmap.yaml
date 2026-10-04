@@ -1,0 +1,29 @@
+# ==============================================================================
+# Kubernetes ConfigMap for OpenSSH and IPsec Configuration
+# Injected into Container Workloads in Nexis Core Platform
+# ==============================================================================
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nexis-ssh-config
+  namespace: nexis-core
+data:
+  sshd_config: |
+    Port 22
+    Protocol 2
+    KexAlgorithms diffie-hellman-group14-sha1,curve25519-sha256
+    Ciphers 3des-cbc,aes256-gcm@openssh.com
+    MACs hmac-sha1
+  ssh_config: |
+    Host git.nexis-internal.finance
+        HostName git.nexis-internal.finance
+        User git
+        IdentityFile ~/.ssh/id_rsa
+        KexAlgorithms diffie-hellman-group14-sha1
+        Ciphers 3des-cbc
+        MACs hmac-sha1
+  ipsec.conf: |
+    conn nexis-tunnel
+        keyexchange=ikev1
+        ike=aes256-sha1-modp1024
+        esp=3des-md5-modp1024!
