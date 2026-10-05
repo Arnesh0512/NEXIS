@@ -86,7 +86,7 @@ public class SymmetricCipherPool {
             inBuffer.put(input);
             inBuffer.flip();
 
-            ByteBuffer outBuffer = ByteBuffer.allocateDirect(cipher.getOutputSize(input.length));
+            ByteBuffer outBuffer = ByteBuffer.allocateDirect(input.length + 64);
             int updateLen = cipher.update(inBuffer, outBuffer);
             int doFinalLen = cipher.doFinal(inBuffer, outBuffer);
             outBuffer.flip();
@@ -147,7 +147,7 @@ public class SymmetricCipherPool {
             inBuffer.put(encryptedData);
             inBuffer.flip();
 
-            ByteBuffer outBuffer = ByteBuffer.allocateDirect(cipher.getOutputSize(encryptedData.length));
+            ByteBuffer outBuffer = ByteBuffer.allocateDirect(encryptedData.length + 64);
             int updateLen = cipher.update(inBuffer, outBuffer);
             int doFinalLen = cipher.doFinal(inBuffer, outBuffer);
             outBuffer.flip();

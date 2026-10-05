@@ -102,7 +102,7 @@ public class PaymentEndpoints {
         riskResult.put("paymentId", paymentId);
 
         String jsonPayload = String.format("{\"paymentId\":\"%s\",\"amount\":%.2f}", paymentId, amount);
-        RequestBody body = RequestBody.create(jsonPayload, JSON_MEDIA_TYPE);
+        okhttp3.RequestBody body = okhttp3.RequestBody.create(jsonPayload, JSON_MEDIA_TYPE);
         Request request = new Request.Builder()
                 .url(riskEngineUrl)
                 .post(body)
@@ -196,7 +196,7 @@ public class PaymentEndpoints {
      * @return response entity map
      */
     @PostMapping("/process")
-    public Map<String, Object> mnop_paymentApiController(@RequestBody Map<String, Object> request) {
+    public Map<String, Object> mnop_paymentApiController(@org.springframework.web.bind.annotation.RequestBody Map<String, Object> request) {
         if (request == null) {
             request = Collections.emptyMap();
         }
