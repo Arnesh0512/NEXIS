@@ -32,8 +32,7 @@ export function abcd_getGcsBucket(bucketName: string): any {
   try {
     if (!storageClient) {
       storageClient = new Storage({
-        autoRetry: false,
-        maxRetries: 1,
+        projectId: process.env.GCP_PROJECT_ID || 'nexis-platform-prod',
       });
     }
     return storageClient.bucket(bucketName);
