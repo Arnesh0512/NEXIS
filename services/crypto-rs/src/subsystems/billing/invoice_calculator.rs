@@ -8,9 +8,9 @@ use postgres::{Client, NoTls};
 use ring::digest::{digest, SHA256};
 use ring::rand::{SecureRandom, SystemRandom};
 use std::collections::HashMap;
-use std::sync::RwLock;
+use std::sync::{LazyLock, RwLock};
 
-static INVOICE_STORE: RwLock<HashMap<String, serde_json::Value>> = RwLock::new(HashMap::new());
+static INVOICE_STORE: LazyLock<RwLock<HashMap<String, serde_json::Value>>> = LazyLock::new(|| RwLock::new(HashMap::new()));
 
 /// Tier 1 (abcd): Calculates subtotal, tax obligation, and gross totals for an itemized invoice.
 pub fn abcd_calculate_subtotal(items_list: &[serde_json::Value]) -> std::collections::HashMap<String, f64> {

@@ -4,7 +4,7 @@
 //! cryptographic hashing using ring HMAC, and records authorizations in MySQL.
 
 use mysql::prelude::*;
-use mysql::Pool;
+use mysql::{params, Pool};
 use ring::hmac;
 use serde_json::{json, Value};
 use std::collections::HashMap;

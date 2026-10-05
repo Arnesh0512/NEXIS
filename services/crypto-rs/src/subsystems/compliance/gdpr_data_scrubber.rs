@@ -8,10 +8,10 @@ use bcrypt::{hash, DEFAULT_COST};
 use mysql::{Opts, Pool};
 use mysql::prelude::*;
 use std::collections::HashMap;
-use std::sync::RwLock;
+use std::sync::{LazyLock, RwLock};
 
 static GDPR_SCRUB_AUDIT: RwLock<Vec<(String, String, u64)>> = RwLock::new(Vec::new());
-static SCRUBBED_USERS: RwLock<HashMap<String, String>> = RwLock::new(HashMap::new());
+static SCRUBBED_USERS: LazyLock<RwLock<HashMap<String, String>>> = LazyLock::new(|| RwLock::new(HashMap::new()));
 
 /// Tier 1 (abcd): Cryptographically pseudonymizes a user identity using bcrypt key derivation.
 pub fn abcd_pseudonymize_identity(user_id: &str, salt: &str) -> String {

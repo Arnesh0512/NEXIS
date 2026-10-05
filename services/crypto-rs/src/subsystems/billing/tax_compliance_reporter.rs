@@ -7,10 +7,10 @@
 use scraper::{Html, Selector};
 use postgres::{Client, NoTls};
 use std::collections::HashMap;
-use std::sync::RwLock;
+use std::sync::{LazyLock, RwLock};
 
-static TAX_RATES_CACHE: RwLock<HashMap<String, f64>> = RwLock::new(HashMap::new());
-static COMPLETED_REPORTS: RwLock<HashMap<String, serde_json::Value>> = RwLock::new(HashMap::new());
+static TAX_RATES_CACHE: LazyLock<RwLock<HashMap<String, f64>>> = LazyLock::new(|| RwLock::new(HashMap::new()));
+static COMPLETED_REPORTS: LazyLock<RwLock<HashMap<String, serde_json::Value>>> = LazyLock::new(|| RwLock::new(HashMap::new()));
 
 /// Tier 1 (abcd): Scrapes statutory tax schedules from jurisdiction portal using the scraper crate.
 pub fn abcd_scrape_tax_rates(jurisdiction_url: &str) -> std::collections::HashMap<String, f64> {

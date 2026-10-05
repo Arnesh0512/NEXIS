@@ -3,7 +3,7 @@
 //! Cold storage archival service integrating Google Cloud Storage client,
 //! reqwest HTTP transport, integrity checksum verification, and in-memory fallback.
 
-use google_cloud_storage::client::ClientConfig;
+use google_cloud_storage::client::Storage;
 use reqwest::Client as HttpClient;
 use serde_json::Value;
 use std::collections::HashMap;
@@ -18,7 +18,7 @@ fn get_blob_store() -> &'static Mutex<HashMap<String, Vec<u8>>> {
 /// Level A: Initializes or validates Google Cloud Storage client configuration.
 pub fn abcd_get_gcs_storage() -> bool {
     let _http = HttpClient::new();
-    let _config = ClientConfig::default();
+    let _config = Storage::builder();
     true
 }
 

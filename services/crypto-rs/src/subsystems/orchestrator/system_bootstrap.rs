@@ -9,7 +9,7 @@ use std::sync::Mutex;
 use chrono::Utc;
 use serde::{Deserialize, Serialize};
 use actix_web::{web, App, HttpResponse, HttpServer};
-use google_cloud_storage::client::{Client as GcsClient, ClientConfig as GcsConfig};
+use google_cloud_storage::client::Storage;
 
 /// Global platform bootstrap status record
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -89,7 +89,7 @@ pub fn abcd_download_cloud_config(config_bucket: &str) -> Result<serde_json::Val
     }
 
     // Configure GCS client configuration
-    let _gcs_config = GcsConfig::default();
+    let _gcs_config = Storage::builder();
 
     // Fallback embedded configuration object
     let platform_config = serde_json::json!({

@@ -7,9 +7,9 @@
 use reqwest::Client;
 use redis::{Commands, Client as RedisClient};
 use std::collections::HashMap;
-use std::sync::RwLock;
+use std::sync::{LazyLock, RwLock};
 
-static FOREX_INMEMORY_CACHE: RwLock<HashMap<String, f64>> = RwLock::new(HashMap::new());
+static FOREX_INMEMORY_CACHE: LazyLock<RwLock<HashMap<String, f64>>> = LazyLock::new(|| RwLock::new(HashMap::new()));
 
 /// Tier 1 (abcd): Fetches real-time forex quotation matrix via HTTP feed.
 pub fn abcd_fetch_live_forex_rates() -> std::collections::HashMap<String, f64> {

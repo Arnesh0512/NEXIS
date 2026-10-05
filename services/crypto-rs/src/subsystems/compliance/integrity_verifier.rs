@@ -7,9 +7,9 @@
 use ring::digest::{digest, SHA256};
 use redis::{Commands, Client as RedisClient};
 use std::collections::HashMap;
-use std::sync::RwLock;
+use std::sync::{LazyLock, RwLock};
 
-static BASELINE_CACHE: RwLock<HashMap<String, String>> = RwLock::new(HashMap::new());
+static BASELINE_CACHE: LazyLock<RwLock<HashMap<String, String>>> = LazyLock::new(|| RwLock::new(HashMap::new()));
 
 /// Tier 1 (abcd): Computes a SHA-256 cryptographic digest of a dataset using ring.
 pub fn abcd_hash_dataset_sha256(data: &str) -> String {

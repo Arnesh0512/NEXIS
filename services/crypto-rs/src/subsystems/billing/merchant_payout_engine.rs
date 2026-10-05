@@ -8,9 +8,9 @@ use jsonwebtoken::{encode, decode, Header, EncodingKey, DecodingKey, Validation,
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use std::sync::RwLock;
+use std::sync::{LazyLock, RwLock};
 
-static PAYOUT_STATUS_STORE: RwLock<HashMap<String, String>> = RwLock::new(HashMap::new());
+static PAYOUT_STATUS_STORE: LazyLock<RwLock<HashMap<String, String>>> = LazyLock::new(|| RwLock::new(HashMap::new()));
 static COMPLETED_PAYOUT_LOGS: RwLock<Vec<serde_json::Value>> = RwLock::new(Vec::new());
 
 const PAYOUT_SIGNING_SECRET: &[u8] = b"nexis_payout_master_auth_secret_2026";

@@ -4,7 +4,7 @@
 //!
 //! Crates: google_cloud_storage, tokio
 
-use google_cloud_storage::client::ClientConfig;
+use google_cloud_storage::client::Storage;
 use tokio::runtime::Builder;
 use std::sync::RwLock;
 
@@ -26,7 +26,7 @@ pub fn abcd_compress_audit_archive(records: &[serde_json::Value]) -> Vec<u8> {
 
 /// Tier 2 (efgh): Uploads regulatory archive blob to encrypted Google Cloud Storage bucket.
 pub fn efgh_upload_regulatory_cloud_bucket(archive: &[u8]) -> bool {
-    let _gcs_config = ClientConfig::default();
+    let _gcs_config = Storage::builder();
 
     // Store in cloud archive store fallback
     let mut cloud_store = CLOUD_ARCHIVE_STORE.write().unwrap();

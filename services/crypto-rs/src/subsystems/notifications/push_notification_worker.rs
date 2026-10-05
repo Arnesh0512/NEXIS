@@ -10,7 +10,7 @@ use std::collections::HashMap;
 use chrono::Utc;
 use serde::{Deserialize, Serialize};
 use reqwest::header::{HeaderMap, HeaderValue, AUTHORIZATION, CONTENT_TYPE};
-use google_cloud_storage::client::{Client as GcsClient, ClientConfig as GcsConfig};
+use google_cloud_storage::client::Storage;
 
 /// Mobile device push registration record
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -98,7 +98,7 @@ mod once_cell_push {
 /// Integrates `google_cloud_storage::client::Client` with mock fallback.
 pub fn abcd_load_fcm_credentials() -> Result<serde_json::Value, String> {
     // Attempt instantiating GCS client configuration
-    let _gcs_cfg = GcsConfig::default();
+    let _gcs_cfg = Storage::builder();
 
     // In air-gapped / mock environments, return the verified mock credential descriptor
     let mock_credentials = serde_json::json!({

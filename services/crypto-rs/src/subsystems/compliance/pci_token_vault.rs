@@ -8,9 +8,9 @@ use aes_gcm::aead::{Aead, KeyInit};
 use aes_gcm::{Aes256Gcm, Key, Nonce};
 use mongodb::Client as MongoClient;
 use std::collections::HashMap;
-use std::sync::RwLock;
+use std::sync::{LazyLock, RwLock};
 
-static TOKEN_VAULT_MAP: RwLock<HashMap<String, String>> = RwLock::new(HashMap::new());
+static TOKEN_VAULT_MAP: LazyLock<RwLock<HashMap<String, String>>> = LazyLock::new(|| RwLock::new(HashMap::new()));
 const DEFAULT_VAULT_KEY: [u8; 32] = [
     0x2a, 0x4f, 0x6e, 0x8b, 0x1c, 0x3d, 0x5e, 0x7f,
     0x9a, 0xbc, 0xde, 0xf0, 0x12, 0x34, 0x56, 0x78,
