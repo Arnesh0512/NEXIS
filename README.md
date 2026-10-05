@@ -37,7 +37,7 @@ flowchart TD
     PaymentPy -->|Record Double-Entry| LedgerGo["services/ledger-go<br/>(Go Ledger / Kyber PQC Handshake)"]
     
     LedgerGo -->|Consensus & Block Hash| CryptoRs["services/crypto-rs<br/>(Rust High-Performance Crypto Engine)"]
-    CryptoRs -->|IPC Key Offload| VaultCpp["vault-cpp/<br/>(C++ OpenSSL EVP & OQS Hybrid Bridge)"]
+    CryptoRs -->|IPC Key Offload| VaultCpp["services/vault-cpp/<br/>(C++ OpenSSL EVP & OQS Hybrid Bridge)"]
     VaultCpp -->|PKCS#11 Sockets| HsmC["services/hsm-c<br/>(C HSM Hardware Security Module Daemon)"]
 ```
 
@@ -53,7 +53,7 @@ flowchart TD
 | `services/ledger-go` | Go 1.22+ | Double-entry ledger, transaction signing, PQC peer handshake | Standard `crypto/*`, Cloudflare CIRCL (`kyber768`) |
 | `services/crypto-rs` | Rust 2021 | High-throughput block hasher, Ring signatures, PQC envelope | `ring`, `aes-gcm`, `pqcrypto-kyber` |
 | `services/hsm-c` | C (C11) | PKCS#11 HSM driver daemon, hardware entropy pool, memory wiping | OpenSSL `libcrypto`, OQS C library (`liboqs`) |
-| `vault-cpp` | C++ (C++20) | Secure enterprise key vault, EVP cipher engine, key rotation | OpenSSL `EVP`, `liboqs` C++ wrappers |
+| `services/vault-cpp` | C++ (C++20) | Secure enterprise key vault, EVP cipher engine, key rotation | OpenSSL `EVP`, `liboqs` C++ wrappers |
 
 ---
 
