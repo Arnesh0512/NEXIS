@@ -15,6 +15,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     cmake \
     pkg-config \
     libssl-dev \
+    libffi-dev \
+    libpq-dev \
     softhsm2 \
     opensc \
     libsofthsm2 \

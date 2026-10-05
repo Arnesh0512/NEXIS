@@ -17,6 +17,7 @@ pub mod error_handler;
 pub mod pqc_kem;
 pub mod ring_signer;
 pub mod storage_backend;
+pub mod subsystems;
 
 use std::sync::Arc;
 

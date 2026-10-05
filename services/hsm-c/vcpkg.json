@@ -4,6 +4,18 @@
   "description": "Hardware Security Module daemon and PKCS#11 cryptographic driver for Nexis Core",
   "dependencies": [
     "openssl",
-    "liboqs"
+    "liboqs",
+    "libssh2",
+    "libsodium",
+    "curl",
+    "libmicrohttpd",
+    "cjson",
+    "mongo-c-driver",
+    "libmysql",
+    "libpq",
+    "hiredis",
+    "libxml2",
+    "zlib",
+    "sqlite3"
   ]
 }

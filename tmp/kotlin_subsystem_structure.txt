@@ -1,0 +1,529 @@
+================================================================================
+NEXIS CORE KOTLIN ENTERPRISE IDENTITY & FINANCIAL SUBSYSTEM ARCHITECTURE
+Target Base Directory: services/auth-kotlin/src/main/kotlin/com/nexis/identity/
+Total Files: 50 interacting Kotlin (.kt) source files across 10 functional packages
+Functions per file: Exactly 5 to 6 meaningful functions with strong Kotlin typings
+Invocation pattern: abcd_* (primitives/IO) -> efgh_* (engine/connector) -> ijkl_* (flow/chain) -> mnop_* (controller/entrypoint)
+================================================================================
+
+--------------------------------------------------------------------------------
+15 TARGET MODULES SPECIFICATION FOR KOTLIN
+--------------------------------------------------------------------------------
+A. 5 CRYPTOGRAPHIC SECURITY & CIPHER LIBRARIES:
+   1. org.bouncycastle:bcprov-jdk18on
+      - Enterprise Bouncy Castle provider, RSA-PSS, PQC Dilithium, X.509
+   2. com.google.crypto.tink:tink
+      - Google Tink multi-language crypto suite (AEAD, MAC, Hybrid Encryption)
+   3. io.jsonwebtoken:jjwt-api (plus jjwt-impl & jjwt-jackson)
+      - JSON Web Token signing, claims verification, RS256/ES256
+   4. org.mindrot:jbcrypt
+      - Salted BCrypt password and credential hashing
+   5. org.apache.commons:commons-crypto
+      - Hardware-accelerated AES Ciphers (AES-CTR, AES-CBC)
+   (Bonus: io.ktor:ktor-network-tls for secure network crypto)
+
+B. 10 NON-CRYPTO NETWORK / DATABASE / AI / SCRAPING LIBRARIES:
+   6. io.ktor:ktor-client-core & ktor-client-cio
+      - Asynchronous non-blocking HTTP/2 client for microservice webhooks
+   7. io.ktor:ktor-server-core & ktor-server-netty
+      - Ktor asynchronous REST route handling and API dispatch
+   8. com.squareup.okhttp3:okhttp
+      - Resilient HTTP/2 client for upstream payment gateways and banking APIs
+   9. org.mongodb:mongodb-driver-sync
+      - MongoDB document driver for BSON event streaming and state storage
+   10. com.mysql:mysql-connector-j
+      - Enterprise MySQL JDBC connector for ACID ledger entries
+   11. org.postgresql:postgresql
+      - PostgreSQL JDBC driver for tamper-evident audit trails
+   12. redis.clients:jedis
+      - High-speed Redis client for distributed locking and session caching
+   13. com.theokanning.openai-gpt3-java:service
+      - OpenAI client for LLM transaction risk scoring and explanations
+   14. com.google.cloud:google-cloud-storage
+      - Google Cloud Storage client for regulatory filings and statement blobs
+   15. org.jsoup:jsoup
+      - Fast HTML scraping and DOM parsing for sanctions lists and tax rates
+
+--------------------------------------------------------------------------------
+PACKAGE DIRECTORY STRUCTURE & MODULE MAPPING (50 FILES)
+--------------------------------------------------------------------------------
+
+[SUBSYSTEM 1: VAULT] (package com.nexis.identity.vault)
+1. KtKeyVaultManager.kt
+   - Modules: org.bouncycastle, redis.clients.jedis
+   - Functions:
+     * fun abcd_generateMasterRsaKey(): KeyPair
+     * fun abcd_deriveDataEncryptionKey(masterKey: ByteArray, salt: ByteArray): SecretKeySpec
+     * fun efgh_storeKeyInCache(keyId: String, rawKeyHex: String): Boolean
+     * fun efgh_retrieveActiveKey(keyId: String): String
+     * fun ijkl_rotateMasterKey(keyId: String): Boolean
+     * fun mnop_vaultHealthCheck(): Map<String, Any>
+
+2. KtAsymmetricSigner.kt
+   - Modules: org.bouncycastle, io.jsonwebtoken
+   - Functions:
+     * fun abcd_signPayloadRsa(payload: ByteArray, privateKey: PrivateKey): ByteArray
+     * fun abcd_verifyPayloadRsa(payload: ByteArray, signature: ByteArray, publicKey: PublicKey): Boolean
+     * fun abcd_createSignedJwtClaim(claims: Map<String, Any>, privateKey: PrivateKey): String
+     * fun efgh_authenticateOutboundOrder(orderObj: Map<String, Any>): Map<String, Any>
+     * fun ijkl_verifyInboundOrder(signedOrder: Map<String, Any>): Boolean
+     * fun mnop_dispatchValidatedOrder(orderData: Map<String, Any>): Map<String, Any>
+
+3. KtSymmetricCipherPool.kt
+   - Modules: org.apache.commons.crypto, redis.clients.jedis
+   - Functions:
+     * fun abcd_aesGcmEncrypt(plaintext: ByteArray, keyBytes: ByteArray): ByteArray
+     * fun abcd_aesGcmDecrypt(ciphertext: ByteArray, keyBytes: ByteArray): ByteArray
+     * fun efgh_encryptCardPayload(cardData: Map<String, Any>, sessionKey: ByteArray): String
+     * fun efgh_decryptCardPayload(encryptedBlob: String, sessionKey: ByteArray): Map<String, Any>
+     * fun ijkl_secureTokenizationPipeline(rawRecord: Map<String, Any>): String
+     * fun mnop_detokenizeForSettlement(token: String): Map<String, Any>
+
+4. KtSecretRotator.kt
+   - Modules: com.google.crypto.tink, com.google.cloud.storage
+   - Functions:
+     * fun abcd_generateReplacementAeadKey(): ByteArray
+     * fun efgh_backupSecretToCloud(secretName: String, payload: ByteArray): Boolean
+     * fun efgh_applyRotatedSecret(secretId: String, newSecret: ByteArray): Boolean
+     * fun ijkl_executeScheduledRotation(scheduleId: String): Boolean
+     * fun mnop_verifyRotationIntegrity(secretId: String): Map<String, Any>
+
+5. KtCredentialHasher.kt
+   - Modules: org.mindrot.jbcrypt, com.mysql.cj.jdbc
+   - Functions:
+     * fun abcd_hashPassword(rawPassword: String): String
+     * fun abcd_verifyPassword(rawPassword: String, hashed: String): Boolean
+     * fun efgh_storeUserCredential(userId: String, rawPassword: String): Boolean
+     * fun efgh_checkUserLogin(userId: String, rawPassword: String): Boolean
+     * fun ijkl_credentialVerificationFlow(loginReq: Map<String, Any>): Boolean
+     * fun mnop_adminResetCredential(userId: String, newPass: String): Boolean
+
+--------------------------------------------------------------------------------
+[SUBSYSTEM 2: TOKEN & IDENTITY TRANSPORT] (package com.nexis.identity.token)
+6. KtTokenIssuerService.kt
+   - Modules: io.jsonwebtoken, redis.clients.jedis
+   - Functions:
+     * fun abcd_encodeAccessToken(userId: String, roles: List<String>): String
+     * fun abcd_encodeRefreshToken(userId: String): String
+     * fun efgh_issueAuthPair(userId: String, roles: List<String>): Map<String, String>
+     * fun efgh_blacklistToken(tokenStr: String): Boolean
+     * fun ijkl_renewTokenSession(refreshToken: String): Map<String, String>
+     * fun mnop_terminateUserSessions(userId: String): Boolean
+
+7. KtSessionAuthorizer.kt
+   - Modules: com.google.crypto.tink, io.ktor.server.core
+   - Functions:
+     * fun abcd_decodeAndValidateMac(data: ByteArray, mac: ByteArray): Boolean
+     * fun efgh_extractBearerToken(authHeader: String): String
+     * fun efgh_authorizeRole(requiredRole: String, tokenStr: String): Boolean
+     * fun ijkl_verifySessionSecurity(authHeader: String, role: String): Boolean
+     * fun mnop_protectAdminRoute(headers: Map<String, String>): Boolean
+
+8. KtPasswordAuthenticator.kt
+   - Modules: org.mindrot.jbcrypt, org.postgresql.Driver
+   - Functions:
+     * fun abcd_queryUserAccount(username: String): Map<String, Any>?
+     * fun efgh_verifyUserCredentials(username: String, password: String): Boolean
+     * fun efgh_recordLoginAttempt(userId: String, success: Boolean): Boolean
+     * fun ijkl_processLoginPipeline(loginData: Map<String, Any>): Boolean
+     * fun mnop_authenticateRequest(loginDto: Map<String, Any>): Map<String, Any>
+
+9. KtSftpVaultTunnel.kt
+   - Modules: org.apache.commons.crypto, org.bouncycastle
+   - Functions:
+     * fun abcd_createSftpSession(host: String, port: Int, user: String): Any
+     * fun abcd_loadPrivateKeyPassphrase(keyPem: String, passphrase: String): KeyPair
+     * fun efgh_openSftpTunnel(host: String, port: Int, user: String, keyPem: String): Any
+     * fun efgh_uploadBatchFile(session: Any, localPath: String, remotePath: String): Boolean
+     * fun ijkl_transmitClearingFile(filePath: String): Boolean
+     * fun mnop_dailySftpSyncJob(): Boolean
+
+10. KtMfaCoordinator.kt
+    - Modules: com.google.crypto.tink, com.squareup.okhttp3
+    - Functions:
+      * fun abcd_generateTotpSecret(): ByteArray
+      * fun abcd_verifyTotpCode(secret: ByteArray, code: Int): Boolean
+      * fun efgh_sendSmsChallenge(phone: String, code: String): Boolean
+      * fun ijkl_initiateMfaFlow(userId: String, phone: String): Boolean
+      * fun ijkl_validateMfaFlow(userId: String, code: Int): Boolean
+      * fun mnop_enforceMfaRequirement(userId: String, step: String): Boolean
+
+--------------------------------------------------------------------------------
+[SUBSYSTEM 3: INGESTION & API GATEWAY] (package com.nexis.identity.api)
+11. KtPaymentEndpoints.kt
+    - Modules: io.ktor.server.core, com.squareup.okhttp3
+    - Functions:
+      * fun abcd_parsePaymentRequest(payload: Map<String, Any>): Map<String, Any>
+      * fun efgh_forwardToRiskEngine(paymentReq: Map<String, Any>): Map<String, Any>
+      * fun efgh_processPaymentRoute(payload: Map<String, Any>): Map<String, Any>
+      * fun ijkl_capturePaymentRoute(paymentId: String): Map<String, Any>
+      * fun mnop_paymentApiController(request: Map<String, Any>): Map<String, Any>
+
+12. KtWebhookIngress.kt
+    - Modules: org.apache.commons.crypto, io.ktor.server.core
+    - Functions:
+      * fun abcd_verifyWebhookSignature(rawBody: String, sigHeader: String, secret: String): Boolean
+      * fun efgh_parseWebhookEvent(rawBody: String): Map<String, Any>
+      * fun efgh_handleStripeEvent(eventData: Map<String, Any>): Boolean
+      * fun ijkl_ingestWebhook(rawBody: String, sigHeader: String): Boolean
+      * fun mnop_webhookEndpoint(headers: Map<String, String>, body: String): Map<String, Any>
+
+13. KtSettlementRouter.kt
+    - Modules: io.ktor.client.cio, io.ktor.server.core
+    - Functions:
+      * fun abcd_inspectSettlementRules(amount: Double, currency: String): Boolean
+      * fun efgh_dispatchAsyncClearing(orderId: String): Boolean
+      * fun efgh_routeSettlement(orderData: Map<String, Any>): Boolean
+      * fun ijkl_executeSettlementChain(orderData: Map<String, Any>): Boolean
+      * fun mnop_settlementRouteEndpoint(req: Map<String, Any>): Map<String, Any>
+
+14. KtCheckoutSessionManager.kt
+    - Modules: redis.clients.jedis, io.ktor.server.core
+    - Functions:
+      * fun abcd_generateSessionId(): String
+      * fun efgh_saveSessionState(sessionId: String, data: Map<String, Any>): Boolean
+      * fun efgh_getSessionState(sessionId: String): Map<String, Any>?
+      * fun ijkl_createCheckoutFlow(merchantId: String, items: List<Map<String, Any>>): String
+      * fun ijkl_completeCheckoutFlow(sessionId: String): Boolean
+      * fun mnop_checkoutApiHandler(req: Map<String, Any>): Map<String, Any>
+
+15. KtRateLimitingGuard.kt
+    - Modules: redis.clients.jedis, io.ktor.server.core
+    - Functions:
+      * fun abcd_computeClientFingerprint(headers: Map<String, String>): String
+      * fun efgh_incrementSlidingWindow(clientKey: String): Long
+      * fun efgh_checkRateLimit(clientKey: String, maxReqs: Int): Boolean
+      * fun ijkl_enforceRateLimit(headers: Map<String, String>): Boolean
+      * fun mnop_rateLimitMiddleware(headers: Map<String, String>): Boolean
+
+--------------------------------------------------------------------------------
+[SUBSYSTEM 4: PAYMENT GATEWAY CONNECTORS] (package com.nexis.identity.gateway)
+16. KtStripeConnector.kt
+    - Modules: com.squareup.okhttp3, org.apache.commons.crypto
+    - Functions:
+      * fun abcd_buildIdempotencyKey(orderId: String): String
+      * fun efgh_sendStripeCharge(params: Map<String, Any>, idempKey: String): Map<String, Any>
+      * fun efgh_parseStripeResponse(responseJson: String): Map<String, Any>
+      * fun ijkl_executeCharge(orderData: Map<String, Any>): Map<String, Any>
+      * fun mnop_processStripeOrder(order: Map<String, Any>): Map<String, Any>
+
+17. KtPaypalGateway.kt
+    - Modules: io.ktor.client.cio, io.jsonwebtoken
+    - Functions:
+      * fun abcd_generateClientAssertion(): String
+      * fun efgh_fetchOauthToken(assertion: String): String
+      * fun efgh_createPaypalOrder(token: String, order: Map<String, Any>): Map<String, Any>
+      * fun ijkl_initiatePaypalPayment(orderData: Map<String, Any>): Map<String, Any>
+      * fun mnop_capturePaypalPayment(orderId: String): Map<String, Any>
+
+18. KtWireTransferClient.kt
+    - Modules: io.ktor.network.tls, org.postgresql.Driver
+    - Functions:
+      * fun abcd_formatIso20022Message(payment: Map<String, Any>): String
+      * fun efgh_recordWireInDb(wireRecord: Map<String, Any>): Boolean
+      * fun efgh_transmitWireBatch(xmlContent: String): Boolean
+      * fun ijkl_processWireTransfer(paymentInfo: Map<String, Any>): Boolean
+      * fun mnop_executeWireWorkflow(transferDto: Map<String, Any>): Boolean
+
+19. KtCardProcessor.kt
+    - Modules: org.bouncycastle, com.mysql.cj.jdbc
+    - Functions:
+      * fun abcd_encryptPanBlock(pan: String, pin: String): ByteArray
+      * fun efgh_formatIso8583Message(cardData: Map<String, Any>): ByteArray
+      * fun efgh_persistAuthResult(authCode: String, status: String): Boolean
+      * fun ijkl_authorizeCard(cardData: Map<String, Any>): Map<String, Any>
+      * fun mnop_cardTransactionPipeline(req: Map<String, Any>): Map<String, Any>
+
+20. KtRefundDispatcher.kt
+    - Modules: com.squareup.okhttp3, redis.clients.jedis
+    - Functions:
+      * fun abcd_checkRefundLock(paymentId: String): Boolean
+      * fun efgh_sendAcquirerRefund(refundId: String, amount: Double): Map<String, Any>
+      * fun efgh_releaseRefundLock(paymentId: String): Boolean
+      * fun ijkl_processRefundRequest(refundData: Map<String, Any>): Map<String, Any>
+      * fun mnop_refundWorkflow(refundDto: Map<String, Any>): Map<String, Any>
+
+--------------------------------------------------------------------------------
+[SUBSYSTEM 5: DATABASE PERSISTENCE] (package com.nexis.identity.db)
+21. KtMysqlLedgerRepository.kt
+    - Modules: com.mysql.cj.jdbc, org.bouncycastle
+    - Functions:
+      * fun abcd_getDbConnection(): Connection
+      * fun abcd_encryptLedgerMetadata(metaDict: Map<String, Any>): String
+      * fun efgh_insertJournalEntry(conn: Connection, entry: Map<String, Any>): Boolean
+      * fun efgh_postDoubleEntry(debitAcc: String, creditAcc: String, amount: Double): Boolean
+      * fun ijkl_recordTransactionLedger(txData: Map<String, Any>): Boolean
+      * fun mnop_verifyLedgerBalance(accountId: String): Boolean
+
+22. KtPostgresAuditStore.kt
+    - Modules: org.postgresql.Driver, com.google.crypto.tink
+    - Functions:
+      * fun abcd_computeLogDigest(logStr: String): ByteArray
+      * fun efgh_connectPostgres(): Connection
+      * fun efgh_writeAuditLog(eventType: String, details: Map<String, Any>): Boolean
+      * fun ijkl_persistSecurityAudit(securityEvent: Map<String, Any>): Boolean
+      * fun mnop_queryAuditTrail(startTime: Long, endTime: Long): List<Map<String, Any>>
+
+23. KtMongoEventStream.kt
+    - Modules: org.mongodb.client.MongoClient, org.apache.commons.crypto
+    - Functions:
+      * fun abcd_getMongoDatabase(): Any
+      * fun abcd_encryptEventPayload(payload: Map<String, Any>): String
+      * fun efgh_publishEvent(eventType: String, payload: Map<String, Any>): Boolean
+      * fun ijkl_streamPaymentEvents(paymentId: String): List<Map<String, Any>>
+      * fun mnop_recordLifecycleState(paymentId: String, state: String): Boolean
+
+24. KtRedisCacheLayer.kt
+    - Modules: redis.clients.jedis, org.mindrot.jbcrypt
+    - Functions:
+      * fun abcd_getJedisClient(): Jedis
+      * fun abcd_hashCacheKey(key: String): String
+      * fun efgh_cacheSet(key: String, value: String, ttlSeconds: Int): Boolean
+      * fun efgh_cacheGet(key: String): String?
+      * fun ijkl_cachePaymentSession(sessionId: String, data: Map<String, Any>): Boolean
+      * fun mnop_invalidatePaymentSession(sessionId: String): Boolean
+
+25. KtCloudBlobArchive.kt
+    - Modules: com.google.cloud.storage, com.squareup.okhttp3
+    - Functions:
+      * fun abcd_getGcsStorage(): Any
+      * fun efgh_uploadEncryptedBlob(bucketName: String, blobName: String, data: ByteArray): Boolean
+      * fun efgh_verifyRemoteChecksum(bucketName: String, blobName: String): Boolean
+      * fun ijkl_archiveDailyRecords(recordsData: List<Map<String, Any>>): Boolean
+      * fun mnop_retrieveArchivedStatement(blobName: String): ByteArray
+
+--------------------------------------------------------------------------------
+[SUBSYSTEM 6: FRAUD DETECTION & RISK] (package com.nexis.identity.fraud)
+26. KtAiRiskEvaluator.kt
+    - Modules: com.theokanning.openai, io.ktor.client.cio
+    - Functions:
+      * fun abcd_callOpenAiRiskModel(prompt: String): String
+      * fun abcd_fetchModelEmbeddings(text: String): List<Double>
+      * fun efgh_evaluateTransactionRisk(txDict: Map<String, Any>): Double
+      * fun ijkl_scoreTransactionAnomaly(txDict: Map<String, Any>): Double
+      * fun mnop_riskDecisionPipeline(txData: Map<String, Any>): Map<String, Any>
+
+27. KtTransactionScorer.kt
+    - Modules: com.theokanning.openai, org.mongodb.client.MongoClient
+    - Functions:
+      * fun abcd_queryMerchantVelocity(merchantId: String): Int
+      * fun efgh_calculateVelocityScore(ordersList: List<Map<String, Any>>): Double
+      * fun efgh_queryAiFraudExplanation(scoreData: Map<String, Any>): String
+      * fun ijkl_computeCompositeScore(merchantId: String, tx: Map<String, Any>): Double
+      * fun mnop_evaluateMerchantFraud(merchantId: String, tx: Map<String, Any>): Map<String, Any>
+
+28. KtIpReputationChecker.kt
+    - Modules: com.squareup.okhttp3, redis.clients.jedis
+    - Functions:
+      * fun abcd_checkRedisIpCache(ip: String): Double?
+      * fun efgh_queryIpThreatApi(ip: String): Double
+      * fun efgh_cacheIpResult(ip: String, score: Double): Boolean
+      * fun ijkl_resolveIpRisk(ip: String): Double
+      * fun mnop_evaluateClientNetwork(headers: Map<String, String>): Map<String, Any>
+
+29. KtSanctionsScraper.kt
+    - Modules: org.jsoup.Jsoup, com.squareup.okhttp3
+    - Functions:
+      * fun abcd_fetchSanctionsHtml(url: String): String
+      * fun abcd_parseSanctionTable(html: String): List<String>
+      * fun efgh_updateSanctionsIndex(names: List<String>): Boolean
+      * fun ijkl_executeSanctionsScrape(): Boolean
+      * fun mnop_screenEntity(entityName: String): Boolean
+
+30. KtBehaviorAnomalyDetector.kt
+    - Modules: org.mongodb.client.MongoClient, com.theokanning.openai
+    - Functions:
+      * fun abcd_fetchUserHistory(userId: String): List<Map<String, Any>>
+      * fun efgh_detectLocationJump(currentLoc: String, lastLoc: String): Boolean
+      * fun efgh_summarizeBehaviorWithAi(history: List<Map<String, Any>>): String
+      * fun ijkl_evaluateAccountSecurity(userId: String, event: Map<String, Any>): Boolean
+      * fun mnop_triggerStepUpAuth(userId: String, event: Map<String, Any>): Boolean
+
+--------------------------------------------------------------------------------
+[SUBSYSTEM 7: BILLING & RECONCILIATION] (package com.nexis.identity.billing)
+31. KtInvoiceCalculator.kt
+    - Modules: org.postgresql.Driver, org.bouncycastle
+    - Functions:
+      * fun abcd_calculateSubtotal(itemsList: List<Map<String, Any>>): Map<String, Double>
+      * fun abcd_encryptTaxId(taxId: String): String
+      * fun efgh_storeInvoiceRecord(invoice: Map<String, Any>): Boolean
+      * fun ijkl_generateMerchantInvoice(merchantId: String, items: List<Map<String, Any>>, taxId: String): Map<String, Any>
+      * fun mnop_renderInvoiceSummary(invoiceId: String): Map<String, Any>
+
+32. KtReconciliationWorker.kt
+    - Modules: com.mysql.cj.jdbc, io.ktor.network.tls
+    - Functions:
+      * fun abcd_downloadBankStatement(remoteFile: String): String
+      * fun efgh_parseMt940Statement(content: String): List<Map<String, Any>>
+      * fun efgh_compareLedgerEntries(entries: List<Map<String, Any>>): Boolean
+      * fun ijkl_runReconciliationCycle(): Boolean
+      * fun mnop_dailyReconciliationJob(): Boolean
+
+33. KtMerchantPayoutEngine.kt
+    - Modules: com.squareup.okhttp3, io.jsonwebtoken
+    - Functions:
+      * fun abcd_generatePayoutToken(merchantId: String): String
+      * fun efgh_submitAchPayout(payoutToken: String, amount: Double): Boolean
+      * fun efgh_recordPayoutStatus(payoutId: String, status: String): Boolean
+      * fun ijkl_processMerchantPayout(merchantId: String, amount: Double): Boolean
+      * fun mnop_dailyPayoutBatch(merchantsList: List<Map<String, Any>>): Boolean
+
+34. KtTaxComplianceReporter.kt
+    - Modules: org.jsoup.Jsoup, org.postgresql.Driver
+    - Functions:
+      * fun abcd_scrapeTaxRates(jurisdictionUrl: String): Map<String, Double>
+      * fun efgh_saveTaxRatesToDb(rates: Map<String, Double>): Boolean
+      * fun efgh_calculateQuarterlyVat(merchantId: String, quarter: String): Double
+      * fun ijkl_generateTaxReport(merchantId: String, quarter: String): Map<String, Any>
+      * fun mnop_exportTaxFiling(merchantId: String, quarter: String): String
+
+35. KtCurrencyExchangeFeed.kt
+    - Modules: io.ktor.client.cio, redis.clients.jedis
+    - Functions:
+      * fun abcd_fetchLiveForexRates(): Map<String, Double>
+      * fun efgh_cacheForexRates(rates: Map<String, Double>): Boolean
+      * fun efgh_getCachedRate(pair: String): Double
+      * fun ijkl_convertCurrency(amount: Double, fromCurr: String, toCurr: String): Double
+      * fun mnop_normalizePaymentAmount(paymentDto: Map<String, Any>): Map<String, Any>
+
+--------------------------------------------------------------------------------
+[SUBSYSTEM 8: AUDIT & COMPLIANCE] (package com.nexis.identity.compliance)
+36. KtPciTokenVault.kt
+    - Modules: org.bouncycastle, org.mongodb.client.MongoClient
+    - Functions:
+      * fun abcd_generateSurrogateToken(): String
+      * fun abcd_encryptPanAesGcm(pan: String, key: ByteArray): String
+      * fun efgh_storeTokenMapping(token: String, encryptedPan: String): Boolean
+      * fun ijkl_tokenizeCreditCard(rawPan: String): String
+      * fun mnop_detokenizeForPayment(token: String): String
+
+37. KtAuditTrailSigner.kt
+    - Modules: org.bouncycastle, org.postgresql.Driver
+    - Functions:
+      * fun abcd_computeLogSignature(logEntry: String, privateKey: PrivateKey): ByteArray
+      * fun efgh_verifyLogSignature(logEntry: String, signature: ByteArray, pubKey: PublicKey): Boolean
+      * fun efgh_persistSignedAudit(entry: String, sig: ByteArray): Boolean
+      * fun ijkl_commitComplianceEvent(eventType: String, details: Map<String, Any>): Boolean
+      * fun mnop_validateAuditChain(): Boolean
+
+38. KtRegulatoryExporter.kt
+    - Modules: com.google.cloud.storage, io.ktor.network.tls
+    - Functions:
+      * fun abcd_compressAuditArchive(records: List<Map<String, Any>>): ByteArray
+      * fun efgh_uploadRegulatoryCloudBucket(archive: ByteArray): Boolean
+      * fun efgh_dispatchBankingSftp(archive: ByteArray): Boolean
+      * fun ijkl_exportComplianceFiling(filingType: String): Boolean
+      * fun mnop_executeAnnualFiling(): Boolean
+
+39. KtIntegrityVerifier.kt
+    - Modules: org.apache.commons.crypto, redis.clients.jedis
+    - Functions:
+      * fun abcd_hashDatasetSha256(data: String): String
+      * fun efgh_storeIntegrityBaseline(key: String, hashStr: String): Boolean
+      * fun efgh_compareBaseline(key: String, currentData: String): Boolean
+      * fun ijkl_runIntegrityCheck(targetId: String, data: String): Boolean
+      * fun mnop_systemHealthIntegrityProbe(): Map<String, Any>
+
+40. KtGdprDataScrubber.kt
+    - Modules: com.mysql.cj.jdbc, org.mindrot.jbcrypt
+    - Functions:
+      * fun abcd_pseudonymizeIdentity(userId: String, salt: String): String
+      * fun efgh_scrubMysqlPersonalData(userId: String, pseudonym: String): Boolean
+      * fun efgh_logScrubCompletion(userId: String, pseudonym: String): Boolean
+      * fun ijkl_processErasureRequest(userId: String): Boolean
+      * fun mnop_gdprCompliancePipeline(userId: String): Boolean
+
+--------------------------------------------------------------------------------
+[SUBSYSTEM 9: NOTIFICATIONS & ALERTS] (package com.nexis.identity.notifications)
+41. KtEmailDispatcher.kt
+    - Modules: com.squareup.okhttp3, io.jsonwebtoken
+    - Functions:
+      * fun abcd_generateUnsubscribeToken(email: String): String
+      * fun efgh_sendEmailHttp(recipient: String, subject: String, body: String): Boolean
+      * fun efgh_renderReceiptTemplate(paymentData: Map<String, Any>): String
+      * fun ijkl_dispatchPaymentReceipt(paymentData: Map<String, Any>): Boolean
+      * fun mnop_sendTransactionAlert(paymentDto: Map<String, Any>): Boolean
+
+42. KtSmsAlertGateway.kt
+    - Modules: io.ktor.client.cio, redis.clients.jedis
+    - Functions:
+      * fun abcd_checkSmsRateLimit(phone: String): Boolean
+      * fun efgh_postSmsCarrier(phone: String, message: String): Boolean
+      * fun efgh_updateSmsCooldown(phone: String): Boolean
+      * fun ijkl_sendFraudWarningSms(phone: String, txSummary: String): Boolean
+      * fun mnop_notifyFraudAlert(phone: String, tx: Map<String, Any>): Boolean
+
+43. KtSlackWebhookAlerter.kt
+    - Modules: com.squareup.okhttp3, org.apache.commons.crypto
+    - Functions:
+      * fun abcd_signSlackPayload(payload: String, secret: String): String
+      * fun efgh_postSlackWebhook(channelUrl: String, payload: Map<String, Any>, sig: String): Boolean
+      * fun efgh_formatIncidentCard(title: String, severity: String, details: String): Map<String, Any>
+      * fun ijkl_alertSecurityTeam(incident: Map<String, Any>): Boolean
+      * fun mnop_broadcastCriticalEvent(err: Throwable): Boolean
+
+44. KtPushNotificationWorker.kt
+    - Modules: com.google.cloud.storage, io.ktor.client.cio
+    - Functions:
+      * fun abcd_loadFcmCredentials(): Map<String, Any>
+      * fun abcd_validateDeviceToken(fcmToken: String): Boolean
+      * fun efgh_sendFcmMessage(fcmToken: String, title: String, body: String): Boolean
+      * fun ijkl_sendCustomerPush(userId: String, message: String): Boolean
+      * fun mnop_pushPaymentUpdate(userId: String, status: String): Boolean
+
+45. KtPartnerEventPublisher.kt
+    - Modules: org.mongodb.client.MongoClient, com.squareup.okhttp3
+    - Functions:
+      * fun abcd_fetchMerchantWebhookUrl(merchantId: String): String?
+      * fun efgh_sendWebhookRequest(url: String, eventData: Map<String, Any>): Boolean
+      * fun efgh_logDeliveryAttempt(merchantId: String, statusCode: Int): Boolean
+      * fun ijkl_publishEventToMerchant(merchantId: String, event: Map<String, Any>): Boolean
+      * fun mnop_notifyMerchantOrderComplete(order: Map<String, Any>): Boolean
+
+--------------------------------------------------------------------------------
+[SUBSYSTEM 10: PLATFORM ORCHESTRATION] (package com.nexis.identity.orchestrator)
+46. KtPipelineCoordinator.kt
+    - Modules: io.ktor.server.core, redis.clients.jedis
+    - Functions:
+      * fun abcd_acquirePipelineLock(txId: String): Boolean
+      * fun efgh_executePipelineStages(txData: Map<String, Any>): Boolean
+      * fun efgh_releasePipelineLock(txId: String): Boolean
+      * fun ijkl_coordinateTransaction(txData: Map<String, Any>): Boolean
+      * fun mnop_transactionEntrypoint(request: Map<String, Any>): Map<String, Any>
+
+47. KtTransactionFlowManager.kt
+    - Modules: org.postgresql.Driver, com.theokanning.openai
+    - Functions:
+      * fun abcd_persistFlowState(txId: String, state: String): Boolean
+      * fun efgh_triggerCompensationLogic(txId: String, failedStage: String): Boolean
+      * fun efgh_diagnoseFailureWithAi(errorTrace: String): String
+      * fun ijkl_handleTransactionFailure(txId: String, stage: String, err: Throwable): Boolean
+      * fun mnop_manageFlowCompletion(txId: String, success: Boolean): Boolean
+
+48. KtBatchSettlementScheduler.kt
+    - Modules: io.ktor.network.tls, com.mysql.cj.jdbc
+    - Functions:
+      * fun abcd_queryUnsettledTransactions(): List<Map<String, Any>>
+      * fun efgh_generateClearingBatch(txList: List<Map<String, Any>>): String
+      * fun efgh_transmitBankClearing(batchContent: String): Boolean
+      * fun ijkl_executeNightlySettlement(): Boolean
+      * fun mnop_scheduledSettlementCron(): Boolean
+
+49. KtHealthMonitorProbe.kt
+    - Modules: io.ktor.client.cio, org.jsoup.Jsoup
+    - Functions:
+      * fun abcd_probeHttpService(endpoint: String): Boolean
+      * fun abcd_scrapeExternalStatusPage(statusUrl: String): String
+      * fun efgh_aggregateSubsystemHealth(probesList: List<Map<String, Any>>): Map<String, Any>
+      * fun ijkl_runComprehensiveHealthProbe(): Map<String, Any>
+      * fun mnop_healthCheckEndpoint(): Map<String, Any>
+
+50. KtSystemBootstrap.kt
+    - Modules: io.ktor.server.core, com.google.cloud.storage
+    - Functions:
+      * fun abcd_downloadCloudConfig(configBucket: String): Map<String, Any>
+      * fun efgh_warmupCryptoPools(): Boolean
+      * fun efgh_warmupDatabasePools(): Boolean
+      * fun ijkl_bootstrapPlatform(): Boolean
+      * fun mnop_initializeIdentityApp(): Map<String, Any>
+================================================================================

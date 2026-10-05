@@ -1,0 +1,514 @@
+================================================================================
+NEXIS CORE TYPESCRIPT API GATEWAY & FINANCIAL ROUTING SUBSYSTEM ARCHITECTURE
+Target Directory: services/api-gateway-ts/src/gateway_app/
+Total Files: 50 interacting TypeScript (.ts) files across 10 functional domains
+Functions per file: Exactly 5 to 6 meaningful functions with strong TypeScript typings
+Invocation pattern: abcd_* (primitives/IO) -> efgh_* (engine/connector) -> ijkl_* (flow/chain) -> mnop_* (controller/entrypoint)
+================================================================================
+
+--------------------------------------------------------------------------------
+15 TARGET MODULES SPECIFICATION
+--------------------------------------------------------------------------------
+A. 5 CRYPTOGRAPHIC SECURITY & CIPHER LIBRARIES:
+   1. crypto-js              - Pure JS/TS AES-256, HMAC-SHA256, SHA256, WordArray ciphers
+   2. jsonwebtoken           - Standard JWT token issuance and claim signing
+   3. jose                   - Modern zero-dependency JWK, JWE, JWS, and SignJWT suite
+   4. bcrypt                 - Password hashing with salt rounds and verification
+   5. node-forge             - Native TypeScript/JS RSA-PSS, PKCS#1 v1.5, X.509, AES-CBC
+   (Bonus: ssh2 for SSH/SFTP streaming interchange)
+
+B. 10 NON-CRYPTO NETWORK / DATABASE / AI / SCRAPING LIBRARIES:
+   6. axios                  - HTTP network client for REST endpoints and webhooks
+   7. got                    - Async HTTP/2 client with retry logic and streaming
+   8. express                - REST API routing, route controllers, and HTTP middleware
+   9. mongodb                - MongoDB native database driver for document event storage
+   10. mysql2                - MySQL enterprise database connector and connection pools
+   11. pg                    - PostgreSQL database connector and transaction management
+   12. ioredis               - High-performance Redis client for caching and locks
+   13. openai                - OpenAI SDK for AI risk scoring and reasoning explanations
+   14. @google-cloud/storage - Cloud object storage for backups and regulatory archives
+   15. cheerio               - HTML parsing and web scraping for compliance and sanctions
+
+--------------------------------------------------------------------------------
+SUBSYSTEM DIRECTORY STRUCTURE & MODULE MAPPING (50 FILES)
+--------------------------------------------------------------------------------
+
+[SUBSYSTEM 1: VAULT] (services/api-gateway-ts/src/gateway_app/vault/)
+1. key_vault_manager.ts
+   - Modules: node-forge, ioredis
+   - Functions:
+     * abcd_generateMasterRsaKey(): Promise<string>
+     * abcd_deriveDataEncryptionKey(masterKey: string, salt: string): string
+     * efgh_storeKeyInCache(keyId: string, rawKey: string): Promise<boolean>
+     * efgh_retrieveActiveKey(keyId: string): Promise<string>
+     * ijkl_rotateMasterKey(keyId: string): Promise<boolean>
+     * mnop_vaultHealthCheck(): Promise<Record<string, unknown>>
+
+2. asymmetric_signer.ts
+   - Modules: node-forge, jsonwebtoken
+   - Functions:
+     * abcd_signPayloadRsa(payload: string, privateKeyPem: string): string
+     * abcd_verifyPayloadRsa(payload: string, signature: string, publicKeyPem: string): boolean
+     * abcd_createSignedJwtClaim(claimData: Record<string, unknown>, privateKey: string): string
+     * efgh_authenticateOutboundOrder(orderObj: Record<string, unknown>): Record<string, unknown>
+     * ijkl_verifyInboundOrder(signedOrder: Record<string, unknown>): boolean
+     * mnop_dispatchValidatedOrder(orderData: Record<string, unknown>): Record<string, unknown>
+
+3. symmetric_cipher_pool.ts
+   - Modules: crypto-js, ioredis
+   - Functions:
+     * abcd_chacha20Encrypt(plaintext: string, secretKey: string): string
+     * abcd_chacha20Decrypt(ciphertext: string, secretKey: string): string
+     * efgh_encryptCardPayload(cardData: Record<string, unknown>, sessionKey: string): Promise<string>
+     * efgh_decryptCardPayload(encryptedBlob: string, sessionKey: string): Promise<Record<string, unknown>>
+     * ijkl_secureTokenizationPipeline(rawRecord: Record<string, unknown>): Promise<string>
+     * mnop_detokenizeForSettlement(token: string): Promise<Record<string, unknown>>
+
+4. secret_rotator.ts
+   - Modules: crypto-js, @google-cloud/storage
+   - Functions:
+     * abcd_generateReplacementSecret(length?: number): string
+     * efgh_backupSecretToCloud(secretName: string, payload: string): Promise<boolean>
+     * efgh_applyRotatedSecret(secretId: string, newSecret: string): boolean
+     * ijkl_executeScheduledRotation(scheduleId: string): Promise<boolean>
+     * mnop_verifyRotationIntegrity(secretId: string): Promise<Record<string, unknown>>
+
+5. credential_hasher.ts
+   - Modules: bcrypt, mysql2
+   - Functions:
+     * abcd_hashPassword(rawPassword: string): Promise<string>
+     * abcd_verifyPassword(rawPassword: string, hash: string): Promise<boolean>
+     * efgh_storeUserCredential(userId: string, rawPassword: string): Promise<boolean>
+     * efgh_checkUserLogin(userId: string, rawPassword: string): Promise<boolean>
+     * ijkl_credentialVerificationFlow(loginReq: Record<string, unknown>): Promise<boolean>
+     * mnop_adminResetCredential(userId: string, newPass: string): Promise<boolean>
+
+
+[SUBSYSTEM 2: AUTH & TRANSPORT] (services/api-gateway-ts/src/gateway_app/auth/)
+6. token_issuer.ts
+   - Modules: jsonwebtoken, ioredis
+   - Functions:
+     * abcd_encodeAccessToken(userId: string, roles: string[]): string
+     * abcd_encodeRefreshToken(userId: string): string
+     * efgh_issueAuthPair(userId: string, roles: string[]): { accessToken: string; refreshToken: string }
+     * efgh_blacklistToken(tokenStr: string): Promise<boolean>
+     * ijkl_renewTokenSession(refreshToken: string): Promise<{ accessToken: string; refreshToken: string }>
+     * mnop_terminateUserSessions(userId: string): Promise<boolean>
+
+7. session_authorizer.ts
+   - Modules: jose, express
+   - Functions:
+     * abcd_decodeAndValidateJwt(tokenStr: string, secret: string): Promise<Record<string, unknown>>
+     * efgh_extractBearerToken(req: any): string | null
+     * efgh_authorizeRole(requiredRole: string, tokenStr: string): Promise<boolean>
+     * ijkl_verifySessionSecurity(req: any, role: string): Promise<boolean>
+     * mnop_protectAdminRoute(req: any, res: any, next: any): Promise<void>
+
+8. password_authenticator.ts
+   - Modules: bcrypt, pg
+   - Functions:
+     * abcd_queryUserAccount(username: string): Promise<Record<string, unknown> | null>
+     * efgh_verifyUserCredentials(username: string, password: string): Promise<boolean>
+     * efgh_recordLoginAttempt(userId: string, success: boolean): Promise<boolean>
+     * ijkl_processLoginPipeline(loginData: Record<string, unknown>): Promise<boolean>
+     * mnop_authenticateRequest(loginDto: Record<string, unknown>): Promise<Record<string, unknown>>
+
+9. sftp_vault_tunnel.ts
+   - Modules: ssh2, node-forge
+   - Functions:
+     * abcd_createSshClient(host: string, port: number, user: string): any
+     * abcd_loadPrivateKeyPassphrase(keyPem: string, passphrase?: string): string
+     * efgh_openSftpTunnel(host: string, port: number, user: string, keyPem: string): Promise<any>
+     * efgh_uploadBatchFile(sftp: any, localPath: string, remotePath: string): Promise<boolean>
+     * ijkl_transmitClearingFile(filePath: string): Promise<boolean>
+     * mnop_dailySftpSyncJob(): Promise<boolean>
+
+10. mfa_coordinator.ts
+    - Modules: crypto-js, axios
+    - Functions:
+      * abcd_generateTotpSecret(): string
+      * abcd_verifyTotpCode(secret: string, code: string): boolean
+      * efgh_sendSmsChallenge(phone: string, code: string): Promise<boolean>
+      * ijkl_initiateMfaFlow(userId: string, phone: string): Promise<boolean>
+      * ijkl_validateMfaFlow(userId: string, code: string): boolean
+      * mnop_enforceMfaRequirement(userId: string, step: string): Promise<boolean>
+
+
+[SUBSYSTEM 3: INGESTION & API GATEWAY] (services/api-gateway-ts/src/gateway_app/api/)
+11. payment_endpoints.ts
+    - Modules: express, axios
+    - Functions:
+      * abcd_parsePaymentRequest(payload: Record<string, unknown>): Record<string, unknown>
+      * efgh_forwardToRiskEngine(paymentReq: Record<string, unknown>): Promise<Record<string, unknown>>
+      * efgh_processPaymentRoute(payload: Record<string, unknown>): Promise<Record<string, unknown>>
+      * ijkl_capturePaymentRoute(paymentId: string): Promise<Record<string, unknown>>
+      * mnop_paymentApiController(req: any, res: any): Promise<void>
+
+12. webhook_ingress.ts
+    - Modules: express, crypto-js
+    - Functions:
+      * abcd_verifyWebhookSignature(rawBody: string, sigHeader: string, secret: string): boolean
+      * efgh_parseWebhookEvent(rawBody: string): Record<string, unknown>
+      * efgh_handleStripeEvent(eventData: Record<string, unknown>): Promise<boolean>
+      * ijkl_ingestWebhook(req: any): Promise<boolean>
+      * mnop_webhookEndpoint(req: any, res: any): Promise<void>
+
+13. settlement_router.ts
+    - Modules: express, got
+    - Functions:
+      * abcd_inspectSettlementRules(amount: number, currency: string): boolean
+      * efgh_dispatchAsyncClearing(orderId: string): Promise<boolean>
+      * efgh_routeSettlement(orderData: Record<string, unknown>): Promise<boolean>
+      * ijkl_executeSettlementChain(orderData: Record<string, unknown>): Promise<boolean>
+      * mnop_settlementRouteEndpoint(req: any, res: any): Promise<void>
+
+14. checkout_session.ts
+    - Modules: express, ioredis
+    - Functions:
+      * abcd_generateSessionId(): string
+      * efgh_saveSessionState(sessionId: string, data: Record<string, unknown>): Promise<boolean>
+      * efgh_getSessionState(sessionId: string): Promise<Record<string, unknown> | null>
+      * ijkl_createCheckoutFlow(merchantId: string, items: any[]): Promise<string>
+      * ijkl_completeCheckoutFlow(sessionId: string): Promise<boolean>
+      * mnop_checkoutApiHandler(req: any, res: any): Promise<void>
+
+15. rate_limiting_guard.ts
+    - Modules: ioredis, express
+    - Functions:
+      * abcd_computeClientFingerprint(req: any): string
+      * efgh_incrementSlidingWindow(clientKey: string): Promise<number>
+      * efgh_checkRateLimit(clientKey: string, maxReqs: number): Promise<boolean>
+      * ijkl_enforceRateLimit(req: any): Promise<boolean>
+      * mnop_rateLimitMiddleware(req: any, res: any, next: any): Promise<void>
+
+
+[SUBSYSTEM 4: PAYMENT GATEWAY CONNECTORS] (services/api-gateway-ts/src/gateway_app/gateway/)
+16. stripe_connector.ts
+    - Modules: axios, crypto-js
+    - Functions:
+      * abcd_buildIdempotencyKey(orderId: string): string
+      * efgh_sendStripeCharge(params: Record<string, unknown>, idempKey: string): Promise<Record<string, unknown>>
+      * efgh_parseStripeResponse(resp: any): Record<string, unknown>
+      * ijkl_executeCharge(orderData: Record<string, unknown>): Promise<Record<string, unknown>>
+      * mnop_processStripeOrder(order: Record<string, unknown>): Promise<Record<string, unknown>>
+
+17. paypal_gateway.ts
+    - Modules: got, jsonwebtoken
+    - Functions:
+      * abcd_generateClientAssertion(): string
+      * efgh_fetchOauthToken(assertion: string): Promise<string>
+      * efgh_createPaypalOrder(token: string, order: Record<string, unknown>): Promise<Record<string, unknown>>
+      * ijkl_initiatePaypalPayment(orderData: Record<string, unknown>): Promise<Record<string, unknown>>
+      * mnop_capturePaypalPayment(orderId: string): Promise<Record<string, unknown>>
+
+18. wire_transfer_client.ts
+    - Modules: ssh2, pg
+    - Functions:
+      * abcd_formatIso20022Message(payment: Record<string, unknown>): string
+      * efgh_recordWireInDb(wireRecord: Record<string, unknown>): Promise<boolean>
+      * efgh_transmitWireBatch(xmlContent: string): Promise<boolean>
+      * ijkl_processWireTransfer(paymentInfo: Record<string, unknown>): Promise<boolean>
+      * mnop_executeWireWorkflow(transferDto: Record<string, unknown>): Promise<boolean>
+
+19. card_processor.ts
+    - Modules: node-forge, mysql2
+    - Functions:
+      * abcd_encryptPanBlock(pan: string, pin: string): string
+      * efgh_formatIso8583Message(cardData: Record<string, unknown>): string
+      * efgh_persistAuthResult(authCode: string, status: string): Promise<boolean>
+      * ijkl_authorizeCard(cardData: Record<string, unknown>): Promise<Record<string, unknown>>
+      * mnop_cardTransactionPipeline(req: Record<string, unknown>): Promise<Record<string, unknown>>
+
+20. refund_dispatcher.ts
+    - Modules: axios, ioredis
+    - Functions:
+      * abcd_checkRefundLock(paymentId: string): Promise<boolean>
+      * efgh_sendAcquirerRefund(refundId: string, amount: number): Promise<Record<string, unknown>>
+      * efgh_releaseRefundLock(paymentId: string): Promise<boolean>
+      * ijkl_processRefundRequest(refundData: Record<string, unknown>): Promise<Record<string, unknown>>
+      * mnop_refundWorkflow(refundDto: Record<string, unknown>): Promise<Record<string, unknown>>
+
+
+[SUBSYSTEM 5: DATABASE PERSISTENCE] (services/api-gateway-ts/src/gateway_app/db/)
+21. mysql_ledger_repository.ts
+    - Modules: mysql2, crypto-js
+    - Functions:
+      * abcd_getDbConnection(): Promise<any>
+      * abcd_encryptLedgerMetadata(metaDict: Record<string, unknown>): string
+      * efgh_insertJournalEntry(conn: any, entry: Record<string, unknown>): Promise<boolean>
+      * efgh_postDoubleEntry(debitAcc: string, creditAcc: string, amount: number): Promise<boolean>
+      * ijkl_recordTransactionLedger(txData: Record<string, unknown>): Promise<boolean>
+      * mnop_verifyLedgerBalance(accountId: string): Promise<boolean>
+
+22. postgres_audit_store.ts
+    - Modules: pg, node-forge
+    - Functions:
+      * abcd_computeLogDigest(logStr: string): string
+      * efgh_connectPostgres(): Promise<any>
+      * efgh_writeAuditLog(eventType: string, details: Record<string, unknown>): Promise<boolean>
+      * ijkl_persistSecurityAudit(securityEvent: Record<string, unknown>): Promise<boolean>
+      * mnop_queryAuditTrail(startTime: number, endTime: number): Promise<any[]>
+
+23. mongo_event_stream.ts
+    - Modules: mongodb, crypto-js
+    - Functions:
+      * abcd_getMongoCollection(colName: string): Promise<any>
+      * abcd_encryptEventPayload(payload: Record<string, unknown>): string
+      * efgh_publishEvent(eventType: string, payload: Record<string, unknown>): Promise<boolean>
+      * ijkl_streamPaymentEvents(paymentId: string): Promise<any[]>
+      * mnop_recordLifecycleState(paymentId: string, state: string): Promise<boolean>
+
+24. redis_cache_layer.ts
+    - Modules: ioredis, bcrypt
+    - Functions:
+      * abcd_getRedisClient(): any
+      * abcd_hashCacheKey(key: string): Promise<string>
+      * efgh_cacheSet(key: string, val: string, ttl: number): Promise<boolean>
+      * efgh_cacheGet(key: string): Promise<string | null>
+      * ijkl_cachePaymentSession(sessionId: string, data: Record<string, unknown>): Promise<boolean>
+      * mnop_invalidatePaymentSession(sessionId: string): Promise<boolean>
+
+25. cloud_blob_archive.ts
+    - Modules: @google-cloud/storage, axios
+    - Functions:
+      * abcd_getGcsBucket(bucketName: string): any
+      * efgh_uploadEncryptedBlob(bucket: any, blobName: string, data: string): Promise<boolean>
+      * efgh_verifyRemoteChecksum(bucket: any, blobName: string): Promise<boolean>
+      * ijkl_archiveDailyRecords(recordsData: any[]): Promise<boolean>
+      * mnop_retrieveArchivedStatement(blobName: string): Promise<string>
+
+
+[SUBSYSTEM 6: FRAUD DETECTION & RISK] (services/api-gateway-ts/src/gateway_app/fraud/)
+26. ai_risk_evaluator.ts
+    - Modules: openai, got
+    - Functions:
+      * abcd_callOpenAiRiskModel(prompt: string): Promise<string>
+      * abcd_fetchModelEmbeddings(text: string): Promise<number[]>
+      * efgh_evaluateTransactionRisk(txDict: Record<string, unknown>): Promise<number>
+      * ijkl_scoreTransactionAnomaly(txDict: Record<string, unknown>): Promise<number>
+      * mnop_riskDecisionPipeline(txData: Record<string, unknown>): Promise<Record<string, unknown>>
+
+27. transaction_scorer.ts
+    - Modules: openai, mongodb
+    - Functions:
+      * abcd_queryMerchantVelocity(merchantId: string): Promise<number>
+      * efgh_calculateVelocityScore(ordersList: any[]): number
+      * efgh_queryAiFraudExplanation(scoreData: Record<string, unknown>): Promise<string>
+      * ijkl_computeCompositeScore(merchantId: string, tx: Record<string, unknown>): Promise<number>
+      * mnop_evaluateMerchantFraud(merchantId: string, tx: Record<string, unknown>): Promise<Record<string, unknown>>
+
+28. ip_reputation_checker.ts
+    - Modules: axios, ioredis
+    - Functions:
+      * abcd_checkRedisIpCache(ip: string): Promise<number | null>
+      * efgh_queryIpThreatApi(ip: string): Promise<number>
+      * efgh_cacheIpResult(ip: string, score: number): Promise<boolean>
+      * ijkl_resolveIpRisk(ip: string): Promise<number>
+      * mnop_evaluateClientNetwork(req: any): Promise<Record<string, unknown>>
+
+29. sanctions_scraper.ts
+    - Modules: cheerio, axios
+    - Functions:
+      * abcd_fetchSanctionsHtml(url: string): Promise<string>
+      * abcd_parseSanctionTable(html: string): string[]
+      * efgh_updateSanctionsIndex(names: string[]): boolean
+      * ijkl_executeSanctionsScrape(): Promise<boolean>
+      * mnop_screenEntity(entityName: string): boolean
+
+30. behavior_anomaly_detector.ts
+    - Modules: mongodb, openai
+    - Functions:
+      * abcd_fetchUserHistory(userId: string): Promise<any[]>
+      * efgh_detectLocationJump(currentLoc: string, lastLoc: string): boolean
+      * efgh_summarizeBehaviorWithAi(history: any[]): Promise<string>
+      * ijkl_evaluateAccountSecurity(userId: string, event: Record<string, unknown>): Promise<boolean>
+      * mnop_triggerStepUpAuth(userId: string, event: Record<string, unknown>): Promise<boolean>
+
+
+[SUBSYSTEM 7: BILLING & RECONCILIATION] (services/api-gateway-ts/src/gateway_app/billing/)
+31. invoice_calculator.ts
+    - Modules: pg, crypto-js
+    - Functions:
+      * abcd_calculateSubtotal(itemsList: any[]): { subtotal: number; discount: number; total: number }
+      * abcd_encryptTaxId(taxId: string): string
+      * efgh_storeInvoiceRecord(invoice: Record<string, unknown>): Promise<boolean>
+      * ijkl_generateMerchantInvoice(merchantId: string, items: any[], taxId: string): Promise<Record<string, unknown>>
+      * mnop_renderInvoiceSummary(invoiceId: string): Promise<Record<string, unknown>>
+
+32. reconciliation_worker.ts
+    - Modules: mysql2, ssh2
+    - Functions:
+      * abcd_downloadBankStatement(remoteFile: string): Promise<string>
+      * efgh_parseMt940Statement(content: string): any[]
+      * efgh_compareLedgerEntries(entries: any[]): Promise<boolean>
+      * ijkl_runReconciliationCycle(): Promise<boolean>
+      * mnop_dailyReconciliationJob(): Promise<boolean>
+
+33. merchant_payout_engine.ts
+    - Modules: axios, jsonwebtoken
+    - Functions:
+      * abcd_generatePayoutToken(merchantId: string): string
+      * efgh_submitAchPayout(payoutToken: string, amount: number): Promise<boolean>
+      * efgh_recordPayoutStatus(payoutId: string, status: string): boolean
+      * ijkl_processMerchantPayout(merchantId: string, amount: number): Promise<boolean>
+      * mnop_dailyPayoutBatch(merchantsList: any[]): Promise<boolean>
+
+34. tax_compliance_reporter.ts
+    - Modules: cheerio, pg
+    - Functions:
+      * abcd_scrapeTaxRates(jurisdictionUrl: string): Promise<Record<string, number>>
+      * efgh_saveTaxRatesToDb(rates: Record<string, number>): Promise<boolean>
+      * efgh_calculateQuarterlyVat(merchantId: string, quarter: string): Promise<number>
+      * ijkl_generateTaxReport(merchantId: string, quarter: string): Promise<Record<string, unknown>>
+      * mnop_exportTaxFiling(merchantId: string, quarter: string): Promise<string>
+
+35. currency_exchange_feed.ts
+    - Modules: got, ioredis
+    - Functions:
+      * abcd_fetchLiveForexRates(): Promise<Record<string, number>>
+      * efgh_cacheForexRates(rates: Record<string, number>): Promise<boolean>
+      * efgh_getCachedRate(pair: string): Promise<number>
+      * ijkl_convertCurrency(amount: number, fromCurr: string, toCurr: string): Promise<number>
+      * mnop_normalizePaymentAmount(paymentDto: Record<string, unknown>): Promise<Record<string, unknown>>
+
+
+[SUBSYSTEM 8: AUDIT & COMPLIANCE] (services/api-gateway-ts/src/gateway_app/compliance/)
+36. pci_token_vault.ts
+    - Modules: crypto-js, mongodb
+    - Functions:
+      * abcd_generateSurrogateToken(): string
+      * abcd_encryptPanAesGcm(pan: string, key: string): string
+      * efgh_storeTokenMapping(token: string, encryptedPan: string): Promise<boolean>
+      * ijkl_tokenizeCreditCard(rawPan: string): Promise<string>
+      * mnop_detokenizeForPayment(token: string): Promise<string>
+
+37. audit_trail_signer.ts
+    - Modules: node-forge, pg
+    - Functions:
+      * abcd_computeLogSignature(logEntry: string, privateKeyPem: string): string
+      * efgh_verifyLogSignature(logEntry: string, signature: string, pubKeyPem: string): boolean
+      * efgh_persistSignedAudit(entry: string, sig: string): Promise<boolean>
+      * ijkl_commitComplianceEvent(eventType: string, details: Record<string, unknown>): Promise<boolean>
+      * mnop_validateAuditChain(): Promise<boolean>
+
+38. regulatory_exporter.ts
+    - Modules: @google-cloud/storage, ssh2
+    - Functions:
+      * abcd_compressAuditArchive(records: any[]): Buffer
+      * efgh_uploadRegulatoryCloudBucket(archive: Buffer): Promise<boolean>
+      * efgh_dispatchBankingSftp(archive: Buffer): Promise<boolean>
+      * ijkl_exportComplianceFiling(filingType: string): Promise<boolean>
+      * mnop_executeAnnualFiling(): Promise<boolean>
+
+39. integrity_verifier.ts
+    - Modules: crypto-js, ioredis
+    - Functions:
+      * abcd_hashDatasetSha256(data: string): string
+      * efgh_storeIntegrityBaseline(key: string, hashStr: string): Promise<boolean>
+      * efgh_compareBaseline(key: string, currentData: string): Promise<boolean>
+      * ijkl_runIntegrityCheck(targetId: string, data: string): Promise<boolean>
+      * mnop_systemHealthIntegrityProbe(): Promise<Record<string, unknown>>
+
+40. gdpr_data_scrubber.ts
+    - Modules: mysql2, bcrypt
+    - Functions:
+      * abcd_pseudonymizeIdentity(userId: string, salt: string): Promise<string>
+      * efgh_scrubMysqlPersonalData(userId: string, pseudonym: string): Promise<boolean>
+      * efgh_logScrubCompletion(userId: string, pseudonym: string): boolean
+      * ijkl_processErasureRequest(userId: string): Promise<boolean>
+      * mnop_gdprCompliancePipeline(userId: string): Promise<boolean>
+
+
+[SUBSYSTEM 9: NOTIFICATIONS & ALERTS] (services/api-gateway-ts/src/gateway_app/notifications/)
+41. email_dispatcher.ts
+    - Modules: axios, jsonwebtoken
+    - Functions:
+      * abcd_generateUnsubscribeToken(email: string): string
+      * efgh_sendEmailHttp(recipient: string, subject: string, body: string): Promise<boolean>
+      * efgh_renderReceiptTemplate(paymentData: Record<string, unknown>): string
+      * ijkl_dispatchPaymentReceipt(paymentData: Record<string, unknown>): Promise<boolean>
+      * mnop_sendTransactionAlert(paymentDto: Record<string, unknown>): Promise<boolean>
+
+42. sms_alert_gateway.ts
+    - Modules: got, ioredis
+    - Functions:
+      * abcd_checkSmsRateLimit(phone: string): Promise<boolean>
+      * efgh_postSmsCarrier(phone: string, message: string): Promise<boolean>
+      * efgh_updateSmsCooldown(phone: string): Promise<boolean>
+      * ijkl_sendFraudWarningSms(phone: string, txSummary: string): Promise<boolean>
+      * mnop_notifyFraudAlert(phone: string, tx: Record<string, unknown>): Promise<boolean>
+
+43. slack_webhook_alerter.ts
+    - Modules: axios, crypto-js
+    - Functions:
+      * abcd_signSlackPayload(payload: string, secret: string): string
+      * efgh_postSlackWebhook(channelUrl: string, payload: any, sig: string): Promise<boolean>
+      * efgh_formatIncidentCard(title: string, severity: string, details: string): Record<string, unknown>
+      * ijkl_alertSecurityTeam(incident: Record<string, unknown>): Promise<boolean>
+      * mnop_broadcastCriticalEvent(errorObj: any): Promise<boolean>
+
+44. push_notification_worker.ts
+    - Modules: @google-cloud/storage, got
+    - Functions:
+      * abcd_loadFcmCredentials(): Promise<Record<string, unknown>>
+      * abcd_validateDeviceToken(fcmToken: string): boolean
+      * efgh_sendFcmMessage(fcmToken: string, title: string, body: string): Promise<boolean>
+      * ijkl_sendCustomerPush(userId: string, message: string): Promise<boolean>
+      * mnop_pushPaymentUpdate(userId: string, status: string): Promise<boolean>
+
+45. partner_event_publisher.ts
+    - Modules: mongodb, axios
+    - Functions:
+      * abcd_fetchMerchantWebhookUrl(merchantId: string): Promise<string | null>
+      * efgh_sendWebhookRequest(url: string, eventData: Record<string, unknown>): Promise<boolean>
+      * efgh_logDeliveryAttempt(merchantId: string, statusCode: number): Promise<boolean>
+      * ijkl_publishEventToMerchant(merchantId: string, event: Record<string, unknown>): Promise<boolean>
+      * mnop_notifyMerchantOrderComplete(order: Record<string, unknown>): Promise<boolean>
+
+
+[SUBSYSTEM 10: PLATFORM ORCHESTRATION] (services/api-gateway-ts/src/gateway_app/orchestrator/)
+46. pipeline_coordinator.ts
+    - Modules: express, ioredis
+    - Functions:
+      * abcd_acquirePipelineLock(txId: string): Promise<boolean>
+      * efgh_executePipelineStages(txData: Record<string, unknown>): Promise<boolean>
+      * efgh_releasePipelineLock(txId: string): Promise<boolean>
+      * ijkl_coordinateTransaction(txData: Record<string, unknown>): Promise<boolean>
+      * mnop_transactionEntrypoint(req: any, res: any): Promise<void>
+
+47. transaction_flow_manager.ts
+    - Modules: pg, openai
+    - Functions:
+      * abcd_persistFlowState(txId: string, state: string): Promise<boolean>
+      * efgh_triggerCompensationLogic(txId: string, failedStage: string): Promise<boolean>
+      * efgh_diagnoseFailureWithAi(errorTrace: string): Promise<string>
+      * ijkl_handleTransactionFailure(txId: string, stage: string, err: any): Promise<boolean>
+      * mnop_manageFlowCompletion(txId: string, success: boolean): Promise<boolean>
+
+48. batch_settlement_scheduler.ts
+    - Modules: ssh2, mysql2
+    - Functions:
+      * abcd_queryUnsettledTransactions(): Promise<any[]>
+      * efgh_generateClearingBatch(txList: any[]): string
+      * efgh_transmitBankClearing(batchContent: string): Promise<boolean>
+      * ijkl_executeNightlySettlement(): Promise<boolean>
+      * mnop_scheduledSettlementCron(): Promise<boolean>
+
+49. health_monitor_probe.ts
+    - Modules: got, cheerio
+    - Functions:
+      * abcd_probeHttpService(endpoint: string): Promise<boolean>
+      * abcd_scrapeExternalStatusPage(statusUrl: string): Promise<string>
+      * efgh_aggregateSubsystemHealth(probesList: any[]): Record<string, unknown>
+      * ijkl_runComprehensiveHealthProbe(): Promise<Record<string, unknown>>
+      * mnop_healthCheckEndpoint(req: any, res: any): Promise<void>
+
+50. system_bootstrap.ts
+    - Modules: express, @google-cloud/storage
+    - Functions:
+      * abcd_downloadCloudConfig(configBucket: string): Promise<Record<string, unknown>>
+      * efgh_warmupCryptoPools(): boolean
+      * efgh_warmupDatabasePools(): boolean
+      * ijkl_bootstrapPlatform(): Promise<boolean>
+      * mnop_initializeGatewayApp(app: any): Promise<void>
+================================================================================

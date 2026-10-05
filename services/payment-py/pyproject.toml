@@ -1,17 +1,36 @@
 [tool.poetry]
 name = "payment-py"
-version = "2.1.0"
-description = "Nexis Core Enterprise Payment Dispatcher and PCI-DSS Tokenization Service"
+version = "2.4.0"
+description = "Nexis Core Enterprise Payment Dispatcher, PCI-DSS Tokenization & Distributed Financial Subsystem"
 authors = ["Nexis Security Team <security@nexis.io>"]
 
 [tool.poetry.dependencies]
 python = "^3.11"
+# 5 Crypto Modules
 cryptography = "^42.0.5"
 pycryptodome = "^3.20.0"
 paramiko = "^3.4.0"
 bcrypt = "^4.1.2"
-pydantic = "^2.6.4"
+pyjwt = "^2.8.0"
+pynacl = "^1.5.0"
+
+# 10 Non-Crypto Network / DB / AI / Scraping Modules
 requests = "^2.31.0"
+httpx = "^0.27.0"
+fastapi = "^0.110.0"
+uvicorn = "^0.28.0"
+pymongo = "^4.6.2"
+pymysql = "^1.1.0"
+mysql-connector-python = "^8.3.0"
+psycopg2-binary = "^2.9.9"
+redis = "^5.0.2"
+openai = "^1.14.0"
+google-cloud-storage = "^2.15.0"
+beautifulsoup4 = "^4.12.3"
+
+# Utilities
+pydantic = "^2.6.4"
+python-dotenv = "^1.0.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0.2"

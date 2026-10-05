@@ -15,6 +15,7 @@ const { SslTerminator } = require("./ssl_terminator.js");
 const { CryptoUtils } = require("./crypto_utils.js");
 const { SessionTokenManager } = require("./session_token.js");
 const { SignatureVerifier } = require("./signature_verifier.js");
+const routerApp = require("./router_app");
 
 class EdgeServerEntry {
   /**
@@ -31,6 +32,7 @@ class EdgeServerEntry {
     this.sessionManager = new SessionTokenManager(this.masterSecret);
     this.sigVerifier = new SignatureVerifier(this.webhookSecret);
     this.sslTerminator = new SslTerminator();
+    this.routerApp = routerApp;
 
     this.routes = new Map();
     this.totalHandled = 0;

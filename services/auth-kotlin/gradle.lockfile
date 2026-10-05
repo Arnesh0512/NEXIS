@@ -1,10 +1,27 @@
 # This is a Gradle generated file for dependency locking.
 # Manual edits can break the build and are not advised.
 # This file is used by Spectra dependency scanner to discover resolved packages.
+com.google.cloud:google-cloud-storage:2.36.0=compileClasspath,runtimeClasspath
 com.google.crypto.tink:tink:1.12.0=compileClasspath,runtimeClasspath
+com.mysql:mysql-connector-j:8.3.0=compileClasspath,runtimeClasspath
+com.squareup.okhttp3:okhttp:4.12.0=compileClasspath,runtimeClasspath
+com.theokanning.openai-gpt3-java:service:0.18.2=compileClasspath,runtimeClasspath
+io.jsonwebtoken:jjwt-api:0.12.5=compileClasspath,runtimeClasspath
+io.jsonwebtoken:jjwt-impl:0.12.5=runtimeClasspath
+io.jsonwebtoken:jjwt-jackson:0.12.5=runtimeClasspath
+io.ktor:ktor-client-cio:2.3.8=compileClasspath,runtimeClasspath
+io.ktor:ktor-client-core:2.3.8=compileClasspath,runtimeClasspath
 io.ktor:ktor-network-tls:2.3.8=compileClasspath,runtimeClasspath
 io.ktor:ktor-server-core:2.3.8=compileClasspath,runtimeClasspath
+io.ktor:ktor-server-netty:2.3.8=compileClasspath,runtimeClasspath
+org.apache.commons:commons-crypto:1.2.0=compileClasspath,runtimeClasspath
+org.bouncycastle:bcpkix-jdk18on:1.78.1=compileClasspath,runtimeClasspath
 org.bouncycastle:bcprov-jdk18on:1.78.1=compileClasspath,runtimeClasspath
 org.jetbrains.kotlin:kotlin-stdlib:1.9.22=compileClasspath,runtimeClasspath
 org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0=compileClasspath,runtimeClasspath
+org.jsoup:jsoup:1.17.2=compileClasspath,runtimeClasspath
+org.mindrot:jbcrypt:0.4=compileClasspath,runtimeClasspath
+org.mongodb:mongodb-driver-sync:5.0.0=compileClasspath,runtimeClasspath
+org.postgresql:postgresql:42.7.3=compileClasspath,runtimeClasspath
+redis.clients:jedis:5.1.2=compileClasspath,runtimeClasspath
 empty=

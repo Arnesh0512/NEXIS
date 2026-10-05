@@ -1,0 +1,761 @@
+================================================================================
+NEXIS CORE PLATFORM - PYTHON SUBSYSTEM ARCHITECTURE & CALL GRAPH DESIGN
+================================================================================
+Target: services/payment-py/src/
+Scope: 50 Interacting Python Modules, 5-6 Meaningful Functions per Module
+Modules Used: 15 External Libraries (5 Cryptographic, 10 Network/Database/AI/IO)
+
+--------------------------------------------------------------------------------
+1. MODULE MATRIX (15 EXTERNAL LIBRARIES)
+--------------------------------------------------------------------------------
+[CRYPTOGRAPHIC MODULES (5)]:
+  1. cryptography       - High-level Fernet, Hazmat asymmetric RSA, AES-GCM, X.509
+  2. pycryptodome       - AES-CBC, ChaCha20-Poly1305, RSA-PSS signature verification
+  3. bcrypt             - Password hashing, salt derivation, authentication verification
+  4. jwt (PyJWT)        - Token signing, HMAC/RSA JWT encoding and decoding
+  5. paramiko           - Encrypted SSH/SFTP network transport and remote key exchange
+
+[NON-CRYPTO NETWORK, DATABASE, AI & I/O MODULES (10)]:
+  6. requests           - Synchronous HTTP client for partner gateways and webhooks
+  7. httpx              - Async HTTP client for high-throughput microservice calls
+  8. fastapi            - Async Web API routing, middleware, and request validation
+  9. pymongo            - MongoDB distributed document database network connection
+ 10. pymysql            - MySQL relational database socket connection and transactions
+ 11. psycopg2           - PostgreSQL enterprise database connection and pooled queries
+ 12. redis              - Redis in-memory cache, rate limiting, and pub/sub connection
+ 13. openai             - OpenAI API client for AI anomaly scoring and fraud detection
+ 14. google.cloud.storage - Google Cloud Object Storage client for encrypted archives
+ 15. bs4 (beautifulsoup4)- HTML parser for regulatory sanction feeds and scraping
+
+================================================================================
+2. SUBSYSTEM DIRECTORY STRUCTURE (50 FILES)
+================================================================================
+
+--------------------------------------------------------------------------------
+SUBSYSTEM 1: CORE CRYPTOGRAPHIC VAULT & KEY MANAGEMENT
+Location: services/payment-py/src/vault/
+--------------------------------------------------------------------------------
+
+File 1: vault/key_vault_manager.py
+  External Modules: cryptography, redis
+  Description: Central repository for hardware security keys, master keys, and cache.
+  Functions:
+    1. abcd_generate_master_rsa_key(): Generates 4096-bit RSA root master keypair using cryptography.
+    2. abcd_derive_data_encryption_key(): Derives ephemeral AES-256 GCM key using HKDF.
+    3. efgh_store_key_in_cache(key_id, raw_key): Caches encrypted key in Redis; calls abcd_derive_data_encryption_key.
+    4. efgh_retrieve_active_key(key_id): Fetches active key from Redis cache; calls abcd_generate_master_rsa_key on cache miss.
+    5. ijkl_rotate_master_key(): Orchestrates master key rotation; calls efgh_store_key_in_cache.
+    6. mnop_vault_health_check(): Verifies key vault availability and crypto engine readiness; calls ijkl_rotate_master_key.
+  Interactions:
+    - Called by: vault/secret_rotator.py, auth/session_authorizer.py, db/mysql_ledger_repository.py
+
+File 2: vault/asymmetric_signer.py
+  External Modules: cryptography, jwt
+  Description: Asymmetric digital signature engine for payment orders and payload authentication.
+  Functions:
+    1. abcd_sign_payload_rsa(payload_bytes): Signs payload using RSA-PSS SHA-256 via cryptography.
+    2. abcd_verify_payload_rsa(payload_bytes, signature): Verifies RSA-PSS signature against public key.
+    3. abcd_create_signed_jwt_claim(claim_data): Issues signed RS256 JWT using jwt module.
+    4. efgh_authenticate_outbound_order(order_dict): Direct caller; formats order and calls abcd_sign_payload_rsa.
+    5. ijkl_verify_inbound_order(signed_order): Indirect caller; parses payload and calls abcd_verify_payload_rsa.
+    6. mnop_dispatch_validated_order(order_data): Pipeline coordinator; calls ijkl_verify_inbound_order.
+  Interactions:
+    - Calls: vault/key_vault_manager.py:efgh_retrieve_active_key()
+    - Called by: gateway/stripe_connector.py, api/webhook_ingress.py
+
+File 3: vault/symmetric_cipher_pool.py
+  External Modules: pycryptodome, redis
+  Description: High-performance symmetric encryption pool using ChaCha20-Poly1305 and AES-CBC.
+  Functions:
+    1. abcd_chacha20_encrypt(plaintext, key): Encrypts sensitive credit card data with ChaCha20-Poly1305 via pycryptodome.
+    2. abcd_chacha20_decrypt(ciphertext, key): Decrypts ChaCha20-Poly1305 ciphertext with authentication tag.
+    3. efgh_encrypt_card_payload(card_data): Fetches pool session from Redis and calls abcd_chacha20_encrypt.
+    4. efgh_decrypt_card_payload(encrypted_blob): Validates session and calls abcd_chacha20_decrypt.
+    5. ijkl_secure_tokenization_pipeline(raw_record): Tokenizes PAN; calls efgh_encrypt_card_payload.
+    6. mnop_detokenize_for_settlement(token): Resolves token; calls efgh_decrypt_card_payload.
+  Interactions:
+    - Called by: gateway/card_processor.py, compliance/pci_token_vault.py
+
+File 4: vault/secret_rotator.py
+  External Modules: cryptography, google.cloud.storage
+  Description: Automated rotation worker for KMS secrets, database passwords, and API keys.
+  Functions:
+    1. abcd_generate_replacement_secret(): Generates high-entropy cryptographic secret using cryptography.
+    2. efgh_backup_secret_to_cloud(secret_name, payload): Archives prior secret to Google Cloud Storage bucket.
+    3. efgh_apply_rotated_secret(secret_id, new_secret): Direct caller; calls abcd_generate_replacement_secret.
+    4. ijkl_execute_scheduled_rotation(schedule_id): Calls efgh_backup_secret_to_cloud and efgh_apply_rotated_secret.
+    5. mnop_verify_rotation_integrity(secret_id): Validates rotation audit status; calls ijkl_execute_scheduled_rotation.
+  Interactions:
+    - Calls: vault/key_vault_manager.py:ijkl_rotate_master_key()
+    - Called by: orchestrator/batch_settlement_scheduler.py
+
+File 5: vault/credential_hasher.py
+  External Modules: bcrypt, pymysql
+  Description: Password hashing, salting, and credential verification service.
+  Functions:
+    1. abcd_hash_password(raw_password): Hashes password using bcrypt with work factor 12.
+    2. abcd_verify_password(raw_password, hashed): Verifies password match against bcrypt hash.
+    3. efgh_store_user_credential(user_id, raw_password): Hashes password via abcd_hash_password and saves to MySQL via pymysql.
+    4. efgh_check_user_login(user_id, raw_password): Reads hash from MySQL and calls abcd_verify_password.
+    5. ijkl_credential_verification_flow(login_req): Calls efgh_check_user_login.
+    6. mnop_admin_reset_credential(user_id, new_pass): Resets credential; calls efgh_store_user_credential.
+  Interactions:
+    - Called by: auth/password_authenticator.py, compliance/gdpr_data_scrubber.py
+
+--------------------------------------------------------------------------------
+SUBSYSTEM 2: IDENTITY, AUTHENTICATION & SECURE TRANSPORT
+Location: services/payment-py/src/auth/
+--------------------------------------------------------------------------------
+
+File 6: auth/token_issuer.py
+  External Modules: jwt, redis
+  Description: JWT and session token issuance with distributed blacklist tracking.
+  Functions:
+    1. abcd_encode_access_token(user_id, roles): Generates JWT signed with HS512/RS256 using jwt.
+    2. abcd_encode_refresh_token(user_id): Generates long-lived refresh token.
+    3. efgh_issue_auth_pair(user_id, roles): Calls abcd_encode_access_token and abcd_encode_refresh_token.
+    4. efgh_blacklist_token(token_str): Stores revoked JWT JTI into Redis cache with expiration.
+    5. ijkl_renew_token_session(refresh_token): Validates refresh token; calls efgh_issue_auth_pair.
+    6. mnop_terminate_user_sessions(user_id): Blacklists all user tokens; calls efgh_blacklist_token.
+  Interactions:
+    - Called by: auth/session_authorizer.py, api/payment_endpoints.py
+
+File 7: auth/session_authorizer.py
+  External Modules: jwt, fastapi
+  Description: FastAPI dependency middleware for role-based authorization and token validation.
+  Functions:
+    1. abcd_decode_and_validate_jwt(token_str): Decodes JWT using jwt; validates claims and signature.
+    2. efgh_extract_bearer_token(request): FastAPI request dependency to extract Authorization header.
+    3. efgh_authorize_role(required_role, token_str): Direct caller; calls abcd_decode_and_validate_jwt.
+    4. ijkl_verify_session_security(request, role): Calls efgh_extract_bearer_token and efgh_authorize_role.
+    5. mnop_protect_admin_route(request): Route guard; calls ijkl_verify_session_security.
+  Interactions:
+    - Calls: auth/token_issuer.py:abcd_encode_access_token()
+    - Called by: api/payment_endpoints.py, api/settlement_router.py
+
+File 8: auth/password_authenticator.py
+  External Modules: bcrypt, psycopg2
+  Description: Primary authentication provider querying PostgreSQL user store.
+  Functions:
+    1. abcd_query_user_account(username): Connects to PostgreSQL using psycopg2 to query account.
+    2. efgh_verify_user_credentials(username, password): Calls vault/credential_hasher:abcd_verify_password.
+    3. efgh_record_login_attempt(user_id, success): Updates login attempt telemetry in PostgreSQL.
+    4. ijkl_process_login_pipeline(login_data): Calls abcd_query_user_account and efgh_verify_user_credentials.
+    5. mnop_authenticate_request(login_dto): Pipeline coordinator; calls ijkl_process_login_pipeline.
+  Interactions:
+    - Calls: vault/credential_hasher.py:abcd_verify_password()
+    - Called by: api/payment_endpoints.py
+
+File 9: auth/sftp_vault_tunnel.py
+  External Modules: paramiko, cryptography
+  Description: Encrypted SFTP client for inter-bank transaction batch file synchronization.
+  Functions:
+    1. abcd_create_ssh_client(host, port, user): Configures Paramiko SSHClient with RSA host key verification.
+    2. abcd_load_private_key_passphrase(key_path): Loads encrypted private key using cryptography.
+    3. efgh_open_sftp_tunnel(host, port, user, key_path): Calls abcd_create_ssh_client and abcd_load_private_key_passphrase.
+    4. efgh_upload_batch_file(sftp_client, local_path, remote_path): Uploads batch file over encrypted SFTP tunnel.
+    5. ijkl_transmit_clearing_file(file_path): Calls efgh_open_sftp_tunnel and efgh_upload_batch_file.
+    6. mnop_daily_sftp_sync_job(): Calls ijkl_transmit_clearing_file.
+  Interactions:
+    - Called by: billing/reconciliation_worker.py, orchestrator/batch_settlement_scheduler.py
+
+File 10: auth/mfa_coordinator.py
+  External Modules: cryptography, httpx
+  Description: Multi-factor authentication engine with TOTP generation and SMS carrier relay.
+  Functions:
+    1. abcd_generate_totp_secret(): Generates 32-byte cryptographic TOTP seed using cryptography.
+    2. abcd_verify_totp_code(secret, code): Validates time-based one-time password code.
+    3. efgh_send_sms_challenge(phone_number, code): Asynchronously calls external SMS gateway using httpx.
+    4. ijkl_initiate_mfa_flow(user_id, phone): Calls abcd_generate_totp_secret and efgh_send_sms_challenge.
+    5. ijkl_validate_mfa_flow(user_id, code): Calls abcd_verify_totp_code.
+    6. mnop_enforce_mfa_requirement(user_id, step): Calls ijkl_initiate_mfa_flow or ijkl_validate_mfa_flow.
+  Interactions:
+    - Called by: auth/session_authorizer.py, api/payment_endpoints.py
+
+--------------------------------------------------------------------------------
+SUBSYSTEM 3: TRANSACTION INGESTION & API GATEWAY
+Location: services/payment-py/src/api/
+--------------------------------------------------------------------------------
+
+File 11: api/payment_endpoints.py
+  External Modules: fastapi, requests
+  Description: Core HTTP routes for merchant payment creation, captures, and inquiries.
+  Functions:
+    1. abcd_parse_payment_request(payload_dict): Validates schema and extracts parameters.
+    2. efgh_forward_to_risk_engine(payment_req): Relays request to internal risk engine using requests.
+    3. efgh_process_payment_route(payload): Calls abcd_parse_payment_request and efgh_forward_to_risk_engine.
+    4. ijkl_capture_payment_route(payment_id): Calls gateway/stripe_connector:efgh_execute_charge.
+    5. mnop_payment_api_controller(request, action): FastAPI route handler calling processing functions.
+  Interactions:
+    - Calls: gateway/stripe_connector.py, fraud/ai_risk_evaluator.py, auth/session_authorizer.py
+
+File 12: api/webhook_ingress.py
+  External Modules: fastapi, cryptography
+  Description: Receives and validates asynchronous webhooks from payment processors.
+  Functions:
+    1. abcd_verify_webhook_signature(raw_body, sig_header, secret): Computes HMAC-SHA256 via cryptography.
+    2. efgh_parse_webhook_event(raw_body): Parses validated JSON event body.
+    3. efgh_handle_stripe_event(event_data): Processes charge.succeeded and payment_intent.failed events.
+    4. ijkl_ingest_webhook(request): Calls abcd_verify_webhook_signature and efgh_handle_stripe_event.
+    5. mnop_webhook_endpoint(request): FastAPI POST endpoint calling ijkl_ingest_webhook.
+  Interactions:
+    - Calls: db/mongo_event_stream.py:efgh_publish_event()
+    - Called by: External webhooks from Stripe / PayPal
+
+File 13: api/settlement_router.py
+  External Modules: fastapi, httpx
+  Description: Routes high-value settlement transactions to specialized processing nodes.
+  Functions:
+    1. abcd_inspect_settlement_rules(amount, currency): Evaluates threshold for high-value routing.
+    2. efgh_dispatch_async_clearing(order_id): Asynchronously posts clearing instruction using httpx.
+    3. efgh_route_settlement(order_data): Calls abcd_inspect_settlement_rules and efgh_dispatch_async_clearing.
+    4. ijkl_execute_settlement_chain(order_data): Calls efgh_route_settlement.
+    5. mnop_settlement_route_endpoint(order_dto): FastAPI endpoint calling ijkl_execute_settlement_chain.
+  Interactions:
+    - Calls: gateway/wire_transfer_client.py, billing/reconciliation_worker.py
+
+File 14: api/checkout_session.py
+  External Modules: fastapi, redis
+  Description: Manages customer checkout sessions, state machines, and expiration.
+  Functions:
+    1. abcd_generate_session_id(): Generates unique cryptographically random session identifier.
+    2. efgh_save_session_state(session_id, data): Stores JSON session payload in Redis with TTL.
+    3. efgh_get_session_state(session_id): Retrieves and deserializes session state from Redis.
+    4. ijkl_create_checkout_flow(merchant_id, items): Calls abcd_generate_session_id and efgh_save_session_state.
+    5. ijkl_complete_checkout_flow(session_id): Calls efgh_get_session_state and marks completed.
+    6. mnop_checkout_api_handler(action, payload): FastAPI route handler.
+  Interactions:
+    - Called by: api/payment_endpoints.py, notifications/email_dispatcher.py
+
+File 15: api/rate_limiting_guard.py
+  External Modules: redis, fastapi
+  Description: Sliding-window rate limiter protecting payment endpoints from brute-force & DDoS.
+  Functions:
+    1. abcd_compute_client_fingerprint(request): Hashes client IP, User-Agent, and API token.
+    2. efgh_increment_sliding_window(client_key): Updates Redis sorted-set window counter.
+    3. efgh_check_rate_limit(client_key, max_reqs): Evaluates if client exceeded rate threshold.
+    4. ijkl_enforce_rate_limit(request): Calls abcd_compute_client_fingerprint and efgh_check_rate_limit.
+    5. mnop_rate_limit_middleware(request, call_next): FastAPI HTTP middleware calling ijkl_enforce_rate_limit.
+  Interactions:
+    - Protects all routes in api/
+
+--------------------------------------------------------------------------------
+SUBSYSTEM 4: PAYMENT PROCESSING & GATEWAY CONNECTORS
+Location: services/payment-py/src/gateway/
+--------------------------------------------------------------------------------
+
+File 16: gateway/stripe_connector.py
+  External Modules: requests, cryptography
+  Description: Connects to Stripe payment rails with signed idempotency keys.
+  Functions:
+    1. abcd_build_idempotency_key(order_id): Computes HMAC-SHA256 idempotency key via cryptography.
+    2. efgh_send_stripe_charge(params, idemp_key): Sends POST request to Stripe API using requests.
+    3. efgh_parse_stripe_response(response): Extracts payment status and authorization codes.
+    4. ijkl_execute_charge(order_data): Calls abcd_build_idempotency_key, efgh_send_stripe_charge, efgh_parse_stripe_response.
+    5. mnop_process_stripe_order(order): Calls ijkl_execute_charge.
+  Interactions:
+    - Calls: vault/asymmetric_signer.py:efgh_authenticate_outbound_order()
+    - Called by: api/payment_endpoints.py
+
+File 17: gateway/paypal_gateway.py
+  External Modules: httpx, jwt
+  Description: Async gateway integration for PayPal v2 Orders & Capture APIs.
+  Functions:
+    1. abcd_generate_client_assertion(): Signs JWT client assertion token using jwt.
+    2. efgh_fetch_oauth_token(assertion): Exchanges assertion for access token via httpx.
+    3. efgh_create_paypal_order(token, order): Posts order creation request using httpx.
+    4. ijkl_initiate_paypal_payment(order_data): Calls abcd_generate_client_assertion and efgh_create_paypal_order.
+    5. mnop_capture_paypal_payment(order_id): Calls httpx capture endpoint.
+  Interactions:
+    - Called by: api/payment_endpoints.py
+
+File 18: gateway/wire_transfer_client.py
+  External Modules: paramiko, psycopg2
+  Description: Corporate SWIFT / Fedwire instruction generator and SFTP clearing exporter.
+  Functions:
+    1. abcd_format_iso20022_message(payment): Generates XML message according to ISO 20022 standard.
+    2. efgh_record_wire_in_db(wire_record): Persists pending wire to PostgreSQL using psycopg2.
+    3. efgh_transmit_wire_batch(xml_content): Uploads wire batch to bank server via paramiko SFTP.
+    4. ijkl_process_wire_transfer(payment_info): Calls abcd_format_iso20022_message, efgh_record_wire_in_db, efgh_transmit_wire_batch.
+    5. mnop_execute_wire_workflow(transfer_dto): Calls ijkl_process_wire_transfer.
+  Interactions:
+    - Calls: auth/sftp_vault_tunnel.py:efgh_upload_batch_file()
+    - Called by: api/settlement_router.py
+
+File 19: gateway/card_processor.py
+  External Modules: pycryptodome, pymysql
+  Description: Direct credit card network authorization engine (Visa/Mastercard interchange).
+  Functions:
+    1. abcd_encrypt_pan_block(pan, pin): Encrypts PIN block with 3DES/AES via pycryptodome.
+    2. efgh_format_iso8583_message(card_data): Builds binary ISO 8583 financial transaction packet.
+    3. efgh_persist_auth_result(auth_code, status): Saves authorization record to MySQL using pymysql.
+    4. ijkl_authorize_card(card_data): Calls abcd_encrypt_pan_block, efgh_format_iso8583_message, efgh_persist_auth_result.
+    5. mnop_card_transaction_pipeline(req): Calls ijkl_authorize_card.
+  Interactions:
+    - Calls: vault/symmetric_cipher_pool.py:ijkl_secure_tokenization_pipeline()
+    - Called by: api/payment_endpoints.py
+
+File 20: gateway/refund_dispatcher.py
+  External Modules: requests, redis
+  Description: Dispatches refund and chargeback claims to upstream acquirers.
+  Functions:
+    1. abcd_check_refund_lock(payment_id): Uses Redis distributed lock to prevent duplicate refunds.
+    2. efgh_send_acquirer_refund(refund_id, amount): Dispatches HTTP refund request using requests.
+    3. efgh_release_refund_lock(payment_id): Releases Redis lock after response.
+    4. ijkl_process_refund_request(refund_data): Calls abcd_check_refund_lock, efgh_send_acquirer_refund, efgh_release_refund_lock.
+    5. mnop_refund_workflow(refund_dto): Calls ijkl_process_refund_request.
+  Interactions:
+    - Called by: api/payment_endpoints.py, billing/reconciliation_worker.py
+
+--------------------------------------------------------------------------------
+SUBSYSTEM 5: DATABASE PERSISTENCE & STORAGE
+Location: services/payment-py/src/db/
+--------------------------------------------------------------------------------
+
+File 21: db/mysql_ledger_repository.py
+  External Modules: pymysql, cryptography
+  Description: Primary relational ledger repository for double-entry financial bookkeeping.
+  Functions:
+    1. abcd_get_db_connection(): Establishes connection to MySQL database via pymysql.
+    2. abcd_encrypt_ledger_metadata(meta_dict): Encrypts sensitive metadata using cryptography.
+    3. efgh_insert_journal_entry(conn, entry): Inserts debit/credit row in transaction.
+    4. efgh_post_double_entry(debit_acc, credit_acc, amount): Calls abcd_get_db_connection, abcd_encrypt_ledger_metadata, efgh_insert_journal_entry.
+    5. ijkl_record_transaction_ledger(tx_data): Calls efgh_post_double_entry.
+    6. mnop_verify_ledger_balance(account_id): Queries account balances; calls abcd_get_db_connection.
+  Interactions:
+    - Called by: billing/invoice_calculator.py, orchestrator/transaction_flow_manager.py
+
+File 22: db/postgres_audit_store.py
+  External Modules: psycopg2, pycryptodome
+  Description: Immutable compliance audit log repository in PostgreSQL.
+  Functions:
+    1. abcd_compute_log_digest(log_str): Computes SHA-256 HMAC digest via pycryptodome.
+    2. efgh_connect_postgres(): Connects to PostgreSQL using psycopg2 connection pool.
+    3. efgh_write_audit_log(event_type, details): Calls abcd_compute_log_digest and inserts into audit table.
+    4. ijkl_persist_security_audit(security_event): Calls efgh_write_audit_log.
+    5. mnop_query_audit_trail(start_time, end_time): Queries audit log records using psycopg2.
+  Interactions:
+    - Called by: compliance/audit_trail_signer.py, auth/password_authenticator.py
+
+File 23: db/mongo_event_stream.py
+  External Modules: pymongo, cryptography
+  Description: MongoDB event sourcing repository for real-time payment telemetry & domain events.
+  Functions:
+    1. abcd_get_mongo_collection(col_name): Returns PyMongo collection instance from MongoDB.
+    2. abcd_encrypt_event_payload(payload): Encrypts event with AES-GCM via cryptography.
+    3. efgh_publish_event(event_type, payload): Calls abcd_encrypt_event_payload and inserts document.
+    4. ijkl_stream_payment_events(payment_id): Queries PyMongo stream for payment lifecycle events.
+    5. mnop_record_lifecycle_state(payment_id, state): Calls efgh_publish_event.
+  Interactions:
+    - Called by: api/webhook_ingress.py, fraud/transaction_scorer.py
+
+File 24: db/redis_cache_layer.py
+  External Modules: redis, bcrypt
+  Description: Distributed caching layer for rate limits, idempotency keys, and session storage.
+  Functions:
+    1. abcd_get_redis_client(): Initializes connection pool to Redis server.
+    2. abcd_hash_cache_key(key): Hashes cache key using bcrypt salt for privacy.
+    3. efgh_cache_set(key, val, ttl): Sets key-value with TTL in Redis.
+    4. efgh_cache_get(key): Reads key-value from Redis.
+    5. ijkl_cache_payment_session(session_id, data): Calls abcd_hash_cache_key and efgh_cache_set.
+    6. mnop_invalidate_payment_session(session_id): Deletes key from Redis.
+  Interactions:
+    - Called by: api/checkout_session.py, api/rate_limiting_guard.py
+
+File 25: db/cloud_blob_archive.py
+  External Modules: google.cloud.storage, requests
+  Description: Long-term cold storage archive for encrypted regulatory financial records.
+  Functions:
+    1. abcd_get_gcs_bucket(bucket_name): Connects to Google Cloud Storage client.
+    2. efgh_upload_encrypted_blob(bucket, blob_name, data): Uploads byte stream to GCS.
+    3. efgh_verify_remote_checksum(bucket, blob_name): Verifies MD5/CRC32 checksum of uploaded blob.
+    4. ijkl_archive_daily_records(records_data): Calls abcd_get_gcs_bucket, efgh_upload_encrypted_blob, efgh_verify_remote_checksum.
+    5. mnop_retrieve_archived_statement(blob_name): Downloads statement blob using google.cloud.storage.
+  Interactions:
+    - Called by: compliance/regulatory_exporter.py, vault/secret_rotator.py
+
+--------------------------------------------------------------------------------
+SUBSYSTEM 6: FRAUD DETECTION, RISK & AI ANALYSIS
+Location: services/payment-py/src/fraud/
+--------------------------------------------------------------------------------
+
+File 26: fraud/ai_risk_evaluator.py
+  External Modules: openai, httpx
+  Description: Evaluates transaction risk in real time using OpenAI GPT models and async heuristics.
+  Functions:
+    1. abcd_call_openai_risk_model(prompt): Queries OpenAI chat completions endpoint via openai.
+    2. abcd_fetch_model_embeddings(text): Generates vector embeddings for user activity.
+    3. efgh_evaluate_transaction_risk(tx_dict): Constructs prompt and calls abcd_call_openai_risk_model.
+    4. ijkl_score_transaction_anomaly(tx_dict): Async orchestrator; calls efgh_evaluate_transaction_risk.
+    5. mnop_risk_decision_pipeline(tx_data): Calls ijkl_score_transaction_anomaly and returns APPROVE/DECLINE.
+  Interactions:
+    - Calls: fraud/transaction_scorer.py, fraud/ip_reputation_checker.py
+    - Called by: api/payment_endpoints.py
+
+File 27: fraud/transaction_scorer.py
+  External Modules: openai, pymongo
+  Description: Aggregates historical transaction patterns from MongoDB to feed AI risk models.
+  Functions:
+    1. abcd_query_merchant_velocity(merchant_id): Aggregates recent orders from MongoDB via pymongo.
+    2. efgh_calculate_velocity_score(orders_list): Computes transaction frequency anomaly score.
+    3. efgh_query_ai_fraud_explanation(score_data): Calls openai to generate risk reasoning.
+    4. ijkl_compute_composite_score(merchant_id, tx): Calls abcd_query_merchant_velocity, efgh_calculate_velocity_score, efgh_query_ai_fraud_explanation.
+    5. mnop_evaluate_merchant_fraud(merchant_id, tx): Calls ijkl_compute_composite_score.
+  Interactions:
+    - Called by: fraud/ai_risk_evaluator.py
+
+File 28: fraud/ip_reputation_checker.py
+  External Modules: requests, redis
+  Description: Checks IP geolocation, ASN, and known proxy/VPN lists via external threat APIs.
+  Functions:
+    1. abcd_check_redis_ip_cache(ip): Checks if IP reputation is cached in Redis.
+    2. efgh_query_ip_threat_api(ip): Queries external threat database using requests.
+    3. efgh_cache_ip_result(ip, score): Saves IP threat intelligence to Redis.
+    4. ijkl_resolve_ip_risk(ip): Calls abcd_check_redis_ip_cache, efgh_query_ip_threat_api, efgh_cache_ip_result.
+    5. mnop_evaluate_client_network(request): Calls ijkl_resolve_ip_risk.
+  Interactions:
+    - Called by: fraud/ai_risk_evaluator.py, api/rate_limiting_guard.py
+
+File 29: fraud/sanctions_scraper.py
+  External Modules: bs4, requests
+  Description: Scrapes and parses international AML/OFAC sanctions lists and PEP databases.
+  Functions:
+    1. abcd_fetch_sanctions_html(url): Downloads government regulatory webpage using requests.
+    2. abcd_parse_sanction_table(html): Extracts flagged names and entities using BeautifulSoup (bs4).
+    3. efgh_update_sanctions_index(sanctioned_names): Indexes parsed records into memory/database.
+    4. ijkl_execute_sanctions_scrape(): Calls abcd_fetch_sanctions_html, abcd_parse_sanction_table, efgh_update_sanctions_index.
+    5. mnop_screen_entity(entity_name): Checks entity against parsed list; calls ijkl_execute_sanctions_scrape on refresh.
+  Interactions:
+    - Called by: compliance/regulatory_exporter.py, fraud/ai_risk_evaluator.py
+
+File 30: fraud/behavior_anomaly_detector.py
+  External Modules: pymongo, openai
+  Description: Analyzes user navigation patterns and purchase velocities to detect account takeover.
+  Functions:
+    1. abcd_fetch_user_history(user_id): Retrieves historical login and checkout logs from MongoDB.
+    2. efgh_detect_location_jump(current_loc, last_loc): Checks impossible travel velocity.
+    3. efgh_summarize_behavior_with_ai(history): Uses openai to analyze behavioral deviation.
+    4. ijkl_evaluate_account_security(user_id, current_event): Calls abcd_fetch_user_history, efgh_detect_location_jump, efgh_summarize_behavior_with_ai.
+    5. mnop_trigger_step_up_auth(user_id, event): Calls ijkl_evaluate_account_security.
+  Interactions:
+    - Called by: auth/mfa_coordinator.py, api/payment_endpoints.py
+
+--------------------------------------------------------------------------------
+SUBSYSTEM 7: ACCOUNTING, BILLING & SETTLEMENT
+Location: services/payment-py/src/billing/
+--------------------------------------------------------------------------------
+
+File 31: billing/invoice_calculator.py
+  External Modules: psycopg2, cryptography
+  Description: Generates multi-currency merchant invoices, tax breakdowns, and discounts.
+  Functions:
+    1. abcd_calculate_subtotal(items_list): Calculates item line totals.
+    2. abcd_encrypt_tax_id(tax_id): Encrypts sensitive tax ID using cryptography.
+    3. efgh_store_invoice_record(invoice): Saves invoice to PostgreSQL database via psycopg2.
+    4. ijkl_generate_merchant_invoice(merchant_id, items, tax_id): Calls abcd_calculate_subtotal, abcd_encrypt_tax_id, efgh_store_invoice_record.
+    5. mnop_render_invoice_summary(invoice_id): Queries and formats invoice; calls efgh_store_invoice_record.
+  Interactions:
+    - Calls: db/mysql_ledger_repository.py:efgh_post_double_entry()
+    - Called by: billing/merchant_payout_engine.py
+
+File 32: billing/reconciliation_worker.py
+  External Modules: pymysql, paramiko
+  Description: Reconciles internal transactions against bank end-of-day clearing statements.
+  Functions:
+    1. abcd_download_bank_statement(remote_file): Downloads EOD clearing file over SFTP via paramiko.
+    2. efgh_parse_mt940_statement(file_content): Parses SWIFT MT940 bank statement lines.
+    3. efgh_compare_ledger_entries(entries): Compares bank records against MySQL ledger via pymysql.
+    4. ijkl_run_reconciliation_cycle(): Calls abcd_download_bank_statement, efgh_parse_mt940_statement, efgh_compare_ledger_entries.
+    5. mnop_daily_reconciliation_job(): Scheduled entrypoint; calls ijkl_run_reconciliation_cycle.
+  Interactions:
+    - Calls: auth/sftp_vault_tunnel.py:efgh_open_sftp_tunnel(), db/mysql_ledger_repository.py
+    - Called by: orchestrator/batch_settlement_scheduler.py
+
+File 33: billing/merchant_payout_engine.py
+  External Modules: requests, jwt
+  Description: Schedules and executes ACH/SEPA batch disbursements to merchants.
+  Functions:
+    1. abcd_generate_payout_token(merchant_id): Creates signed authorization JWT using jwt.
+    2. efgh_submit_ach_payout(payout_token, amount): Sends payout instruction to bank API using requests.
+    3. efgh_record_payout_status(payout_id, status): Updates payout status.
+    4. ijkl_process_merchant_payout(merchant_id, amount): Calls abcd_generate_payout_token, efgh_submit_ach_payout, efgh_record_payout_status.
+    5. mnop_daily_payout_batch(merchants_list): Calls ijkl_process_merchant_payout.
+  Interactions:
+    - Calls: billing/invoice_calculator.py, gateway/wire_transfer_client.py
+
+File 34: billing/tax_compliance_reporter.py
+  External Modules: bs4, psycopg2
+  Description: Scrapes jurisdictional VAT/Sales tax rate tables and generates quarterly returns.
+  Functions:
+    1. abcd_scrape_tax_rates(jurisdiction_url): Scrapes official tax rate tables using bs4 and requests.
+    2. efgh_save_tax_rates_to_db(rates): Saves current tax rates into PostgreSQL via psycopg2.
+    3. efgh_calculate_quarterly_vat(merchant_id, quarter): Queries quarterly sales from PostgreSQL.
+    4. ijkl_generate_tax_report(merchant_id, quarter): Calls abcd_scrape_tax_rates, efgh_save_tax_rates_to_db, efgh_calculate_quarterly_vat.
+    5. mnop_export_tax_filing(merchant_id, quarter): Calls ijkl_generate_tax_report.
+  Interactions:
+    - Called by: compliance/regulatory_exporter.py
+
+File 35: billing/currency_exchange_feed.py
+  External Modules: httpx, redis
+  Description: Live currency exchange rate feed with in-memory caching and triangular arbitrage detection.
+  Functions:
+    1. abcd_fetch_live_forex_rates(): Calls central bank API asynchronously via httpx.
+    2. efgh_cache_forex_rates(rates): Writes exchange rates into Redis with 60-second TTL.
+    3. efgh_get_cached_rate(pair): Reads exchange rate from Redis; calls abcd_fetch_live_forex_rates on cache miss.
+    4. ijkl_convert_currency(amount, from_curr, to_curr): Calls efgh_get_cached_rate and calculates converted amount.
+    5. mnop_normalize_payment_amount(payment_dto): Calls ijkl_convert_currency.
+  Interactions:
+    - Called by: api/payment_endpoints.py, billing/invoice_calculator.py
+
+--------------------------------------------------------------------------------
+SUBSYSTEM 8: AUDIT, COMPLIANCE & PCI DSS
+Location: services/payment-py/src/compliance/
+--------------------------------------------------------------------------------
+
+File 36: compliance/pci_token_vault.py
+  External Modules: cryptography, pymongo
+  Description: PCI DSS Level 1 Cardholder Data Environment (CDE) tokenization service.
+  Functions:
+    1. abcd_generate_surrogate_token(): Generates cryptographically secure 16-digit surrogate token.
+    2. abcd_encrypt_pan_aes_gcm(pan, key): Encrypts PAN with AES-256 GCM using cryptography.
+    3. efgh_store_token_mapping(token, encrypted_pan): Saves mapping in isolated MongoDB collection via pymongo.
+    4. ijkl_tokenize_credit_card(raw_pan): Calls abcd_generate_surrogate_token, abcd_encrypt_pan_aes_gcm, efgh_store_token_mapping.
+    5. mnop_detokenize_for_payment(token): Calls MongoDB and decrypts PAN.
+  Interactions:
+    - Calls: vault/key_vault_manager.py:efgh_retrieve_active_key()
+    - Called by: gateway/card_processor.py
+
+File 37: compliance/audit_trail_signer.py
+  External Modules: pycryptodome, psycopg2
+  Description: Cryptographically signs immutable audit log entries using RSA-PSS.
+  Functions:
+    1. abcd_compute_log_signature(log_entry, private_key): Signs log record using pycryptodome RSA-PSS.
+    2. efgh_verify_log_signature(log_entry, signature, pub_key): Verifies log integrity.
+    3. efgh_persist_signed_audit(entry, sig): Stores signed audit log in PostgreSQL via psycopg2.
+    4. ijkl_commit_compliance_event(event_type, details): Calls abcd_compute_log_signature and efgh_persist_signed_audit.
+    5. mnop_validate_audit_chain(): Reads and validates sequential signature chain from PostgreSQL.
+  Interactions:
+    - Calls: db/postgres_audit_store.py
+    - Called by: orchestrator/transaction_flow_manager.py
+
+File 38: compliance/regulatory_exporter.py
+  External Modules: google.cloud.storage, paramiko
+  Description: Packages and exports regulatory compliance reports to central banking authorities.
+  Functions:
+    1. abcd_compress_audit_archive(records): Compresses report payload into encrypted archive.
+    2. efgh_upload_regulatory_cloud_bucket(archive): Uploads archive to Google Cloud Storage.
+    3. efgh_dispatch_banking_sftp(archive): Transmits archive over SFTP via paramiko.
+    4. ijkl_export_compliance_filing(filing_type): Calls abcd_compress_audit_archive, efgh_upload_regulatory_cloud_bucket, efgh_dispatch_banking_sftp.
+    5. mnop_execute_annual_filing(): Calls ijkl_export_compliance_filing.
+  Interactions:
+    - Calls: db/cloud_blob_archive.py, auth/sftp_vault_tunnel.py
+
+File 39: compliance/integrity_verifier.py
+  External Modules: cryptography, redis
+  Description: Runtime memory and database hash verification against tamper attempts.
+  Functions:
+    1. abcd_hash_dataset_sha256(dataset_bytes): Computes SHA-256 hash using cryptography.
+    2. efgh_store_integrity_baseline(key, hash_str): Saves baseline hash to Redis.
+    3. efgh_compare_baseline(key, current_bytes): Calls abcd_hash_dataset_sha256 and compares with Redis.
+    4. ijkl_run_integrity_check(target_id, data): Calls efgh_compare_baseline.
+    5. mnop_system_health_integrity_probe(): Calls ijkl_run_integrity_check across system components.
+  Interactions:
+    - Called by: orchestrator/health_monitor_probe.py
+
+File 40: compliance/gdpr_data_scrubber.py
+  External Modules: pymysql, bcrypt
+  Description: Right-to-be-forgotten / GDPR automated data anonymization and pseudonymization.
+  Functions:
+    1. abcd_pseudonymize_identity(user_id, salt): Generates one-way irreversible bcrypt pseudonym.
+    2. efgh_scrub_mysql_personal_data(user_id, pseudonym): Overwrites PII in MySQL tables using pymysql.
+    3. efgh_log_scrub_completion(user_id, pseudonym): Logs GDPR compliance event.
+    4. ijkl_process_erasure_request(user_id): Calls abcd_pseudonymize_identity, efgh_scrub_mysql_personal_data, efgh_log_scrub_completion.
+    5. mnop_gdpr_compliance_pipeline(user_id): Calls ijkl_process_erasure_request.
+  Interactions:
+    - Calls: vault/credential_hasher.py, db/mysql_ledger_repository.py
+
+--------------------------------------------------------------------------------
+SUBSYSTEM 9: NOTIFICATIONS & EXTERNAL INTEGRATIONS
+Location: services/payment-py/src/notifications/
+--------------------------------------------------------------------------------
+
+File 41: notifications/email_dispatcher.py
+  External Modules: requests, jwt
+  Description: Transaction confirmation and receipt email dispatcher via SendGrid/Mailgun REST API.
+  Functions:
+    1. abcd_generate_unsubscribe_token(email): Signs email verification token with jwt.
+    2. efgh_send_email_http(recipient, subject, body): Sends email via external API using requests.
+    3. efgh_render_receipt_template(payment_data): Renders HTML receipt template.
+    4. ijkl_dispatch_payment_receipt(payment_data): Calls efgh_render_receipt_template and efgh_send_email_http.
+    5. mnop_send_transaction_alert(payment_dto): Calls ijkl_dispatch_payment_receipt.
+  Interactions:
+    - Called by: api/payment_endpoints.py, billing/merchant_payout_engine.py
+
+File 42: notifications/sms_alert_gateway.py
+  External Modules: httpx, redis
+  Description: Real-time fraud alert and transaction OTP SMS carrier integration (Twilio REST API).
+  Functions:
+    1. abcd_check_sms_rate_limit(phone): Checks Redis to ensure no duplicate SMS sent within 60s.
+    2. efgh_post_sms_carrier(phone, message): Async HTTP POST to SMS provider using httpx.
+    3. efgh_update_sms_cooldown(phone): Writes timestamp to Redis.
+    4. ijkl_send_fraud_warning_sms(phone, tx_summary): Calls abcd_check_sms_rate_limit, efgh_post_sms_carrier, efgh_update_sms_cooldown.
+    5. mnop_notify_fraud_alert(phone, tx): Calls ijkl_send_fraud_warning_sms.
+  Interactions:
+    - Called by: fraud/ai_risk_evaluator.py, auth/mfa_coordinator.py
+
+File 43: notifications/slack_webhook_alerter.py
+  External Modules: requests, cryptography
+  Description: DevOps and Security Ops real-time Slack/Teams incident notification system.
+  Functions:
+    1. abcd_sign_slack_payload(payload, secret): Computes HMAC-SHA256 signature using cryptography.
+    2. efgh_post_slack_webhook(channel_url, payload, sig): Dispatches POST to webhook using requests.
+    3. efgh_format_incident_card(title, severity, details): Builds Slack Block Kit payload.
+    4. ijkl_alert_security_team(incident): Calls efgh_format_incident_card, abcd_sign_slack_payload, efgh_post_slack_webhook.
+    5. mnop_broadcast_critical_event(error_obj): Calls ijkl_alert_security_team.
+  Interactions:
+    - Called by: compliance/integrity_verifier.py, fraud/ai_risk_evaluator.py
+
+File 44: notifications/push_notification_worker.py
+  External Modules: google.cloud.storage, httpx
+  Description: Mobile push notifications via Apple APNs & Google FCM with cloud credentials.
+  Functions:
+    1. abcd_load_fcm_credentials(): Reads service account credentials from Google Cloud Storage.
+    2. efgh_send_fcm_message(fcm_token, title, body): Posts push notification via httpx.
+    3. ijkl_send_customer_push(user_id, message): Calls abcd_load_fcm_credentials and efgh_send_fcm_message.
+    4. mnop_push_payment_update(user_id, status): Calls ijkl_send_customer_push.
+  Interactions:
+    - Called by: api/payment_endpoints.py
+
+File 45: notifications/partner_event_publisher.py
+  External Modules: pymongo, requests
+  Description: Publishes webhook events to external merchant subscribed endpoints with retry backoff.
+  Functions:
+    1. abcd_fetch_merchant_webhook_url(merchant_id): Queries MongoDB via pymongo for webhook config.
+    2. efgh_send_webhook_request(url, event_data): Dispatches HTTP POST with exponential backoff via requests.
+    3. efgh_log_delivery_attempt(merchant_id, status_code): Logs attempt to MongoDB.
+    4. ijkl_publish_event_to_merchant(merchant_id, event): Calls abcd_fetch_merchant_webhook_url, efgh_send_webhook_request, efgh_log_delivery_attempt.
+    5. mnop_notify_merchant_order_complete(order): Calls ijkl_publish_event_to_merchant.
+  Interactions:
+    - Called by: orchestrator/transaction_flow_manager.py
+
+--------------------------------------------------------------------------------
+SUBSYSTEM 10: PLATFORM ORCHESTRATION & WORKFLOW PIPELINE
+Location: services/payment-py/src/orchestrator/
+--------------------------------------------------------------------------------
+
+File 46: orchestrator/pipeline_coordinator.py
+  External Modules: fastapi, redis
+  Description: Central orchestrator managing the lifecycle of every inbound financial transaction.
+  Functions:
+    1. abcd_acquire_pipeline_lock(tx_id): Sets Redis distributed lock for transaction execution.
+    2. efgh_execute_pipeline_stages(tx_data): Executes Ingestion -> Fraud -> Auth -> Ledger -> Receipt.
+    3. efgh_release_pipeline_lock(tx_id): Releases Redis distributed lock.
+    4. ijkl_coordinate_transaction(tx_data): Calls abcd_acquire_pipeline_lock, efgh_execute_pipeline_stages, efgh_release_pipeline_lock.
+    5. mnop_transaction_entrypoint(request): FastAPI endpoint calling ijkl_coordinate_transaction.
+  Interactions:
+    - Calls: fraud/ai_risk_evaluator.py, gateway/stripe_connector.py, db/mysql_ledger_repository.py
+
+File 47: orchestrator/transaction_flow_manager.py
+  External Modules: psycopg2, openai
+  Description: State machine controller handling rollbacks, compensation, and AI post-mortems.
+  Functions:
+    1. abcd_persist_flow_state(tx_id, state): Saves state machine transitions into PostgreSQL via psycopg2.
+    2. efgh_trigger_compensation_logic(tx_id, failed_stage): Executes compensating transactions on failure.
+    3. efgh_diagnose_failure_with_ai(error_trace): Queries openai to provide human-readable post-mortem.
+    4. ijkl_handle_transaction_failure(tx_id, stage, err): Calls abcd_persist_flow_state, efgh_trigger_compensation_logic, efgh_diagnose_failure_with_ai.
+    5. mnop_manage_flow_completion(tx_id, success): Calls abcd_persist_flow_state.
+  Interactions:
+    - Called by: orchestrator/pipeline_coordinator.py
+
+File 48: orchestrator/batch_settlement_scheduler.py
+  External Modules: paramiko, pymysql
+  Description: Cron and batch scheduler for nightly bank clearing, reconciliation, and SFTP transfers.
+  Functions:
+    1. abcd_query_unsettled_transactions(): Reads unsettled transactions from MySQL via pymysql.
+    2. efgh_generate_clearing_batch(tx_list): Formats bank batch clearing file.
+    3. efgh_transmit_bank_clearing(batch_file): Transmits clearing file via paramiko SFTP.
+    4. ijkl_execute_nightly_settlement(): Calls abcd_query_unsettled_transactions, efgh_generate_clearing_batch, efgh_transmit_bank_clearing.
+    5. mnop_scheduled_settlement_cron(): Cron entrypoint calling ijkl_execute_nightly_settlement.
+  Interactions:
+    - Calls: billing/reconciliation_worker.py, auth/sftp_vault_tunnel.py
+
+File 49: orchestrator/health_monitor_probe.py
+  External Modules: httpx, bs4
+  Description: Synthetic transaction monitoring probe checking health of internal and external services.
+  Functions:
+    1. abcd_probe_http_service(endpoint): Probes internal microservice status using httpx.
+    2. abcd_scrape_external_status_page(status_url): Scrapes third-party status page with bs4.
+    3. efgh_aggregate_subsystem_health(probes_list): Aggregates latency and error counters.
+    4. ijkl_run_comprehensive_health_probe(): Calls abcd_probe_http_service, abcd_scrape_external_status_page, efgh_aggregate_subsystem_health.
+    5. mnop_health_check_endpoint(): Returns JSON health response.
+  Interactions:
+    - Called by: Docker healthcheck, Nginx ingress
+
+File 50: orchestrator/system_bootstrap.py
+  External Modules: fastapi, google.cloud.storage
+  Description: Platform initialization, environment discovery, cloud configuration pull, and warm-up.
+  Functions:
+    1. abcd_download_cloud_config(config_bucket): Fetches encrypted configuration from Google Cloud Storage.
+    2. efgh_warmup_crypto_pools(): Initializes cryptographic key pools and ciphers.
+    3. efgh_warmup_database_pools(): Pre-connects PostgreSQL, MySQL, Redis, and MongoDB pools.
+    4. ijkl_bootstrap_platform(): Calls abcd_download_cloud_config, efgh_warmup_crypto_pools, efgh_warmup_database_pools.
+    5. mnop_lifespan_handler(app): FastAPI lifespan context manager running ijkl_bootstrap_platform on startup.
+  Interactions:
+    - Initializes all 9 other subsystems on platform startup.
+
+================================================================================
+3. SUMMARY MATRIX: FILE TO EXTERNAL MODULE MAPPING
+================================================================================
+File  1 (vault/key_vault_manager.py)          -> cryptography, redis
+File  2 (vault/asymmetric_signer.py)          -> cryptography, jwt
+File  3 (vault/symmetric_cipher_pool.py)      -> pycryptodome, redis
+File  4 (vault/secret_rotator.py)             -> cryptography, google.cloud.storage
+File  5 (vault/credential_hasher.py)          -> bcrypt, pymysql
+File  6 (auth/token_issuer.py)                -> jwt, redis
+File  7 (auth/session_authorizer.py)          -> jwt, fastapi
+File  8 (auth/password_authenticator.py)      -> bcrypt, psycopg2
+File  9 (auth/sftp_vault_tunnel.py)           -> paramiko, cryptography
+File 10 (auth/mfa_coordinator.py)             -> cryptography, httpx
+File 11 (api/payment_endpoints.py)            -> fastapi, requests
+File 12 (api/webhook_ingress.py)              -> fastapi, cryptography
+File 13 (api/settlement_router.py)            -> fastapi, httpx
+File 14 (api/checkout_session.py)             -> fastapi, redis
+File 15 (api/rate_limiting_guard.py)          -> redis, fastapi
+File 16 (gateway/stripe_connector.py)         -> requests, cryptography
+File 17 (gateway/paypal_gateway.py)           -> httpx, jwt
+File 18 (gateway/wire_transfer_client.py)     -> paramiko, psycopg2
+File 19 (gateway/card_processor.py)           -> pycryptodome, pymysql
+File 20 (gateway/refund_dispatcher.py)        -> requests, redis
+File 21 (db/mysql_ledger_repository.py)       -> pymysql, cryptography
+File 22 (db/postgres_audit_store.py)          -> psycopg2, pycryptodome
+File 23 (db/mongo_event_stream.py)            -> pymongo, cryptography
+File 24 (db/redis_cache_layer.py)             -> redis, bcrypt
+File 25 (db/cloud_blob_archive.py)            -> google.cloud.storage, requests
+File 26 (fraud/ai_risk_evaluator.py)          -> openai, httpx
+File 27 (fraud/transaction_scorer.py)         -> openai, pymongo
+File 28 (fraud/ip_reputation_checker.py)      -> requests, redis
+File 29 (fraud/sanctions_scraper.py)          -> bs4, requests
+File 30 (fraud/behavior_anomaly_detector.py)  -> pymongo, openai
+File 31 (billing/invoice_calculator.py)       -> psycopg2, cryptography
+File 32 (billing/reconciliation_worker.py)    -> pymysql, paramiko
+File 33 (billing/merchant_payout_engine.py)   -> requests, jwt
+File 34 (billing/tax_compliance_reporter.py)  -> bs4, psycopg2
+File 35 (billing/currency_exchange_feed.py)   -> httpx, redis
+File 36 (compliance/pci_token_vault.py)       -> cryptography, pymongo
+File 37 (compliance/audit_trail_signer.py)    -> pycryptodome, psycopg2
+File 38 (compliance/regulatory_exporter.py)   -> google.cloud.storage, paramiko
+File 39 (compliance/integrity_verifier.py)    -> cryptography, redis
+File 40 (compliance/gdpr_data_scrubber.py)    -> pymysql, bcrypt
+File 41 (notifications/email_dispatcher.py)   -> requests, jwt
+File 42 (notifications/sms_alert_gateway.py)  -> httpx, redis
+File 43 (notifications/slack_webhook_alerter.py)-> requests, cryptography
+File 44 (notifications/push_notification_worker.py)-> google.cloud.storage, httpx
+File 45 (notifications/partner_event_publisher.py)-> pymongo, requests
+File 46 (orchestrator/pipeline_coordinator.py)-> fastapi, redis
+File 47 (orchestrator/transaction_flow_manager.py)-> psycopg2, openai
+File 48 (orchestrator/batch_settlement_scheduler.py)-> paramiko, pymysql
+File 49 (orchestrator/health_monitor_probe.py)-> httpx, bs4
+File 50 (orchestrator/system_bootstrap.py)    -> fastapi, google.cloud.storage
+================================================================================
+END OF ARCHITECTURE SPECIFICATION
+================================================================================

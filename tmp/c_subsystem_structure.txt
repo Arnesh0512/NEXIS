@@ -1,0 +1,93 @@
+================================================================================
+NEXIS CORE C HARDWARE SECURITY MODULE & FINANCIAL SUBSYSTEM ARCHITECTURE
+Target Base Directory: services/hsm-c/src/subsystems/
+Total Files: 50 interacting C (.c) source files across 10 functional modules
+Functions per file: Exactly 5 to 6 meaningful functions with strong C typings
+Invocation pattern: abcd_* (primitives/IO) -> efgh_* (engine/connector) -> ijkl_* (flow/chain) -> mnop_* (controller/entrypoint)
+================================================================================
+
+--------------------------------------------------------------------------------
+15 TARGET MODULES SPECIFICATION FOR C
+--------------------------------------------------------------------------------
+A. 5 CRYPTOGRAPHIC SECURITY & CIPHER LIBRARIES:
+   1. openssl (EVP, AES, RSA, HMAC)
+   2. liboqs (Post-quantum cryptography)
+   3. libcrypto
+   4. libssh2
+   5. libsodium
+
+B. 10 NON-CRYPTO NETWORK / DATABASE / AI / SCRAPING LIBRARIES:
+   6. curl (libcurl HTTP networking)
+   7. libmicrohttpd (HTTP REST engine)
+   8. cJSON (JSON parsing and serialization)
+   9. libmongoc (MongoDB C driver)
+   10. libmysqlclient (MySQL C client)
+   11. libpq (PostgreSQL C client)
+   12. hiredis (Redis C client)
+   13. libxml2 (HTML/XML parsing for sanctions lists)
+   14. zlib (compression archives)
+   15. sqlite3 (embedded database)
+
+--------------------------------------------------------------------------------
+DIRECTORY STRUCTURE (50 FILES)
+--------------------------------------------------------------------------------
+1.  subsystems/vault/key_vault_manager.c
+2.  subsystems/vault/asymmetric_signer.c
+3.  subsystems/vault/symmetric_cipher_pool.c
+4.  subsystems/vault/secret_rotator.c
+5.  subsystems/vault/credential_hasher.c
+
+6.  subsystems/auth/token_issuer.c
+7.  subsystems/auth/session_authorizer.c
+8.  subsystems/auth/password_authenticator.c
+9.  subsystems/auth/sftp_vault_tunnel.c
+10. subsystems/auth/mfa_coordinator.c
+
+11. subsystems/api/payment_endpoints.c
+12. subsystems/api/webhook_ingress.c
+13. subsystems/api/settlement_router.c
+14. subsystems/api/checkout_session.c
+15. subsystems/api/rate_limiting_guard.c
+
+16. subsystems/gateway/stripe_connector.c
+17. subsystems/gateway/paypal_gateway.c
+18. subsystems/gateway/wire_transfer_client.c
+19. subsystems/gateway/card_processor.c
+20. subsystems/gateway/refund_dispatcher.c
+
+21. subsystems/db/mysql_ledger_repository.c
+22. subsystems/db/postgres_audit_store.c
+23. subsystems/db/mongo_event_stream.c
+24. subsystems/db/redis_cache_layer.c
+25. subsystems/db/cloud_blob_archive.c
+
+26. subsystems/fraud/ai_risk_evaluator.c
+27. subsystems/fraud/transaction_scorer.c
+28. subsystems/fraud/ip_reputation_checker.c
+29. subsystems/fraud/sanctions_scraper.c
+30. subsystems/fraud/behavior_anomaly_detector.c
+
+31. subsystems/billing/invoice_calculator.c
+32. subsystems/billing/reconciliation_worker.c
+33. subsystems/billing/merchant_payout_engine.c
+34. subsystems/billing/tax_compliance_reporter.c
+35. subsystems/billing/currency_exchange_feed.c
+
+36. subsystems/compliance/pci_token_vault.c
+37. subsystems/compliance/audit_trail_signer.c
+38. subsystems/compliance/regulatory_exporter.c
+39. subsystems/compliance/integrity_verifier.c
+40. subsystems/compliance/gdpr_data_scrubber.c
+
+41. subsystems/notifications/email_dispatcher.c
+42. subsystems/notifications/sms_alert_gateway.c
+43. subsystems/notifications/slack_webhook_alerter.c
+44. subsystems/notifications/push_notification_worker.c
+45. subsystems/notifications/partner_event_publisher.c
+
+46. subsystems/orchestrator/pipeline_coordinator.c
+47. subsystems/orchestrator/transaction_flow_manager.c
+48. subsystems/orchestrator/batch_settlement_scheduler.c
+49. subsystems/orchestrator/health_monitor_probe.c
+50. subsystems/orchestrator/system_bootstrap.c
+================================================================================

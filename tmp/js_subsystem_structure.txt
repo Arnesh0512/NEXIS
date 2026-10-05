@@ -1,0 +1,513 @@
+================================================================================
+NEXIS CORE JAVASCRIPT FINANCIAL ROUTING & EDGE LEDGER SUBSYSTEM ARCHITECTURE
+Target Directory: services/edge-router-js/src/router_app/
+Total Files: 50 interacting JavaScript (CommonJS) files across 10 functional domains
+Functions per file: Exactly 5 to 6 meaningful functions with typed JSDoc
+Invocation pattern: abcd_* (primitives/IO) -> efgh_* (engine/connector) -> ijkl_* (flow/chain) -> mnop_* (controller/entrypoint)
+================================================================================
+
+--------------------------------------------------------------------------------
+15 TARGET MODULES SPECIFICATION
+--------------------------------------------------------------------------------
+A. 5 CRYPTOGRAPHIC SECURITY & CIPHER LIBRARIES:
+   1. crypto-js              - Pure JS AES-256, HMAC-SHA256, SHA256, WordArray ciphers
+   2. jsonwebtoken           - JWT token issuance, verification (RS256, HS256, ES256)
+   3. bcrypt                 - Password hashing with salts, asynchronous comparison
+   4. node-forge             - Native JavaScript RSA-PSS, PKCS#1 v1.5, X.509, AES-CBC
+   5. ssh2                   - Enterprise SSH2 & SFTP transport client and secure tunnels
+
+B. 10 NON-CRYPTO NETWORK / DATABASE / AI / SCRAPING LIBRARIES:
+   6. axios                  - HTTP client for REST APIs and webhook integrations
+   7. got                    - Async HTTP client with streaming and retry capabilities
+   8. express                - Web server, REST API routing, and HTTP middleware
+   9. mongodb                - MongoDB native database driver for document event storage
+   10. mysql2                - MySQL enterprise database connector and connection pools
+   11. pg                    - PostgreSQL database connector and transaction management
+   12. ioredis               - High-performance Redis client for caching and locks
+   13. openai                - OpenAI SDK for AI risk scoring and reasoning explanations
+   14. @google-cloud/storage - Cloud object storage for backups and regulatory archives
+   15. cheerio               - HTML parsing and web scraping for compliance and sanctions
+
+--------------------------------------------------------------------------------
+SUBSYSTEM DIRECTORY STRUCTURE & MODULE MAPPING (50 FILES)
+--------------------------------------------------------------------------------
+
+[SUBSYSTEM 1: VAULT] (services/edge-router-js/src/router_app/vault/)
+1. key_vault_manager.js
+   - Modules: node-forge, ioredis
+   - Functions:
+     * abcd_generateMasterRsaKey(): Generates 2048-bit RSA keypair via node-forge.
+     * abcd_deriveDataEncryptionKey(masterKey, salt): Derives AES key using PBKDF2 (forge.pkcs5.pbkdf2).
+     * efgh_storeKeyInCache(keyId, rawKey): Caches derived key in Redis with TTL via ioredis; calls abcd_deriveDataEncryptionKey.
+     * efgh_retrieveActiveKey(keyId): Reads key from Redis; on cache miss calls abcd_generateMasterRsaKey.
+     * ijkl_rotateMasterKey(keyId): Rotates key in cache and storage; calls efgh_storeKeyInCache.
+     * mnop_vaultHealthCheck(): Probes vault key health; calls ijkl_rotateMasterKey.
+
+2. asymmetric_signer.js
+   - Modules: node-forge, jsonwebtoken
+   - Functions:
+     * abcd_signPayloadRsa(payload, privateKeyPem): Computes RSA-SHA256 signature using node-forge.
+     * abcd_verifyPayloadRsa(payload, signature, publicKeyPem): Verifies RSA signature using node-forge.
+     * abcd_createSignedJwtClaim(claimData, privateKey): Signs RS256 JWT claim using jsonwebtoken.sign.
+     * efgh_authenticateOutboundOrder(orderObj): Signs outbound order payload; calls abcd_signPayloadRsa.
+     * ijkl_verifyInboundOrder(signedOrder): Verifies inbound order signature; calls abcd_verifyPayloadRsa.
+     * mnop_dispatchValidatedOrder(orderData): Validates and dispatches order; calls ijkl_verifyInboundOrder.
+
+3. symmetric_cipher_pool.js
+   - Modules: crypto-js, ioredis
+   - Functions:
+     * abcd_chacha20Encrypt(plaintext, secretKey): Encrypts plaintext using CryptoJS.AES.
+     * abcd_chacha20Decrypt(ciphertext, secretKey): Decrypts ciphertext using CryptoJS.AES.
+     * efgh_encryptCardPayload(cardData, sessionKey): Encrypts card details; calls abcd_chacha20Encrypt.
+     * efgh_decryptCardPayload(encryptedBlob, sessionKey): Decrypts card details; calls abcd_chacha20Decrypt.
+     * ijkl_secureTokenizationPipeline(rawRecord): Runs tokenization; calls efgh_encryptCardPayload.
+     * mnop_detokenizeForSettlement(token): Detokenizes record; calls efgh_decryptCardPayload.
+
+4. secret_rotator.js
+   - Modules: crypto-js, @google-cloud/storage
+   - Functions:
+     * abcd_generateReplacementSecret(length): Generates random secret using CryptoJS.lib.WordArray.random.
+     * efgh_backupSecretToCloud(secretName, payload): Uploads backup to GCS via @google-cloud/storage.
+     * efgh_applyRotatedSecret(secretId, newSecret): Updates secret state; calls abcd_generateReplacementSecret.
+     * ijkl_executeScheduledRotation(scheduleId): Coordinates rotation; calls efgh_backupSecretToCloud and efgh_applyRotatedSecret.
+     * mnop_verifyRotationIntegrity(secretId): Integrity verification; calls ijkl_executeScheduledRotation.
+
+5. credential_hasher.js
+   - Modules: bcrypt, mysql2
+   - Functions:
+     * abcd_hashPassword(rawPassword): Hashes raw password using bcrypt.hash with salt rounds.
+     * abcd_verifyPassword(rawPassword, hash): Compares password using bcrypt.compare.
+     * efgh_storeUserCredential(userId, rawPassword): Inserts credential into MySQL via mysql2; calls abcd_hashPassword.
+     * efgh_checkUserLogin(userId, rawPassword): Queries MySQL; calls abcd_verifyPassword.
+     * ijkl_credentialVerificationFlow(loginReq): Executes verification flow; calls efgh_checkUserLogin.
+     * mnop_adminResetCredential(userId, newPass): Admin reset handler; calls efgh_storeUserCredential.
+
+
+[SUBSYSTEM 2: AUTH & TRANSPORT] (services/edge-router-js/src/router_app/auth/)
+6. token_issuer.js
+   - Modules: jsonwebtoken, ioredis
+   - Functions:
+     * abcd_encodeAccessToken(userId, roles): Signs JWT access token with HS256/RS256 via jsonwebtoken.
+     * abcd_encodeRefreshToken(userId): Signs refresh token via jsonwebtoken.
+     * efgh_issueAuthPair(userId, roles): Issues token pair; calls abcd_encodeAccessToken and abcd_encodeRefreshToken.
+     * efgh_blacklistToken(tokenStr): Stores revoked token in Redis via ioredis.
+     * ijkl_renewTokenSession(refreshToken): Renews session; calls efgh_issueAuthPair.
+     * mnop_terminateUserSessions(userId): Revokes sessions; calls efgh_blacklistToken.
+
+7. session_authorizer.js
+   - Modules: jsonwebtoken, express
+   - Functions:
+     * abcd_decodeAndValidateJwt(tokenStr, secret): Verifies and decodes JWT via jsonwebtoken.verify.
+     * efgh_extractBearerToken(req): Extracts Bearer token from authorization header.
+     * efgh_authorizeRole(requiredRole, tokenStr): Checks role; calls abcd_decodeAndValidateJwt.
+     * ijkl_verifySessionSecurity(req, role): Calls efgh_extractBearerToken and efgh_authorizeRole.
+     * mnop_protectAdminRoute(req, res, next): Express middleware calling ijkl_verifySessionSecurity.
+
+8. password_authenticator.js
+   - Modules: bcrypt, pg
+   - Functions:
+     * abcd_queryUserAccount(username): Queries user row from PostgreSQL via pg.Pool.
+     * efgh_verifyUserCredentials(username, password): Checks password using bcrypt.compare.
+     * efgh_recordLoginAttempt(userId, success): Records login attempt audit in PostgreSQL via pg.
+     * ijkl_processLoginPipeline(loginData): Calls abcd_queryUserAccount and efgh_verifyUserCredentials.
+     * mnop_authenticateRequest(loginDto): Entrypoint calling ijkl_processLoginPipeline.
+
+9. sftp_vault_tunnel.js
+   - Modules: ssh2, node-forge
+   - Functions:
+     * abcd_createSshClient(host, port, user): Initializes ssh2.Client instance.
+     * abcd_loadPrivateKeyPassphrase(keyPem, passphrase): Decrypts encrypted private key using node-forge.
+     * efgh_openSftpTunnel(host, port, user, keyPem): Calls abcd_createSshClient and abcd_loadPrivateKeyPassphrase.
+     * efgh_uploadBatchFile(sftp, localPath, remotePath): Streams file over SFTP via ssh2.
+     * ijkl_transmitClearingFile(filePath): Calls efgh_openSftpTunnel and efgh_uploadBatchFile.
+     * mnop_dailySftpSyncJob(): Daily synchronization cron; calls ijkl_transmitClearingFile.
+
+10. mfa_coordinator.js
+    - Modules: crypto-js, axios
+    - Functions:
+      * abcd_generateTotpSecret(): Generates random TOTP secret via CryptoJS.lib.WordArray.random.
+      * abcd_verifyTotpCode(secret, code): Validates TOTP challenge using CryptoJS.HmacSHA1.
+      * efgh_sendSmsChallenge(phone, code): Dispatches SMS via axios.post.
+      * ijkl_initiateMfaFlow(userId, phone): Calls abcd_generateTotpSecret and efgh_sendSmsChallenge.
+      * ijkl_validateMfaFlow(userId, code): Calls abcd_verifyTotpCode.
+      * mnop_enforceMfaRequirement(userId, step): Calls ijkl_initiateMfaFlow or ijkl_validateMfaFlow.
+
+
+[SUBSYSTEM 3: INGESTION & API GATEWAY] (services/edge-router-js/src/router_app/api/)
+11. payment_endpoints.js
+    - Modules: express, axios
+    - Functions:
+      * abcd_parsePaymentRequest(payload): Validates request schema and types.
+      * efgh_forwardToRiskEngine(paymentReq): Relays payment to risk service via axios.post.
+      * efgh_processPaymentRoute(payload): Calls abcd_parsePaymentRequest and efgh_forwardToRiskEngine.
+      * ijkl_capturePaymentRoute(paymentId): Dispatches payment capture flow.
+      * mnop_paymentApiController(req, res): Express route controller for payment ingestion.
+
+12. webhook_ingress.js
+    - Modules: express, crypto-js
+    - Functions:
+      * abcd_verifyWebhookSignature(rawBody, sigHeader, secret): Computes HMAC-SHA256 via CryptoJS.HmacSHA256.
+      * efgh_parseWebhookEvent(rawBody): Deserializes and validates webhook payload.
+      * efgh_handleStripeEvent(eventData): Processes Stripe webhook events.
+      * ijkl_ingestWebhook(req): Calls abcd_verifyWebhookSignature and efgh_handleStripeEvent.
+      * mnop_webhookEndpoint(req, res): Express POST webhook route handler.
+
+13. settlement_router.js
+    - Modules: express, got
+    - Functions:
+      * abcd_inspectSettlementRules(amount, currency): Checks routing rules and minimums.
+      * efgh_dispatchAsyncClearing(orderId): Asynchronously posts settlement via got.post.
+      * efgh_routeSettlement(orderData): Calls abcd_inspectSettlementRules and efgh_dispatchAsyncClearing.
+      * ijkl_executeSettlementChain(orderData): Calls efgh_routeSettlement.
+      * mnop_settlementRouteEndpoint(req, res): Express settlement endpoint.
+
+14. checkout_session.js
+    - Modules: express, ioredis
+    - Functions:
+      * abcd_generateSessionId(): Generates random session token.
+      * efgh_saveSessionState(sessionId, data): Stores session state in Redis with TTL via ioredis.
+      * efgh_getSessionState(sessionId): Reads session state from Redis.
+      * ijkl_createCheckoutFlow(merchantId, items): Calls abcd_generateSessionId and efgh_saveSessionState.
+      * ijkl_completeCheckoutFlow(sessionId): Calls efgh_getSessionState.
+      * mnop_checkoutApiHandler(req, res): Express checkout session endpoint.
+
+15. rate_limiting_guard.js
+    - Modules: ioredis, express
+    - Functions:
+      * abcd_computeClientFingerprint(req): Computes client identifier hash.
+      * efgh_incrementSlidingWindow(clientKey): Records request in Redis sorted set via ioredis.
+      * efgh_checkRateLimit(clientKey, maxReqs): Evaluates request velocity threshold.
+      * ijkl_enforceRateLimit(req): Calls abcd_computeClientFingerprint and efgh_checkRateLimit.
+      * mnop_rateLimitMiddleware(req, res, next): Express rate limiting middleware.
+
+
+[SUBSYSTEM 4: PAYMENT GATEWAY CONNECTORS] (services/edge-router-js/src/router_app/gateway/)
+16. stripe_connector.js
+    - Modules: axios, crypto-js
+    - Functions:
+      * abcd_buildIdempotencyKey(orderId): Computes HMAC-SHA256 idempotency key via CryptoJS.HmacSHA256.
+      * efgh_sendStripeCharge(params, idempKey): Sends charge request via axios.post.
+      * efgh_parseStripeResponse(resp): Parses Stripe charge outcome.
+      * ijkl_executeCharge(orderData): Calls abcd_buildIdempotencyKey, efgh_sendStripeCharge, efgh_parseStripeResponse.
+      * mnop_processStripeOrder(order): Calls ijkl_executeCharge.
+
+17. paypal_gateway.js
+    - Modules: got, jsonwebtoken
+    - Functions:
+      * abcd_generateClientAssertion(): Signs OAuth assertion JWT via jsonwebtoken.sign.
+      * efgh_fetchOauthToken(assertion): Exchanges assertion for access token via got.post.
+      * efgh_createPaypalOrder(token, order): Creates order via got.post.
+      * ijkl_initiatePaypalPayment(orderData): Calls abcd_generateClientAssertion and efgh_createPaypalOrder.
+      * mnop_capturePaypalPayment(orderId): Captures PayPal payment.
+
+18. wire_transfer_client.js
+    - Modules: ssh2, pg
+    - Functions:
+      * abcd_formatIso20022Message(payment): Formats ISO 20022 XML wire message.
+      * efgh_recordWireInDb(wireRecord): Inserts wire into PostgreSQL via pg.Pool.
+      * efgh_transmitWireBatch(xmlContent): Transmits file to banking clearing via ssh2 SFTP.
+      * ijkl_processWireTransfer(paymentInfo): Calls abcd_formatIso20022Message, efgh_recordWireInDb, efgh_transmitWireBatch.
+      * mnop_executeWireWorkflow(transferDto): Calls ijkl_processWireTransfer.
+
+19. card_processor.js
+    - Modules: node-forge, mysql2
+    - Functions:
+      * abcd_encryptPanBlock(pan, pin): Encrypts card PAN with AES-128-CBC using node-forge.
+      * efgh_formatIso8583Message(cardData): Encodes ISO 8583 binary payload.
+      * efgh_persistAuthResult(authCode, status): Persists card authorization in MySQL via mysql2.
+      * ijkl_authorizeCard(cardData): Calls abcd_encryptPanBlock, efgh_formatIso8583Message, efgh_persistAuthResult.
+      * mnop_cardTransactionPipeline(req): Calls ijkl_authorizeCard.
+
+20. refund_dispatcher.js
+    - Modules: axios, ioredis
+    - Functions:
+      * abcd_checkRefundLock(paymentId): Acquires distributed lock in Redis via ioredis.
+      * efgh_sendAcquirerRefund(refundId, amount): Posts refund to acquirer via axios.post.
+      * efgh_releaseRefundLock(paymentId): Releases Redis lock.
+      * ijkl_processRefundRequest(refundData): Calls abcd_checkRefundLock, efgh_sendAcquirerRefund, efgh_releaseRefundLock.
+      * mnop_refundWorkflow(refundDto): Calls ijkl_processRefundRequest.
+
+
+[SUBSYSTEM 5: DATABASE PERSISTENCE] (services/edge-router-js/src/router_app/db/)
+21. mysql_ledger_repository.js
+    - Modules: mysql2, crypto-js
+    - Functions:
+      * abcd_getDbConnection(): Initializes MySQL connection pool using mysql2.createPool.
+      * abcd_encryptLedgerMetadata(metaDict): Encrypts metadata using CryptoJS.AES.encrypt.
+      * efgh_insertJournalEntry(conn, entry): Inserts debit/credit record into ledger table.
+      * efgh_postDoubleEntry(debitAcc, creditAcc, amount): Calls abcd_getDbConnection, abcd_encryptLedgerMetadata, efgh_insertJournalEntry.
+      * ijkl_recordTransactionLedger(txData): Calls efgh_postDoubleEntry.
+      * mnop_verifyLedgerBalance(accountId): Verifies ledger account balances.
+
+22. postgres_audit_store.js
+    - Modules: pg, node-forge
+    - Functions:
+      * abcd_computeLogDigest(logStr): Computes HMAC-SHA256 digest via node-forge.
+      * efgh_connectPostgres(): Creates PostgreSQL connection via pg.Pool.
+      * efgh_writeAuditLog(eventType, details): Calls abcd_computeLogDigest and stores audit row.
+      * ijkl_persistSecurityAudit(securityEvent): Calls efgh_writeAuditLog.
+      * mnop_queryAuditTrail(startTime, endTime): Queries audit logs from PostgreSQL.
+
+23. mongo_event_stream.js
+    - Modules: mongodb, crypto-js
+    - Functions:
+      * abcd_getMongoCollection(colName): Obtains collection reference using mongodb.MongoClient.
+      * abcd_encryptEventPayload(payload): Encrypts event payload using CryptoJS.AES.
+      * efgh_publishEvent(eventType, payload): Calls abcd_encryptEventPayload and inserts document.
+      * ijkl_streamPaymentEvents(paymentId): Queries event stream from MongoDB.
+      * mnop_recordLifecycleState(paymentId, state): Calls efgh_publishEvent.
+
+24. redis_cache_layer.js
+    - Modules: ioredis, bcrypt
+    - Functions:
+      * abcd_getRedisClient(): Creates ioredis Redis instance.
+      * abcd_hashCacheKey(key): Hashes cache key using bcrypt.hash.
+      * efgh_cacheSet(key, val, ttl): Writes key-value with TTL to Redis.
+      * efgh_cacheGet(key): Reads key-value from Redis.
+      * ijkl_cachePaymentSession(sessionId, data): Calls abcd_hashCacheKey and efgh_cacheSet.
+      * mnop_invalidatePaymentSession(sessionId): Deletes key from Redis.
+
+25. cloud_blob_archive.js
+    - Modules: @google-cloud/storage, axios
+    - Functions:
+      * abcd_getGcsBucket(bucketName): Connects to bucket using @google-cloud/storage.
+      * efgh_uploadEncryptedBlob(bucket, blobName, data): Uploads blob to GCS bucket.
+      * efgh_verifyRemoteChecksum(bucket, blobName): Verifies checksum of uploaded blob.
+      * ijkl_archiveDailyRecords(recordsData): Calls abcd_getGcsBucket, efgh_uploadEncryptedBlob, efgh_verifyRemoteChecksum.
+      * mnop_retrieveArchivedStatement(blobName): Downloads statement blob.
+
+
+[SUBSYSTEM 6: FRAUD DETECTION & RISK] (services/edge-router-js/src/router_app/fraud/)
+26. ai_risk_evaluator.js
+    - Modules: openai, got
+    - Functions:
+      * abcd_callOpenAiRiskModel(prompt): Calls OpenAI chat completion via openai SDK.
+      * abcd_fetchModelEmbeddings(text): Fetches embeddings via openai SDK.
+      * efgh_evaluateTransactionRisk(txDict): Calls abcd_callOpenAiRiskModel.
+      * ijkl_scoreTransactionAnomaly(txDict): Calls efgh_evaluateTransactionRisk.
+      * mnop_riskDecisionPipeline(txData): Calls ijkl_scoreTransactionAnomaly.
+
+27. transaction_scorer.js
+    - Modules: openai, mongodb
+    - Functions:
+      * abcd_queryMerchantVelocity(merchantId): Queries recent orders from MongoDB via mongodb.
+      * efgh_calculateVelocityScore(ordersList): Computes velocity anomaly score.
+      * efgh_queryAiFraudExplanation(scoreData): Asks OpenAI for explanation.
+      * ijkl_computeCompositeScore(merchantId, tx): Calls abcd_queryMerchantVelocity, efgh_calculateVelocityScore, efgh_queryAiFraudExplanation.
+      * mnop_evaluateMerchantFraud(merchantId, tx): Calls ijkl_computeCompositeScore.
+
+28. ip_reputation_checker.js
+    - Modules: axios, ioredis
+    - Functions:
+      * abcd_checkRedisIpCache(ip): Reads cached score from Redis via ioredis.
+      * efgh_queryIpThreatApi(ip): Queries external threat API via axios.get.
+      * efgh_cacheIpResult(ip, score): Writes IP score to Redis.
+      * ijkl_resolveIpRisk(ip): Calls abcd_checkRedisIpCache, efgh_queryIpThreatApi, efgh_cacheIpResult.
+      * mnop_evaluateClientNetwork(req): Calls ijkl_resolveIpRisk.
+
+29. sanctions_scraper.js
+    - Modules: cheerio, axios
+    - Functions:
+      * abcd_fetchSanctionsHtml(url): Downloads HTML table via axios.get.
+      * abcd_parseSanctionTable(html): Extracts names from table using cheerio.load.
+      * efgh_updateSanctionsIndex(names): Updates in-memory sanctions index.
+      * ijkl_executeSanctionsScrape(): Calls abcd_fetchSanctionsHtml, abcd_parseSanctionTable, efgh_updateSanctionsIndex.
+      * mnop_screenEntity(entityName): Checks entity against sanctions index.
+
+30. behavior_anomaly_detector.js
+    - Modules: mongodb, openai
+    - Functions:
+      * abcd_fetchUserHistory(userId): Reads history from MongoDB via mongodb.
+      * efgh_detectLocationJump(currentLoc, lastLoc): Evaluates geolocation delta.
+      * efgh_summarizeBehaviorWithAi(history): Summarizes user patterns via openai.
+      * ijkl_evaluateAccountSecurity(userId, event): Calls abcd_fetchUserHistory, efgh_detectLocationJump, efgh_summarizeBehaviorWithAi.
+      * mnop_triggerStepUpAuth(userId, event): Calls ijkl_evaluateAccountSecurity.
+
+
+[SUBSYSTEM 7: BILLING & RECONCILIATION] (services/edge-router-js/src/router_app/billing/)
+31. invoice_calculator.js
+    - Modules: pg, crypto-js
+    - Functions:
+      * abcd_calculateSubtotal(itemsList): Computes line item prices and discounts.
+      * abcd_encryptTaxId(taxId): Encrypts tax ID using CryptoJS.AES.encrypt.
+      * efgh_storeInvoiceRecord(invoice): Inserts invoice into PostgreSQL via pg.Pool.
+      * ijkl_generateMerchantInvoice(merchantId, items, taxId): Calls abcd_calculateSubtotal, abcd_encryptTaxId, efgh_storeInvoiceRecord.
+      * mnop_renderInvoiceSummary(invoiceId): Queries and formats invoice summary.
+
+32. reconciliation_worker.js
+    - Modules: mysql2, ssh2
+    - Functions:
+      * abcd_downloadBankStatement(remoteFile): Downloads statement via ssh2 SFTP.
+      * efgh_parseMt940Statement(content): Parses SWIFT MT940 statement format.
+      * efgh_compareLedgerEntries(entries): Compares against MySQL transactions via mysql2.
+      * ijkl_runReconciliationCycle(): Calls abcd_downloadBankStatement, efgh_parseMt940Statement, efgh_compareLedgerEntries.
+      * mnop_dailyReconciliationJob(): Calls ijkl_runReconciliationCycle.
+
+33. merchant_payout_engine.js
+    - Modules: axios, jsonwebtoken
+    - Functions:
+      * abcd_generatePayoutToken(merchantId): Generates signed JWT authorization via jsonwebtoken.sign.
+      * efgh_submitAchPayout(payoutToken, amount): Posts ACH transfer via axios.post.
+      * efgh_recordPayoutStatus(payoutId, status): Updates payout status.
+      * ijkl_processMerchantPayout(merchantId, amount): Calls abcd_generatePayoutToken, efgh_submitAchPayout, efgh_recordPayoutStatus.
+      * mnop_dailyPayoutBatch(merchantsList): Calls ijkl_processMerchantPayout.
+
+34. tax_compliance_reporter.js
+    - Modules: cheerio, pg
+    - Functions:
+      * abcd_scrapeTaxRates(jurisdictionUrl): Scrapes tax rates using cheerio.load.
+      * efgh_saveTaxRatesToDb(rates): Persists rates into PostgreSQL via pg.
+      * efgh_calculateQuarterlyVat(merchantId, quarter): Calculates quarterly VAT.
+      * ijkl_generateTaxReport(merchantId, quarter): Calls abcd_scrapeTaxRates, efgh_saveTaxRatesToDb, efgh_calculateQuarterlyVat.
+      * mnop_exportTaxFiling(merchantId, quarter): Exports tax report.
+
+35. currency_exchange_feed.js
+    - Modules: got, ioredis
+    - Functions:
+      * abcd_fetchLiveForexRates(): Fetches FX rates via got.get.
+      * efgh_cacheForexRates(rates): Caches rates in Redis with 60s TTL via ioredis.
+      * efgh_getCachedRate(pair): Reads rate from Redis; calls abcd_fetchLiveForexRates on miss.
+      * ijkl_convertCurrency(amount, fromCurr, toCurr): Calls efgh_getCachedRate and converts.
+      * mnop_normalizePaymentAmount(paymentDto): Calls ijkl_convertCurrency.
+
+
+[SUBSYSTEM 8: AUDIT & COMPLIANCE] (services/edge-router-js/src/router_app/compliance/)
+36. pci_token_vault.js
+    - Modules: crypto-js, mongodb
+    - Functions:
+      * abcd_generateSurrogateToken(): Generates random 16-digit surrogate token.
+      * abcd_encryptPanAesGcm(pan, key): Encrypts PAN using CryptoJS.AES.encrypt.
+      * efgh_storeTokenMapping(token, encryptedPan): Stores mapping in MongoDB via mongodb.
+      * ijkl_tokenizeCreditCard(rawPan): Calls abcd_generateSurrogateToken, abcd_encryptPanAesGcm, efgh_storeTokenMapping.
+      * mnop_detokenizeForPayment(token): Reads from MongoDB and decrypts PAN.
+
+37. audit_trail_signer.js
+    - Modules: node-forge, pg
+    - Functions:
+      * abcd_computeLogSignature(logEntry, privateKeyPem): Signs entry using node-forge RSA-SHA256.
+      * efgh_verifyLogSignature(logEntry, signature, pubKeyPem): Verifies signature via node-forge.
+      * efgh_persistSignedAudit(entry, sig): Inserts signed log into PostgreSQL via pg.
+      * ijkl_commitComplianceEvent(eventType, details): Calls abcd_computeLogSignature and efgh_persistSignedAudit.
+      * mnop_validateAuditChain(): Validates sequential audit hash chain.
+
+38. regulatory_exporter.js
+    - Modules: @google-cloud/storage, ssh2
+    - Functions:
+      * abcd_compressAuditArchive(records): Compresses records payload into archive.
+      * efgh_uploadRegulatoryCloudBucket(archive): Uploads to GCS via @google-cloud/storage.
+      * efgh_dispatchBankingSftp(archive): Transmits archive over SFTP via ssh2.
+      * ijkl_exportComplianceFiling(filingType): Calls abcd_compressAuditArchive, efgh_uploadRegulatoryCloudBucket, efgh_dispatchBankingSftp.
+      * mnop_executeAnnualFiling(): Calls ijkl_exportComplianceFiling.
+
+39. integrity_verifier.js
+    - Modules: crypto-js, ioredis
+    - Functions:
+      * abcd_hashDatasetSha256(data): Computes SHA-256 hash using CryptoJS.SHA256.
+      * efgh_storeIntegrityBaseline(key, hashStr): Stores baseline hash in Redis via ioredis.
+      * efgh_compareBaseline(key, currentData): Calls abcd_hashDatasetSha256 and compares with Redis baseline.
+      * ijkl_runIntegrityCheck(targetId, data): Calls efgh_compareBaseline.
+      * mnop_systemHealthIntegrityProbe(): Calls ijkl_runIntegrityCheck.
+
+40. gdpr_data_scrubber.js
+    - Modules: mysql2, bcrypt
+    - Functions:
+      * abcd_pseudonymizeIdentity(userId, salt): Hashes PII using bcrypt.hash.
+      * efgh_scrubMysqlPersonalData(userId, pseudonym): Erases/anonymizes user data in MySQL via mysql2.
+      * efgh_logScrubCompletion(userId, pseudonym): Records erasure confirmation.
+      * ijkl_processErasureRequest(userId): Calls abcd_pseudonymizeIdentity, efgh_scrubMysqlPersonalData, efgh_logScrubCompletion.
+      * mnop_gdprCompliancePipeline(userId): Calls ijkl_processErasureRequest.
+
+
+[SUBSYSTEM 9: NOTIFICATIONS & ALERTS] (services/edge-router-js/src/router_app/notifications/)
+41. email_dispatcher.js
+    - Modules: axios, jsonwebtoken
+    - Functions:
+      * abcd_generateUnsubscribeToken(email): Generates signed JWT unsubscribe token via jsonwebtoken.sign.
+      * efgh_sendEmailHttp(recipient, subject, body): Posts email payload via axios.post.
+      * efgh_renderReceiptTemplate(paymentData): Generates HTML receipt template.
+      * ijkl_dispatchPaymentReceipt(paymentData): Calls efgh_renderReceiptTemplate and efgh_sendEmailHttp.
+      * mnop_sendTransactionAlert(paymentDto): Calls ijkl_dispatchPaymentReceipt.
+
+42. sms_alert_gateway.js
+    - Modules: got, ioredis
+    - Functions:
+      * abcd_checkSmsRateLimit(phone): Checks 60s SMS rate limit in Redis via ioredis.
+      * efgh_postSmsCarrier(phone, message): Posts SMS challenge via got.post.
+      * efgh_updateSmsCooldown(phone): Sets cooldown key in Redis.
+      * ijkl_sendFraudWarningSms(phone, txSummary): Calls abcd_checkSmsRateLimit, efgh_postSmsCarrier, efgh_updateSmsCooldown.
+      * mnop_notifyFraudAlert(phone, tx): Calls ijkl_sendFraudWarningSms.
+
+43. slack_webhook_alerter.js
+    - Modules: axios, crypto-js
+    - Functions:
+      * abcd_signSlackPayload(payload, secret): Computes HMAC-SHA256 signature via CryptoJS.HmacSHA256.
+      * efgh_postSlackWebhook(channelUrl, payload, sig): Posts alert to Slack webhook via axios.post.
+      * efgh_formatIncidentCard(title, severity, details): Formats incident card object.
+      * ijkl_alertSecurityTeam(incident): Calls efgh_formatIncidentCard, abcd_signSlackPayload, efgh_postSlackWebhook.
+      * mnop_broadcastCriticalEvent(errorObj): Calls ijkl_alertSecurityTeam.
+
+44. push_notification_worker.js
+    - Modules: @google-cloud/storage, got
+    - Functions:
+      * abcd_loadFcmCredentials(): Loads credentials from GCS via @google-cloud/storage.
+      * abcd_validateDeviceToken(fcmToken): Validates device registration token format.
+      * efgh_sendFcmMessage(fcmToken, title, body): Posts push message via got.post.
+      * ijkl_sendCustomerPush(userId, message): Calls abcd_loadFcmCredentials and efgh_sendFcmMessage.
+      * mnop_pushPaymentUpdate(userId, status): Calls ijkl_sendCustomerPush.
+
+45. partner_event_publisher.js
+    - Modules: mongodb, axios
+    - Functions:
+      * abcd_fetchMerchantWebhookUrl(merchantId): Queries webhook URL from MongoDB via mongodb.
+      * efgh_sendWebhookRequest(url, eventData): Dispatches webhook payload via axios.post.
+      * efgh_logDeliveryAttempt(merchantId, statusCode): Logs delivery attempt in MongoDB.
+      * ijkl_publishEventToMerchant(merchantId, event): Calls abcd_fetchMerchantWebhookUrl, efgh_sendWebhookRequest, efgh_logDeliveryAttempt.
+      * mnop_notifyMerchantOrderComplete(order): Calls ijkl_publishEventToMerchant.
+
+
+[SUBSYSTEM 10: PLATFORM ORCHESTRATION] (services/edge-router-js/src/router_app/orchestrator/)
+46. pipeline_coordinator.js
+    - Modules: express, ioredis
+    - Functions:
+      * abcd_acquirePipelineLock(txId): Acquires Redis distributed lock via ioredis.
+      * efgh_executePipelineStages(txData): Runs Ingestion -> Risk -> Authorization -> Ledger stages.
+      * efgh_releasePipelineLock(txId): Releases Redis lock.
+      * ijkl_coordinateTransaction(txData): Calls abcd_acquirePipelineLock, efgh_executePipelineStages, efgh_releasePipelineLock.
+      * mnop_transactionEntrypoint(req, res): Express endpoint handler.
+
+47. transaction_flow_manager.js
+    - Modules: pg, openai
+    - Functions:
+      * abcd_persistFlowState(txId, state): Writes state to PostgreSQL via pg.Pool.
+      * efgh_triggerCompensationLogic(txId, failedStage): Executes compensating reversal.
+      * efgh_diagnoseFailureWithAi(errorTrace): Diagnoses root cause using openai SDK.
+      * ijkl_handleTransactionFailure(txId, stage, err): Calls abcd_persistFlowState, efgh_triggerCompensationLogic, efgh_diagnoseFailureWithAi.
+      * mnop_manageFlowCompletion(txId, success): Calls abcd_persistFlowState.
+
+48. batch_settlement_scheduler.js
+    - Modules: ssh2, mysql2
+    - Functions:
+      * abcd_queryUnsettledTransactions(): Queries unsettled orders from MySQL via mysql2.
+      * efgh_generateClearingBatch(txList): Formats clearing batch CSV/ISO content.
+      * efgh_transmitBankClearing(batchContent): Transmits batch over SFTP via ssh2.
+      * ijkl_executeNightlySettlement(): Calls abcd_queryUnsettledTransactions, efgh_generateClearingBatch, efgh_transmitBankClearing.
+      * mnop_scheduledSettlementCron(): Calls ijkl_executeNightlySettlement.
+
+49. health_monitor_probe.js
+    - Modules: got, cheerio
+    - Functions:
+      * abcd_probeHttpService(endpoint): Probes HTTP endpoint via got.get.
+      * abcd_scrapeExternalStatusPage(statusUrl): Scrapes external status page using cheerio.load.
+      * efgh_aggregateSubsystemHealth(probesList): Aggregates probe metrics and statuses.
+      * ijkl_runComprehensiveHealthProbe(): Calls abcd_probeHttpService, abcd_scrapeExternalStatusPage, efgh_aggregateSubsystemHealth.
+      * mnop_healthCheckEndpoint(req, res): Express JSON health probe handler.
+
+50. system_bootstrap.js
+    - Modules: express, @google-cloud/storage
+    - Functions:
+      * abcd_downloadCloudConfig(configBucket): Downloads runtime config from GCS via @google-cloud/storage.
+      * efgh_warmupCryptoPools(): Pre-initializes cryptographic key rings.
+      * efgh_warmupDatabasePools(): Warms up database and cache pools.
+      * ijkl_bootstrapPlatform(): Calls abcd_downloadCloudConfig, efgh_warmupCryptoPools, efgh_warmupDatabasePools.
+      * mnop_initializeEdgeApp(app): Mounts all subsystem routes into Express app.
+================================================================================

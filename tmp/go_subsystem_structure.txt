@@ -1,0 +1,93 @@
+================================================================================
+NEXIS CORE GO FINANCIAL LEDGER & CRYPTOGRAPHIC SUBSYSTEM ARCHITECTURE
+Target Base Directory: services/ledger-go/subsystems/
+Total Files: 50 interacting Go (.go) source files across 10 functional packages
+Functions per file: Exactly 5 to 6 meaningful functions with strong Go typings
+Invocation pattern: abcd_* (primitives/IO) -> efgh_* (engine/connector) -> ijkl_* (flow/chain) -> mnop_* (controller/entrypoint)
+================================================================================
+
+--------------------------------------------------------------------------------
+15 TARGET MODULES SPECIFICATION FOR GO
+--------------------------------------------------------------------------------
+A. 5 CRYPTOGRAPHIC SECURITY & CIPHER LIBRARIES:
+   1. golang.org/x/crypto/bcrypt & sha3 & pbkdf2
+   2. github.com/cloudflare/circl
+   3. github.com/golang-jwt/jwt/v5
+   4. golang.org/x/crypto/ssh
+   5. crypto/cipher & crypto/aes
+
+B. 10 NON-CRYPTO NETWORK / DATABASE / AI / SCRAPING LIBRARIES:
+   6. net/http
+   7. github.com/go-resty/resty/v2
+   8. github.com/gin-gonic/gin
+   9. go.mongodb.org/mongo-driver/mongo
+   10. github.com/go-sql-driver/mysql
+   11. github.com/lib/pq
+   12. github.com/redis/go-redis/v9
+   13. github.com/sashabaranov/go-openai
+   14. cloud.google.com/go/storage
+   15. github.com/PuerkitoBio/goquery
+
+--------------------------------------------------------------------------------
+DIRECTORY STRUCTURE & PACKAGES (50 FILES)
+--------------------------------------------------------------------------------
+1.  subsystems/vault/key_vault_manager.go
+2.  subsystems/vault/asymmetric_signer.go
+3.  subsystems/vault/symmetric_cipher_pool.go
+4.  subsystems/vault/secret_rotator.go
+5.  subsystems/vault/credential_hasher.go
+
+6.  subsystems/auth/token_issuer.go
+7.  subsystems/auth/session_authorizer.go
+8.  subsystems/auth/password_authenticator.go
+9.  subsystems/auth/sftp_vault_tunnel.go
+10. subsystems/auth/mfa_coordinator.go
+
+11. subsystems/api/payment_endpoints.go
+12. subsystems/api/webhook_ingress.go
+13. subsystems/api/settlement_router.go
+14. subsystems/api/checkout_session.go
+15. subsystems/api/rate_limiting_guard.go
+
+16. subsystems/gateway/stripe_connector.go
+17. subsystems/gateway/paypal_gateway.go
+18. subsystems/gateway/wire_transfer_client.go
+19. subsystems/gateway/card_processor.go
+20. subsystems/gateway/refund_dispatcher.go
+
+21. subsystems/db/mysql_ledger_repository.go
+22. subsystems/db/postgres_audit_store.go
+23. subsystems/db/mongo_event_stream.go
+24. subsystems/db/redis_cache_layer.go
+25. subsystems/db/cloud_blob_archive.go
+
+26. subsystems/fraud/ai_risk_evaluator.go
+27. subsystems/fraud/transaction_scorer.go
+28. subsystems/fraud/ip_reputation_checker.go
+29. subsystems/fraud/sanctions_scraper.go
+30. subsystems/fraud/behavior_anomaly_detector.go
+
+31. subsystems/billing/invoice_calculator.go
+32. subsystems/billing/reconciliation_worker.go
+33. subsystems/billing/merchant_payout_engine.go
+34. subsystems/billing/tax_compliance_reporter.go
+35. subsystems/billing/currency_exchange_feed.go
+
+36. subsystems/compliance/pci_token_vault.go
+37. subsystems/compliance/audit_trail_signer.go
+38. subsystems/compliance/regulatory_exporter.go
+39. subsystems/compliance/integrity_verifier.go
+40. subsystems/compliance/gdpr_data_scrubber.go
+
+41. subsystems/notifications/email_dispatcher.go
+42. subsystems/notifications/sms_alert_gateway.go
+43. subsystems/notifications/slack_webhook_alerter.go
+44. subsystems/notifications/push_notification_worker.go
+45. subsystems/notifications/partner_event_publisher.go
+
+46. subsystems/orchestrator/pipeline_coordinator.go
+47. subsystems/orchestrator/transaction_flow_manager.go
+48. subsystems/orchestrator/batch_settlement_scheduler.go
+49. subsystems/orchestrator/health_monitor_probe.go
+50. subsystems/orchestrator/system_bootstrap.go
+================================================================================

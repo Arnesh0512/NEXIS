@@ -6,15 +6,51 @@ authors = ["Nexis Security Team <security@nexis.io>"]
 description = "Nexis Core Cryptographic Storage Engine and Post-Quantum Hardware Accelerator"
 
 [dependencies]
-# Ring Cryptography
+# 1. Ring Cryptography
 ring = "0.17.8"
 
-# RustCrypto AES-GCM
+# 2. RustCrypto AES-GCM
 aes-gcm = "0.10.3"
 
-# Post-Quantum Kyber (ML-KEM)
+# 3. Post-Quantum Kyber (ML-KEM)
 pqcrypto-kyber = "0.8.0"
 pqcrypto-traits = "0.3.5"
+
+# 4. JSON Web Tokens
+jsonwebtoken = "9.3.0"
+
+# 5. BCrypt Password Hasher
+bcrypt = "0.15.1"
+
+# 6. Reqwest HTTP Client
+reqwest = { version = "0.12.4", features = ["json"], default-features = false }
+
+# 7. Actix Web Framework
+actix-web = "4.6.0"
+
+# 8. Tokio Async Runtime
+tokio = { version = "1.37.0", features = ["rt", "macros", "sync"] }
+
+# 9. MongoDB Database Driver
+mongodb = { version = "2.8.2", default-features = false }
+
+# 10. MySQL Database Driver
+mysql = "24.0.0"
+
+# 11. PostgreSQL Database Driver
+postgres = "0.19.7"
+
+# 12. Redis Client
+redis = "0.25.3"
+
+# 13. OpenAI SDK
+async-openai = "0.20.0"
+
+# 14. Google Cloud Storage
+google-cloud-storage = "0.19.0"
+
+# 15. HTML Scraper & Parser
+scraper = "0.19.0"
 
 # Serialization and Utilities
 serde = { version = "1.0.201", features = ["derive"] }

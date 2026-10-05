@@ -41,8 +41,10 @@ run_check "C/C++ GCC & CMake" "gcc --version && g++ --version && cmake --version
 run_check "OpenSSL & SoftHSM2" "openssl version && softhsm2-util --version"
 
 # 2. Python Dependencies (services/payment-py)
-run_check "Python Cryptography Libraries (cryptography, pycryptodome, bcrypt, paramiko)" \
-    "python3 -c 'import cryptography, Crypto, bcrypt, paramiko, pydantic, requests, dotenv; print(\"OK\")'"
+run_check "Python 15 Cryptographic & Network Libraries (cryptography, Crypto, bcrypt, jwt, paramiko, requests, httpx, fastapi, pymongo, pymysql, psycopg2, redis, openai, google.cloud.storage, bs4)" \
+    "python3 -c 'import cryptography, Crypto, bcrypt, jwt, paramiko, requests, httpx, fastapi, pymongo, pymysql, psycopg2, redis, openai, google.cloud.storage, bs4, pydantic, dotenv; print(\"OK\")'"
+run_check "Payment Service 50 Subsystem Files Compilation" \
+    "python3 -m py_compile services/payment-py/payment_app/**/*.py"
 run_check "Payment Service PCI Engine Self-Test" \
     "python3 -c 'import sys; sys.path.insert(0, \"services/payment-py\"); from payment_app.pci_compliance import PciComplianceEngine; e = PciComplianceEngine(\"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef\"); r = e.encrypt_pan(\"4111111111111111\", \"test\"); assert \"masked_pan\" in r'"
 
@@ -50,23 +52,40 @@ run_check "Payment Service PCI Engine Self-Test" \
 run_check "TypeScript API Gateway Built Dist" "test -f services/api-gateway-ts/dist/gateway_router.js"
 run_check "API Gateway NPM Dependencies (jsonwebtoken, jose, crypto-js)" \
     "node -e 'require(\"./services/api-gateway-ts/node_modules/jsonwebtoken\"); require(\"./services/api-gateway-ts/node_modules/jose\"); require(\"./services/api-gateway-ts/node_modules/crypto-js\")'"
+run_check "API Gateway 50 Subsystem Files & 15 Modules Check" \
+    "node tmp/verify_ts_subsystems.js"
 run_check "Edge Router NPM Dependencies" \
     "node -e 'require(\"./services/edge-router-js/node_modules/crypto-js\"); require(\"./services/edge-router-js/node_modules/jsonwebtoken\")'"
+run_check "Edge Router 50 Subsystem Files Compilation & AST Check" \
+    "node tmp/verify_js_subsystems.js"
 
 # 4. Go Ledger Microservice
 run_check "Go Ledger Module Dependencies (circl, x/crypto)" "cd services/ledger-go && go vet ./..."
+run_check "Go Ledger 50 Subsystem Files & 15 Modules Check" "python3 tmp/verify_go_subsystems.py"
 
 # 5. C/C++ Cryptographic Daemons
 run_check "C HSM Daemon Binary" "test -f services/hsm-c/build/hsm-daemon"
+run_check "C HSM 50 Subsystem Files & 15 Modules Check" "python3 tmp/verify_c_subsystems.py"
 run_check "C++ Vault Server Binary" "test -f services/vault-cpp/build/vault-server"
+run_check "C++ Vault 50 Subsystem Files & 15 Modules Check" "python3 tmp/verify_cpp_subsystems.py"
 
 # 6. Java Authentication Service
 run_check "Java Auth Service Classes" "test -f services/auth-java/target/classes/com/nexis/auth/PasswordHasher.class"
+run_check "Java Auth 50 Subsystem Files & 15 Modules Check" \
+    "python3 tmp/verify_java_subsystems.py"
+
+# 6b. Kotlin Identity Service
+run_check "Kotlin Identity 50 Subsystem Files & 15 Modules Check" \
+    "python3 tmp/verify_kotlin_subsystems.py"
 
 # 7. Rust Cryptographic Engine
 run_check "Rust Crypto Storage Engine Check" "(cd services/crypto-rs && cargo check)"
+run_check "Rust Crypto 50 Subsystem Files & 15 Modules Check" "python3 tmp/verify_rust_subsystems.py"
 
-# 8. Certificates & Cryptographic Assets
+# 8. Python Payment Service
+run_check "Python Payment 50 Subsystem Files & 15 Modules Check" "python3 tmp/verify_py_subsystems.py"
+
+# 9. Certificates & Cryptographic Assets
 run_check "Nexis Internal Root CA Installed" "openssl x509 -in certificates/nexis-root-ca.crt -noout -subject"
 run_check "Edge Router TLS Certificate & Key" "openssl x509 -in certificates/edge-router.crt -noout -subject && test -f keys/edge-router.key"
 

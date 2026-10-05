@@ -1,0 +1,529 @@
+================================================================================
+NEXIS CORE JAVA ENTERPRISE AUTHENTICATION & FINANCIAL SUBSYSTEM ARCHITECTURE
+Target Base Directory: services/auth-java/src/main/java/com/nexis/auth/
+Total Files: 50 interacting Java (.java) source files across 10 functional packages
+Functions per file: Exactly 5 to 6 meaningful methods with strong Java typings
+Invocation pattern: abcd_* (primitives/IO) -> efgh_* (engine/connector) -> ijkl_* (flow/chain) -> mnop_* (controller/entrypoint)
+================================================================================
+
+--------------------------------------------------------------------------------
+15 TARGET MODULES SPECIFICATION FOR JAVA
+--------------------------------------------------------------------------------
+A. 5 CRYPTOGRAPHIC SECURITY & CIPHER LIBRARIES:
+   1. org.bouncycastle:bcprov-jdk18on & bcpkix-jdk18on
+      - Enterprise Bouncy Castle security provider, RSA-PSS, PQC Dilithium, X.509 certificates
+   2. com.google.crypto.tink:tink
+      - Google Tink multi-language crypto library: AEAD (AES-256-GCM), HMAC, Hybrid Encryption
+   3. org.apache.commons:commons-crypto
+      - Optimized OpenSSL / JNI accelerated cryptographic ciphers (AES-CTR, AES-CBC)
+   4. io.jsonwebtoken:jjwt-api (plus jjwt-impl & jjwt-jackson)
+      - JSON Web Token generation, claim verification, asymmetric signing (RS256, ES256)
+   5. com.github.mwiede:jsch (or org.apache.sshd:sshd-core)
+      - Secure Shell (SSH2) & SFTP encrypted network tunnels, public key authentication
+   (Bonus: org.mindrot:jbcrypt for salted bcrypt password hashing)
+
+B. 10 NON-CRYPTO NETWORK / DATABASE / AI / SCRAPING LIBRARIES:
+   6. com.squareup.okhttp3:okhttp
+      - High-performance HTTP/2 client for upstream webhooks and microservice communication
+   7. org.apache.httpcomponents.client5:httpclient5
+      - Resilient Apache HTTP client with connection pooling, retries, and SSL context
+   8. org.springframework:spring-web (or com.sun.net.httpserver)
+      - HTTP REST endpoint routing, request controllers, and API dispatch
+   9. org.mongodb:mongodb-driver-sync
+      - Official MongoDB Java driver for BSON document persistence and event streams
+   10. com.mysql:mysql-connector-j
+      - Enterprise MySQL JDBC database connector and transaction management
+   11. org.postgresql:postgresql
+      - PostgreSQL JDBC driver for tamper-evident audit logging and double-entry ledger
+   12. redis.clients:jedis
+      - High-performance Redis client for distributed locks, caching, and rate limiting
+   13. com.theokanning.openai-gpt3-java:service (or com.openai:openai-java)
+      - OpenAI Java client for AI-driven risk evaluation and automated fraud explanation
+   14. com.google.cloud:google-cloud-storage
+      - Google Cloud Storage client for regulatory archiving, backup, and statement storage
+   15. org.jsoup:jsoup
+      - Fast HTML scraping and DOM parsing for OFAC sanctions checks and regulatory feeds
+
+--------------------------------------------------------------------------------
+PACKAGE DIRECTORY STRUCTURE & MODULE MAPPING (50 FILES)
+--------------------------------------------------------------------------------
+
+[SUBSYSTEM 1: VAULT] (package com.nexis.auth.vault)
+1. KeyVaultManager.java
+   - Modules: org.bouncycastle, redis.clients:jedis
+   - Methods:
+     * abcd_generateMasterRsaKey(): KeyPair
+     * abcd_deriveDataEncryptionKey(byte[] masterKey, byte[] salt): SecretKeySpec
+     * efgh_storeKeyInCache(String keyId, String rawKeyHex): boolean
+     * efgh_retrieveActiveKey(String keyId): String
+     * ijkl_rotateMasterKey(String keyId): boolean
+     * mnop_vaultHealthCheck(): Map<String, Object>
+
+2. AsymmetricSigner.java
+   - Modules: org.bouncycastle, io.jsonwebtoken
+   - Methods:
+     * abcd_signPayloadRsa(byte[] payload, PrivateKey privateKey): byte[]
+     * abcd_verifyPayloadRsa(byte[] payload, byte[] signature, PublicKey publicKey): boolean
+     * abcd_createSignedJwtClaim(Map<String, Object> claims, PrivateKey privateKey): String
+     * efgh_authenticateOutboundOrder(Map<String, Object> orderObj): Map<String, Object>
+     * ijkl_verifyInboundOrder(Map<String, Object> signedOrder): boolean
+     * mnop_dispatchValidatedOrder(Map<String, Object> orderData): Map<String, Object>
+
+3. SymmetricCipherPool.java
+   - Modules: org.apache.commons:commons-crypto, redis.clients:jedis
+   - Methods:
+     * abcd_aesGcmEncrypt(byte[] plaintext, byte[] keyBytes): byte[]
+     * abcd_aesGcmDecrypt(byte[] ciphertext, byte[] keyBytes): byte[]
+     * efgh_encryptCardPayload(Map<String, Object> cardData, byte[] sessionKey): String
+     * efgh_decryptCardPayload(String encryptedBlob, byte[] sessionKey): Map<String, Object>
+     * ijkl_secureTokenizationPipeline(Map<String, Object> rawRecord): String
+     * mnop_detokenizeForSettlement(String token): Map<String, Object>
+
+4. SecretRotator.java
+   - Modules: com.google.crypto.tink, com.google.cloud:google-cloud-storage
+   - Methods:
+     * abcd_generateReplacementAeadKey(): byte[]
+     * efgh_backupSecretToCloud(String secretName, byte[] payload): boolean
+     * efgh_applyRotatedSecret(String secretId, byte[] newSecret): boolean
+     * ijkl_executeScheduledRotation(String scheduleId): boolean
+     * mnop_verifyRotationIntegrity(String secretId): Map<String, Object>
+
+5. CredentialHasher.java
+   - Modules: org.mindrot:jbcrypt, com.mysql:mysql-connector-j
+   - Methods:
+     * abcd_hashPassword(String rawPassword): String
+     * abcd_verifyPassword(String rawPassword, String hashed): boolean
+     * efgh_storeUserCredential(String userId, String rawPassword): boolean
+     * efgh_checkUserLogin(String userId, String rawPassword): boolean
+     * ijkl_credentialVerificationFlow(Map<String, Object> loginReq): boolean
+     * mnop_adminResetCredential(String userId, String newPass): boolean
+
+--------------------------------------------------------------------------------
+[SUBSYSTEM 2: IDENTITY & AUTH TRANSPORT] (package com.nexis.auth.identity)
+6. TokenIssuerService.java
+   - Modules: io.jsonwebtoken, redis.clients:jedis
+   - Methods:
+     * abcd_encodeAccessToken(String userId, List<String> roles): String
+     * abcd_encodeRefreshToken(String userId): String
+     * efgh_issueAuthPair(String userId, List<String> roles): Map<String, String>
+     * efgh_blacklistToken(String tokenStr): boolean
+     * ijkl_renewTokenSession(String refreshToken): Map<String, String>
+     * mnop_terminateUserSessions(String userId): boolean
+
+7. SessionAuthorizer.java
+   - Modules: com.google.crypto.tink, org.springframework:spring-web
+   - Methods:
+     * abcd_decodeAndValidateMac(byte[] data, byte[] mac): boolean
+     * efgh_extractBearerToken(String authHeader): String
+     * efgh_authorizeRole(String requiredRole, String tokenStr): boolean
+     * ijkl_verifySessionSecurity(String authHeader, String role): boolean
+     * mnop_protectAdminRoute(Map<String, String> headers): boolean
+
+8. PasswordAuthenticator.java
+   - Modules: org.mindrot:jbcrypt, org.postgresql:postgresql
+   - Methods:
+     * abcd_queryUserAccount(String username): Map<String, Object>
+     * efgh_verifyUserCredentials(String username, String password): boolean
+     * efgh_recordLoginAttempt(String userId, boolean success): boolean
+     * ijkl_processLoginPipeline(Map<String, Object> loginData): boolean
+     * mnop_authenticateRequest(Map<String, Object> loginDto): Map<String, Object>
+
+9. SftpVaultTunnel.java
+   - Modules: com.github.mwiede:jsch, org.bouncycastle
+   - Methods:
+     * abcd_createSftpSession(String host, int port, String user): Object
+     * abcd_loadPrivateKeyPassphrase(String keyPem, String passphrase): KeyPair
+     * efgh_openSftpTunnel(String host, int port, String user, String keyPem): Object
+     * efgh_uploadBatchFile(Object session, String localPath, String remotePath): boolean
+     * ijkl_transmitClearingFile(String filePath): boolean
+     * mnop_dailySftpSyncJob(): boolean
+
+10. MfaCoordinator.java
+    - Modules: com.google.crypto.tink, com.squareup.okhttp3:okhttp
+    - Methods:
+      * abcd_generateTotpSecret(): byte[]
+      * abcd_verifyTotpCode(byte[] secret, int code): boolean
+      * efgh_sendSmsChallenge(String phone, String code): boolean
+      * ijkl_initiateMfaFlow(String userId, String phone): boolean
+      * ijkl_validateMfaFlow(String userId, int code): boolean
+      * mnop_enforceMfaRequirement(String userId, String step): boolean
+
+--------------------------------------------------------------------------------
+[SUBSYSTEM 3: INGESTION & API GATEWAY] (package com.nexis.auth.api)
+11. PaymentEndpoints.java
+    - Modules: org.springframework:spring-web, com.squareup.okhttp3:okhttp
+    - Methods:
+      * abcd_parsePaymentRequest(Map<String, Object> payload): Map<String, Object>
+      * efgh_forwardToRiskEngine(Map<String, Object> paymentReq): Map<String, Object>
+      * efgh_processPaymentRoute(Map<String, Object> payload): Map<String, Object>
+      * ijkl_capturePaymentRoute(String paymentId): Map<String, Object>
+      * mnop_paymentApiController(Map<String, Object> request): Map<String, Object>
+
+12. WebhookIngress.java
+    - Modules: org.apache.commons:commons-crypto, org.springframework:spring-web
+    - Methods:
+      * abcd_verifyWebhookSignature(String rawBody, String sigHeader, String secret): boolean
+      * efgh_parseWebhookEvent(String rawBody): Map<String, Object>
+      * efgh_handleStripeEvent(Map<String, Object> eventData): boolean
+      * ijkl_ingestWebhook(String rawBody, String sigHeader): boolean
+      * mnop_webhookEndpoint(Map<String, String> headers, String body): Map<String, Object>
+
+13. SettlementRouter.java
+    - Modules: org.apache.httpcomponents.client5:httpclient5, org.springframework:spring-web
+    - Methods:
+      * abcd_inspectSettlementRules(double amount, String currency): boolean
+      * efgh_dispatchAsyncClearing(String orderId): boolean
+      * efgh_routeSettlement(Map<String, Object> orderData): boolean
+      * ijkl_executeSettlementChain(Map<String, Object> orderData): boolean
+      * mnop_settlementRouteEndpoint(Map<String, Object> req): Map<String, Object>
+
+14. CheckoutSessionManager.java
+    - Modules: redis.clients:jedis, org.springframework:spring-web
+    - Methods:
+      * abcd_generateSessionId(): String
+      * efgh_saveSessionState(String sessionId, Map<String, Object> data): boolean
+      * efgh_getSessionState(String sessionId): Map<String, Object>
+      * ijkl_createCheckoutFlow(String merchantId, List<Map<String, Object>> items): String
+      * ijkl_completeCheckoutFlow(String sessionId): boolean
+      * mnop_checkoutApiHandler(Map<String, Object> req): Map<String, Object>
+
+15. RateLimitingGuard.java
+    - Modules: redis.clients:jedis, org.springframework:spring-web
+    - Methods:
+      * abcd_computeClientFingerprint(Map<String, String> headers): String
+      * efgh_incrementSlidingWindow(String clientKey): long
+      * efgh_checkRateLimit(String clientKey, int maxReqs): boolean
+      * ijkl_enforceRateLimit(Map<String, String> headers): boolean
+      * mnop_rateLimitMiddleware(Map<String, String> headers): boolean
+
+--------------------------------------------------------------------------------
+[SUBSYSTEM 4: PAYMENT GATEWAY CONNECTORS] (package com.nexis.auth.gateway)
+16. StripeConnector.java
+    - Modules: com.squareup.okhttp3:okhttp, org.apache.commons:commons-crypto
+    - Methods:
+      * abcd_buildIdempotencyKey(String orderId): String
+      * efgh_sendStripeCharge(Map<String, Object> params, String idempKey): Map<String, Object>
+      * efgh_parseStripeResponse(String responseJson): Map<String, Object>
+      * ijkl_executeCharge(Map<String, Object> orderData): Map<String, Object>
+      * mnop_processStripeOrder(Map<String, Object> order): Map<String, Object>
+
+17. PaypalGateway.java
+    - Modules: org.apache.httpcomponents.client5:httpclient5, io.jsonwebtoken
+    - Methods:
+      * abcd_generateClientAssertion(): String
+      * efgh_fetchOauthToken(String assertion): String
+      * efgh_createPaypalOrder(String token, Map<String, Object> order): Map<String, Object>
+      * ijkl_initiatePaypalPayment(Map<String, Object> orderData): Map<String, Object>
+      * mnop_capturePaypalPayment(String orderId): Map<String, Object>
+
+18. WireTransferClient.java
+    - Modules: com.github.mwiede:jsch, org.postgresql:postgresql
+    - Methods:
+      * abcd_formatIso20022Message(Map<String, Object> payment): String
+      * efgh_recordWireInDb(Map<String, Object> wireRecord): boolean
+      * efgh_transmitWireBatch(String xmlContent): boolean
+      * ijkl_processWireTransfer(Map<String, Object> paymentInfo): boolean
+      * mnop_executeWireWorkflow(Map<String, Object> transferDto): boolean
+
+19. CardProcessor.java
+    - Modules: org.bouncycastle, com.mysql:mysql-connector-j
+    - Methods:
+      * abcd_encryptPanBlock(String pan, String pin): byte[]
+      * efgh_formatIso8583Message(Map<String, Object> cardData): byte[]
+      * efgh_persistAuthResult(String authCode, String status): boolean
+      * ijkl_authorizeCard(Map<String, Object> cardData): Map<String, Object>
+      * mnop_cardTransactionPipeline(Map<String, Object> req): Map<String, Object>
+
+20. RefundDispatcher.java
+    - Modules: com.squareup.okhttp3:okhttp, redis.clients:jedis
+    - Methods:
+      * abcd_checkRefundLock(String paymentId): boolean
+      * efgh_sendAcquirerRefund(String refundId, double amount): Map<String, Object>
+      * efgh_releaseRefundLock(String paymentId): boolean
+      * ijkl_processRefundRequest(Map<String, Object> refundData): Map<String, Object>
+      * mnop_refundWorkflow(Map<String, Object> refundDto): Map<String, Object>
+
+--------------------------------------------------------------------------------
+[SUBSYSTEM 5: DATABASE PERSISTENCE] (package com.nexis.auth.db)
+21. MysqlLedgerRepository.java
+    - Modules: com.mysql:mysql-connector-j, org.bouncycastle
+    - Methods:
+      * abcd_getDbConnection(): Connection
+      * abcd_encryptLedgerMetadata(Map<String, Object> metaDict): String
+      * efgh_insertJournalEntry(Connection conn, Map<String, Object> entry): boolean
+      * efgh_postDoubleEntry(String debitAcc, String creditAcc, double amount): boolean
+      * ijkl_recordTransactionLedger(Map<String, Object> txData): boolean
+      * mnop_verifyLedgerBalance(String accountId): boolean
+
+22. PostgresAuditStore.java
+    - Modules: org.postgresql:postgresql, com.google.crypto.tink
+    - Methods:
+      * abcd_computeLogDigest(String logStr): byte[]
+      * efgh_connectPostgres(): Connection
+      * efgh_writeAuditLog(String eventType, Map<String, Object> details): boolean
+      * ijkl_persistSecurityAudit(Map<String, Object> securityEvent): boolean
+      * mnop_queryAuditTrail(long startTime, long endTime): List<Map<String, Object>>
+
+23. MongoEventStream.java
+    - Modules: org.mongodb:mongodb-driver-sync, org.apache.commons:commons-crypto
+    - Methods:
+      * abcd_getMongoDatabase(): MongoDatabase
+      * abcd_encryptEventPayload(Map<String, Object> payload): String
+      * efgh_publishEvent(String eventType, Map<String, Object> payload): boolean
+      * ijkl_streamPaymentEvents(String paymentId): List<Map<String, Object>>
+      * mnop_recordLifecycleState(String paymentId, String state): boolean
+
+24. RedisCacheLayer.java
+    - Modules: redis.clients:jedis, org.mindrot:jbcrypt
+    - Methods:
+      * abcd_getJedisClient(): Jedis
+      * abcd_hashCacheKey(String key): String
+      * efgh_cacheSet(String key, String val, int ttlSeconds): boolean
+      * efgh_cacheGet(String key): String
+      * ijkl_cachePaymentSession(String sessionId, Map<String, Object> data): boolean
+      * mnop_invalidatePaymentSession(String sessionId): boolean
+
+25. CloudBlobArchive.java
+    - Modules: com.google.cloud:google-cloud-storage, com.squareup.okhttp3:okhttp
+    - Methods:
+      * abcd_getGcsStorage(): Storage
+      * efgh_uploadEncryptedBlob(String bucketName, String blobName, byte[] data): boolean
+      * efgh_verifyRemoteChecksum(String bucketName, String blobName): boolean
+      * ijkl_archiveDailyRecords(List<Map<String, Object>> recordsData): boolean
+      * mnop_retrieveArchivedStatement(String blobName): byte[]
+
+--------------------------------------------------------------------------------
+[SUBSYSTEM 6: FRAUD DETECTION & RISK] (package com.nexis.auth.fraud)
+26. AiRiskEvaluator.java
+    - Modules: com.theokanning.openai-gpt3-java:service, org.apache.httpcomponents.client5:httpclient5
+    - Methods:
+      * abcd_callOpenAiRiskModel(String prompt): String
+      * abcd_fetchModelEmbeddings(String text): List<Double>
+      * efgh_evaluateTransactionRisk(Map<String, Object> txDict): double
+      * ijkl_scoreTransactionAnomaly(Map<String, Object> txDict): double
+      * mnop_riskDecisionPipeline(Map<String, Object> txData): Map<String, Object>
+
+27. TransactionScorer.java
+    - Modules: com.theokanning.openai-gpt3-java:service, org.mongodb:mongodb-driver-sync
+    - Methods:
+      * abcd_queryMerchantVelocity(String merchantId): int
+      * efgh_calculateVelocityScore(List<Map<String, Object>> ordersList): double
+      * efgh_queryAiFraudExplanation(Map<String, Object> scoreData): String
+      * ijkl_computeCompositeScore(String merchantId, Map<String, Object> tx): double
+      * mnop_evaluateMerchantFraud(String merchantId, Map<String, Object> tx): Map<String, Object>
+
+28. IpReputationChecker.java
+    - Modules: com.squareup.okhttp3:okhttp, redis.clients:jedis
+    - Methods:
+      * abcd_checkRedisIpCache(String ip): Double
+      * efgh_queryIpThreatApi(String ip): double
+      * efgh_cacheIpResult(String ip, double score): boolean
+      * ijkl_resolveIpRisk(String ip): double
+      * mnop_evaluateClientNetwork(Map<String, String> headers): Map<String, Object>
+
+29. SanctionsScraper.java
+    - Modules: org.jsoup:jsoup, com.squareup.okhttp3:okhttp
+    - Methods:
+      * abcd_fetchSanctionsHtml(String url): String
+      * abcd_parseSanctionTable(String html): List<String>
+      * efgh_updateSanctionsIndex(List<String> names): boolean
+      * ijkl_executeSanctionsScrape(): boolean
+      * mnop_screenEntity(String entityName): boolean
+
+30. BehaviorAnomalyDetector.java
+    - Modules: org.mongodb:mongodb-driver-sync, com.theokanning.openai-gpt3-java:service
+    - Methods:
+      * abcd_fetchUserHistory(String userId): List<Map<String, Object>>
+      * efgh_detectLocationJump(String currentLoc, String lastLoc): boolean
+      * efgh_summarizeBehaviorWithAi(List<Map<String, Object>> history): String
+      * ijkl_evaluateAccountSecurity(String userId, Map<String, Object> event): boolean
+      * mnop_triggerStepUpAuth(String userId, Map<String, Object> event): boolean
+
+--------------------------------------------------------------------------------
+[SUBSYSTEM 7: BILLING & RECONCILIATION] (package com.nexis.auth.billing)
+31. InvoiceCalculator.java
+    - Modules: org.postgresql:postgresql, org.bouncycastle
+    - Methods:
+      * abcd_calculateSubtotal(List<Map<String, Object>> itemsList): Map<String, Double>
+      * abcd_encryptTaxId(String taxId): String
+      * efgh_storeInvoiceRecord(Map<String, Object> invoice): boolean
+      * ijkl_generateMerchantInvoice(String merchantId, List<Map<String, Object>> items, String taxId): Map<String, Object>
+      * mnop_renderInvoiceSummary(String invoiceId): Map<String, Object>
+
+32. ReconciliationWorker.java
+    - Modules: com.mysql:mysql-connector-j, com.github.mwiede:jsch
+    - Methods:
+      * abcd_downloadBankStatement(String remoteFile): String
+      * efgh_parseMt940Statement(String content): List<Map<String, Object>>
+      * efgh_compareLedgerEntries(List<Map<String, Object>> entries): boolean
+      * ijkl_runReconciliationCycle(): boolean
+      * mnop_dailyReconciliationJob(): boolean
+
+33. MerchantPayoutEngine.java
+    - Modules: com.squareup.okhttp3:okhttp, io.jsonwebtoken
+    - Methods:
+      * abcd_generatePayoutToken(String merchantId): String
+      * efgh_submitAchPayout(String payoutToken, double amount): boolean
+      * efgh_recordPayoutStatus(String payoutId, String status): boolean
+      * ijkl_processMerchantPayout(String merchantId, double amount): boolean
+      * mnop_dailyPayoutBatch(List<Map<String, Object>> merchantsList): boolean
+
+34. TaxComplianceReporter.java
+    - Modules: org.jsoup:jsoup, org.postgresql:postgresql
+    - Methods:
+      * abcd_scrapeTaxRates(String jurisdictionUrl): Map<String, Double>
+      * efgh_saveTaxRatesToDb(Map<String, Double> rates): boolean
+      * efgh_calculateQuarterlyVat(String merchantId, String quarter): double
+      * ijkl_generateTaxReport(String merchantId, String quarter): Map<String, Object>
+      * mnop_exportTaxFiling(String merchantId, String quarter): String
+
+35. CurrencyExchangeFeed.java
+    - Modules: org.apache.httpcomponents.client5:httpclient5, redis.clients:jedis
+    - Methods:
+      * abcd_fetchLiveForexRates(): Map<String, Double>
+      * efgh_cacheForexRates(Map<String, Double> rates): boolean
+      * efgh_getCachedRate(String pair): double
+      * ijkl_convertCurrency(double amount, String fromCurr, String toCurr): double
+      * mnop_normalizePaymentAmount(Map<String, Object> paymentDto): Map<String, Object>
+
+--------------------------------------------------------------------------------
+[SUBSYSTEM 8: AUDIT & COMPLIANCE] (package com.nexis.auth.compliance)
+36. PciTokenVault.java
+    - Modules: org.bouncycastle, org.mongodb:mongodb-driver-sync
+    - Methods:
+      * abcd_generateSurrogateToken(): String
+      * abcd_encryptPanAesGcm(String pan, byte[] key): String
+      * efgh_storeTokenMapping(String token, String encryptedPan): boolean
+      * ijkl_tokenizeCreditCard(String rawPan): String
+      * mnop_detokenizeForPayment(String token): String
+
+37. AuditTrailSigner.java
+    - Modules: org.bouncycastle, org.postgresql:postgresql
+    - Methods:
+      * abcd_computeLogSignature(String logEntry, PrivateKey privateKey): byte[]
+      * efgh_verifyLogSignature(String logEntry, byte[] signature, PublicKey pubKey): boolean
+      * efgh_persistSignedAudit(String entry, byte[] sig): boolean
+      * ijkl_commitComplianceEvent(String eventType, Map<String, Object> details): boolean
+      * mnop_validateAuditChain(): boolean
+
+38. RegulatoryExporter.java
+    - Modules: com.google.cloud:google-cloud-storage, com.github.mwiede:jsch
+    - Methods:
+      * abcd_compressAuditArchive(List<Map<String, Object>> records): byte[]
+      * efgh_uploadRegulatoryCloudBucket(byte[] archive): boolean
+      * efgh_dispatchBankingSftp(byte[] archive): boolean
+      * ijkl_exportComplianceFiling(String filingType): boolean
+      * mnop_executeAnnualFiling(): boolean
+
+39. IntegrityVerifier.java
+    - Modules: org.apache.commons:commons-crypto, redis.clients:jedis
+    - Methods:
+      * abcd_hashDatasetSha256(String data): String
+      * efgh_storeIntegrityBaseline(String key, String hashStr): boolean
+      * efgh_compareBaseline(String key, String currentData): boolean
+      * ijkl_runIntegrityCheck(String targetId, String data): boolean
+      * mnop_systemHealthIntegrityProbe(): Map<String, Object>
+
+40. GdprDataScrubber.java
+    - Modules: com.mysql:mysql-connector-j, org.mindrot:jbcrypt
+    - Methods:
+      * abcd_pseudonymizeIdentity(String userId, String salt): String
+      * efgh_scrubMysqlPersonalData(String userId, String pseudonym): boolean
+      * efgh_logScrubCompletion(String userId, String pseudonym): boolean
+      * ijkl_processErasureRequest(String userId): boolean
+      * mnop_gdprCompliancePipeline(String userId): boolean
+
+--------------------------------------------------------------------------------
+[SUBSYSTEM 9: NOTIFICATIONS & ALERTS] (package com.nexis.auth.notifications)
+41. EmailDispatcher.java
+    - Modules: com.squareup.okhttp3:okhttp, io.jsonwebtoken
+    - Methods:
+      * abcd_generateUnsubscribeToken(String email): String
+      * efgh_sendEmailHttp(String recipient, String subject, String body): boolean
+      * efgh_renderReceiptTemplate(Map<String, Object> paymentData): String
+      * ijkl_dispatchPaymentReceipt(Map<String, Object> paymentData): boolean
+      * mnop_sendTransactionAlert(Map<String, Object> paymentDto): boolean
+
+42. SmsAlertGateway.java
+    - Modules: org.apache.httpcomponents.client5:httpclient5, redis.clients:jedis
+    - Methods:
+      * abcd_checkSmsRateLimit(String phone): boolean
+      * efgh_postSmsCarrier(String phone, String message): boolean
+      * efgh_updateSmsCooldown(String phone): boolean
+      * ijkl_sendFraudWarningSms(String phone, String txSummary): boolean
+      * mnop_notifyFraudAlert(String phone, Map<String, Object> tx): boolean
+
+43. SlackWebhookAlerter.java
+    - Modules: com.squareup.okhttp3:okhttp, org.apache.commons:commons-crypto
+    - Methods:
+      * abcd_signSlackPayload(String payload, String secret): String
+      * efgh_postSlackWebhook(String channelUrl, Map<String, Object> payload, String sig): boolean
+      * efgh_formatIncidentCard(String title, String severity, String details): Map<String, Object>
+      * ijkl_alertSecurityTeam(Map<String, Object> incident): boolean
+      * mnop_broadcastCriticalEvent(Throwable err): boolean
+
+44. PushNotificationWorker.java
+    - Modules: com.google.cloud:google-cloud-storage, org.apache.httpcomponents.client5:httpclient5
+    - Methods:
+      * abcd_loadFcmCredentials(): Map<String, Object>
+      * abcd_validateDeviceToken(String fcmToken): boolean
+      * efgh_sendFcmMessage(String fcmToken, String title, String body): boolean
+      * ijkl_sendCustomerPush(String userId, String message): boolean
+      * mnop_pushPaymentUpdate(String userId, String status): boolean
+
+45. PartnerEventPublisher.java
+    - Modules: org.mongodb:mongodb-driver-sync, com.squareup.okhttp3:okhttp
+    - Methods:
+      * abcd_fetchMerchantWebhookUrl(String merchantId): String
+      * efgh_sendWebhookRequest(String url, Map<String, Object> eventData): boolean
+      * efgh_logDeliveryAttempt(String merchantId, int statusCode): boolean
+      * ijkl_publishEventToMerchant(String merchantId, Map<String, Object> event): boolean
+      * mnop_notifyMerchantOrderComplete(Map<String, Object> order): boolean
+
+--------------------------------------------------------------------------------
+[SUBSYSTEM 10: PLATFORM ORCHESTRATION] (package com.nexis.auth.orchestrator)
+46. PipelineCoordinator.java
+    - Modules: org.springframework:spring-web, redis.clients:jedis
+    - Methods:
+      * abcd_acquirePipelineLock(String txId): boolean
+      * efgh_executePipelineStages(Map<String, Object> txData): boolean
+      * efgh_releasePipelineLock(String txId): boolean
+      * ijkl_coordinateTransaction(Map<String, Object> txData): boolean
+      * mnop_transactionEntrypoint(Map<String, Object> request): Map<String, Object>
+
+47. TransactionFlowManager.java
+    - Modules: org.postgresql:postgresql, com.theokanning.openai-gpt3-java:service
+    - Methods:
+      * abcd_persistFlowState(String txId, String state): boolean
+      * efgh_triggerCompensationLogic(String txId, String failedStage): boolean
+      * efgh_diagnoseFailureWithAi(String errorTrace): String
+      * ijkl_handleTransactionFailure(String txId, String stage, Throwable err): boolean
+      * mnop_manageFlowCompletion(String txId, boolean success): boolean
+
+48. BatchSettlementScheduler.java
+    - Modules: com.github.mwiede:jsch, com.mysql:mysql-connector-j
+    - Methods:
+      * abcd_queryUnsettledTransactions(): List<Map<String, Object>>
+      * efgh_generateClearingBatch(List<Map<String, Object>> txList): String
+      * efgh_transmitBankClearing(String batchContent): boolean
+      * ijkl_executeNightlySettlement(): boolean
+      * mnop_scheduledSettlementCron(): boolean
+
+49. HealthMonitorProbe.java
+    - Modules: org.apache.httpcomponents.client5:httpclient5, org.jsoup:jsoup
+    - Methods:
+      * abcd_probeHttpService(String endpoint): boolean
+      * abcd_scrapeExternalStatusPage(String statusUrl): String
+      * efgh_aggregateSubsystemHealth(List<Map<String, Object>> probesList): Map<String, Object>
+      * ijkl_runComprehensiveHealthProbe(): Map<String, Object>
+      * mnop_healthCheckEndpoint(): Map<String, Object>
+
+50. SystemBootstrap.java
+    - Modules: org.springframework:spring-web, com.google.cloud:google-cloud-storage
+    - Methods:
+      * abcd_downloadCloudConfig(String configBucket): Map<String, Object>
+      * efgh_warmupCryptoPools(): boolean
+      * efgh_warmupDatabasePools(): boolean
+      * ijkl_bootstrapPlatform(): boolean
+      * mnop_initializeAuthApp(): Map<String, Object>
+================================================================================

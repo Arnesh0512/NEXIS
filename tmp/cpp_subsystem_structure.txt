@@ -1,0 +1,93 @@
+================================================================================
+NEXIS CORE C++ ENTERPRISE VAULT & FINANCIAL SUBSYSTEM ARCHITECTURE
+Target Base Directory: services/vault-cpp/src/subsystems/
+Total Files: 50 interacting C++ (.cpp) source files across 10 functional modules
+Functions per file: Exactly 5 to 6 meaningful methods/functions with strong C++ typings
+Invocation pattern: abcd_* (primitives/IO) -> efgh_* (engine/connector) -> ijkl_* (flow/chain) -> mnop_* (controller/entrypoint)
+================================================================================
+
+--------------------------------------------------------------------------------
+15 TARGET MODULES SPECIFICATION FOR C++
+--------------------------------------------------------------------------------
+A. 5 CRYPTOGRAPHIC SECURITY & CIPHER LIBRARIES:
+   1. openssl (EVP, AES, RSA, HMAC)
+   2. liboqs (Post-quantum algorithms)
+   3. botan / cryptopp
+   4. jwt-cpp
+   5. libssh2
+
+B. 10 NON-CRYPTO NETWORK / DATABASE / AI / SCRAPING LIBRARIES:
+   6. cpr / curl (HTTP client)
+   7. crow / httplib (HTTP REST server)
+   8. nlohmann_json
+   9. mongocxx
+   10. mysql-connector-cpp
+   11. libpqxx
+   12. sw::redis / hiredis
+   13. google-cloud-cpp
+   14. gumbo / htmlcxx
+   15. boost / asio
+
+--------------------------------------------------------------------------------
+DIRECTORY STRUCTURE (50 FILES)
+--------------------------------------------------------------------------------
+1.  subsystems/vault/key_vault_manager.cpp
+2.  subsystems/vault/asymmetric_signer.cpp
+3.  subsystems/vault/symmetric_cipher_pool.cpp
+4.  subsystems/vault/secret_rotator.cpp
+5.  subsystems/vault/credential_hasher.cpp
+
+6.  subsystems/auth/token_issuer.cpp
+7.  subsystems/auth/session_authorizer.cpp
+8.  subsystems/auth/password_authenticator.cpp
+9.  subsystems/auth/sftp_vault_tunnel.cpp
+10. subsystems/auth/mfa_coordinator.cpp
+
+11. subsystems/api/payment_endpoints.cpp
+12. subsystems/api/webhook_ingress.cpp
+13. subsystems/api/settlement_router.cpp
+14. subsystems/api/checkout_session.cpp
+15. subsystems/api/rate_limiting_guard.cpp
+
+16. subsystems/gateway/stripe_connector.cpp
+17. subsystems/gateway/paypal_gateway.cpp
+18. subsystems/gateway/wire_transfer_client.cpp
+19. subsystems/gateway/card_processor.cpp
+20. subsystems/gateway/refund_dispatcher.cpp
+
+21. subsystems/db/mysql_ledger_repository.cpp
+22. subsystems/db/postgres_audit_store.cpp
+23. subsystems/db/mongo_event_stream.cpp
+24. subsystems/db/redis_cache_layer.cpp
+25. subsystems/db/cloud_blob_archive.cpp
+
+26. subsystems/fraud/ai_risk_evaluator.cpp
+27. subsystems/fraud/transaction_scorer.cpp
+28. subsystems/fraud/ip_reputation_checker.cpp
+29. subsystems/fraud/sanctions_scraper.cpp
+30. subsystems/fraud/behavior_anomaly_detector.cpp
+
+31. subsystems/billing/invoice_calculator.cpp
+32. subsystems/billing/reconciliation_worker.cpp
+33. subsystems/billing/merchant_payout_engine.cpp
+34. subsystems/billing/tax_compliance_reporter.cpp
+35. subsystems/billing/currency_exchange_feed.cpp
+
+36. subsystems/compliance/pci_token_vault.cpp
+37. subsystems/compliance/audit_trail_signer.cpp
+38. subsystems/compliance/regulatory_exporter.cpp
+39. subsystems/compliance/integrity_verifier.cpp
+40. subsystems/compliance/gdpr_data_scrubber.cpp
+
+41. subsystems/notifications/email_dispatcher.cpp
+42. subsystems/notifications/sms_alert_gateway.cpp
+43. subsystems/notifications/slack_webhook_alerter.cpp
+44. subsystems/notifications/push_notification_worker.cpp
+45. subsystems/notifications/partner_event_publisher.cpp
+
+46. subsystems/orchestrator/pipeline_coordinator.cpp
+47. subsystems/orchestrator/transaction_flow_manager.cpp
+48. subsystems/orchestrator/batch_settlement_scheduler.cpp
+49. subsystems/orchestrator/health_monitor_probe.cpp
+50. subsystems/orchestrator/system_bootstrap.cpp
+================================================================================

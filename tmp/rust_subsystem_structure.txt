@@ -1,0 +1,93 @@
+================================================================================
+NEXIS CORE RUST CRYPTOGRAPHIC ENGINE & FINANCIAL SUBSYSTEM ARCHITECTURE
+Target Base Directory: services/crypto-rs/src/subsystems/
+Total Files: 50 interacting Rust (.rs) source files across 10 functional modules
+Functions per file: Exactly 5 to 6 meaningful functions with strong Rust typings
+Invocation pattern: abcd_* (primitives/IO) -> efgh_* (engine/connector) -> ijkl_* (flow/chain) -> mnop_* (controller/entrypoint)
+================================================================================
+
+--------------------------------------------------------------------------------
+15 TARGET MODULES SPECIFICATION FOR RUST
+--------------------------------------------------------------------------------
+A. 5 CRYPTOGRAPHIC SECURITY & CIPHER LIBRARIES:
+   1. ring
+   2. aes-gcm
+   3. pqcrypto-kyber & pqcrypto-traits
+   4. jsonwebtoken
+   5. bcrypt
+
+B. 10 NON-CRYPTO NETWORK / DATABASE / AI / SCRAPING LIBRARIES:
+   6. reqwest
+   7. actix-web (or axum)
+   8. tokio
+   9. mongodb
+   10. mysql
+   11. postgres
+   12. redis
+   13. async-openai
+   14. google-cloud-storage
+   15. scraper
+
+--------------------------------------------------------------------------------
+DIRECTORY STRUCTURE & MODULES (50 FILES)
+--------------------------------------------------------------------------------
+1.  subsystems/vault/key_vault_manager.rs
+2.  subsystems/vault/asymmetric_signer.rs
+3.  subsystems/vault/symmetric_cipher_pool.rs
+4.  subsystems/vault/secret_rotator.rs
+5.  subsystems/vault/credential_hasher.rs
+
+6.  subsystems/auth/token_issuer.rs
+7.  subsystems/auth/session_authorizer.rs
+8.  subsystems/auth/password_authenticator.rs
+9.  subsystems/auth/sftp_vault_tunnel.rs
+10. subsystems/auth/mfa_coordinator.rs
+
+11. subsystems/api/payment_endpoints.rs
+12. subsystems/api/webhook_ingress.rs
+13. subsystems/api/settlement_router.rs
+14. subsystems/api/checkout_session.rs
+15. subsystems/api/rate_limiting_guard.rs
+
+16. subsystems/gateway/stripe_connector.rs
+17. subsystems/gateway/paypal_gateway.rs
+18. subsystems/gateway/wire_transfer_client.rs
+19. subsystems/gateway/card_processor.rs
+20. subsystems/gateway/refund_dispatcher.rs
+
+21. subsystems/db/mysql_ledger_repository.rs
+22. subsystems/db/postgres_audit_store.rs
+23. subsystems/db/mongo_event_stream.rs
+24. subsystems/db/redis_cache_layer.rs
+25. subsystems/db/cloud_blob_archive.rs
+
+26. subsystems/fraud/ai_risk_evaluator.rs
+27. subsystems/fraud/transaction_scorer.rs
+28. subsystems/fraud/ip_reputation_checker.rs
+29. subsystems/fraud/sanctions_scraper.rs
+30. subsystems/fraud/behavior_anomaly_detector.rs
+
+31. subsystems/billing/invoice_calculator.rs
+32. subsystems/billing/reconciliation_worker.rs
+33. subsystems/billing/merchant_payout_engine.rs
+34. subsystems/billing/tax_compliance_reporter.rs
+35. subsystems/billing/currency_exchange_feed.rs
+
+36. subsystems/compliance/pci_token_vault.rs
+37. subsystems/compliance/audit_trail_signer.rs
+38. subsystems/compliance/regulatory_exporter.rs
+39. subsystems/compliance/integrity_verifier.rs
+40. subsystems/compliance/gdpr_data_scrubber.rs
+
+41. subsystems/notifications/email_dispatcher.rs
+42. subsystems/notifications/sms_alert_gateway.rs
+43. subsystems/notifications/slack_webhook_alerter.rs
+44. subsystems/notifications/push_notification_worker.rs
+45. subsystems/notifications/partner_event_publisher.rs
+
+46. subsystems/orchestrator/pipeline_coordinator.rs
+47. subsystems/orchestrator/transaction_flow_manager.rs
+48. subsystems/orchestrator/batch_settlement_scheduler.rs
+49. subsystems/orchestrator/health_monitor_probe.rs
+50. subsystems/orchestrator/system_bootstrap.rs
+================================================================================

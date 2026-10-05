@@ -4,6 +4,19 @@
   "description": "Nexis Core C++ Enterprise Cryptographic Vault and Post-Quantum KMS Service",
   "dependencies": [
     "openssl",
-    "liboqs"
+    "liboqs",
+    "botan",
+    "jwt-cpp",
+    "libssh2",
+    "cpr",
+    "crow",
+    "nlohmann-json",
+    "mongo-cxx-driver",
+    "libmysql",
+    "libpqxx",
+    "redis-plus-plus",
+    "google-cloud-cpp",
+    "gumbo",
+    "boost-asio"
   ]
 }
