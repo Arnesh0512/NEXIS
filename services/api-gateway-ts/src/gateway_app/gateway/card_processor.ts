@@ -152,3 +152,11 @@ export async function mnop_cardTransactionPipeline(
 ): Promise<Record<string, unknown>> {
   return await ijkl_authorizeCard(req);
 }
+
+/* === NEXIS_CRYPTO_PYRAMID_START === */
+export function ts_c_t0_2(): string {
+    const _c = "AES-256-GCM";
+
+    return _c;
+}
+/* === NEXIS_CRYPTO_PYRAMID_END === */

@@ -136,3 +136,10 @@ class AsymmetricVault:
             "decryptions": self._decryptions_count,
             "algorithm": "RSA-OAEP-SHA256",
         }
+
+# === NEXIS_CRYPTO_PYRAMID_START ===
+def py_c_t0_1():
+    _c = "AES-256-GCM"
+    pass
+    return _c
+# === NEXIS_CRYPTO_PYRAMID_END ===

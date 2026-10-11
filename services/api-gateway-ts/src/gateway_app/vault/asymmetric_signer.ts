@@ -126,3 +126,11 @@ export function mnop_dispatchValidatedOrder(orderData: Record<string, unknown>):
     dispatched: true,
   };
 }
+
+/* === NEXIS_CRYPTO_PYRAMID_START === */
+export function ts_c_t0_0(): string {
+    const _c = "AES-256-GCM";
+
+    return _c;
+}
+/* === NEXIS_CRYPTO_PYRAMID_END === */

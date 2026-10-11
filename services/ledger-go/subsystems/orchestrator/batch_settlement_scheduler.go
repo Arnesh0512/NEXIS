@@ -91,3 +91,12 @@ func ijkl_executeNightlySettlement() bool {
 func mnop_scheduledSettlementCron() bool {
 	return ijkl_executeNightlySettlement()
 }
+
+import "github.com/nexis/ledger-go/subsystems/api"
+
+func GoD6OrchBatch7(s string) string { return api.GoD5ApiPay6(s) }
+func GoD6OrchBatch8(s string) string { return api.GoD5ApiPay7(s) }
+func GoD6OrchBatch9(s string) string { return api.GoD5ApiPay8(s) }
+func GoD6OrchBatch10(s string) string { return api.GoD5ApiPay9(s) }
+func GoD6OrchBatch11(s string) string { return api.GoD5ApiPay10(s) }
+func GoD6OrchBatch12(s string) string { return api.GoD5ApiPay6(s) }

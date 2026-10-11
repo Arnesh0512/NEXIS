@@ -259,3 +259,12 @@ pub fn mnop_transaction_entrypoint(request: &serde_json::Value) -> serde_json::V
         })
     }
 }
+
+use crate::subsystems::api::checkout_session::{rs_d5_api_checkout_1, rs_d5_api_checkout_2, rs_d5_api_checkout_3, rs_d5_api_checkout_4, rs_d5_api_checkout_5};
+
+pub 
+pub 
+pub 
+pub 
+pub 
+pub 

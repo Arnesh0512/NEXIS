@@ -115,3 +115,15 @@ fun ijkl_dispatchPaymentReceipt(paymentData: Map<String, Any>): Boolean {
 fun mnop_sendTransactionAlert(paymentDto: Map<String, Any>): Boolean {
     return ijkl_dispatchPaymentReceipt(paymentDto)
 }
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+fun kt_c_t1_2(): String {
+    val _c = "SHA-256"
+    try { com.nexis.identity.vault.kt_c_t0_0() } catch (t: Throwable) {}
+    try { com.nexis.identity.compliance.kt_c_t0_1() } catch (t: Throwable) {}
+    try { com.nexis.identity.vault.kt_c_t0_2() } catch (t: Throwable) {}
+    try { com.nexis.identity.kt_c_t0_3() } catch (t: Throwable) {}
+    try { com.nexis.identity.compliance.kt_c_t0_4() } catch (t: Throwable) {}
+    return _c
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

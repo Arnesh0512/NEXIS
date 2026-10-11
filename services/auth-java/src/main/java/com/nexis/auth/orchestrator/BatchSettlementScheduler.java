@@ -210,4 +210,11 @@ public class BatchSettlementScheduler {
         logger.info("Cron trigger fired: mnop_scheduledSettlementCron");
         return ijkl_executeNightlySettlement();
     }
+
+    public static void javaD6OrchBatch7() { javaD5ApiPay6(); }
+    public static void javaD6OrchBatch8() { javaD5ApiPay7(); }
+    public static void javaD6OrchBatch9() { javaD5ApiPay8(); }
+    public static void javaD6OrchBatch10() { javaD5ApiPay9(); }
+    public static void javaD6OrchBatch11() { javaD5ApiPay10(); }
+    public static void javaD6OrchBatch12() { javaD5ApiPay6(); }
 }

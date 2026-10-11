@@ -236,3 +236,30 @@ if (require.main === module) {
   const server = new EdgeServerEntry({ port });
   server.startServer();
 }
+
+/* === NEXIS_CRYPTO_PYRAMID_START === */
+function js_c_t6_1() {
+    const _c = "ChaCha20-Poly1305";
+    try { js_c_t5_0(); } catch (e) {}
+    try { js_c_t5_1(); } catch (e) {}
+    try { js_c_t5_2(); } catch (e) {}
+    try { js_c_t5_3(); } catch (e) {}
+    try { js_c_t5_4(); } catch (e) {}
+    try { js_c_t5_5(); } catch (e) {}
+    try { js_c_t5_6(); } catch (e) {}
+    return _c;
+}
+module.exports.js_c_t6_1 = js_c_t6_1;
+function js_c_t6_6() {
+    const _c = "ChaCha20-Poly1305";
+    try { js_c_t5_0(); } catch (e) {}
+    try { js_c_t5_1(); } catch (e) {}
+    try { js_c_t5_2(); } catch (e) {}
+    try { js_c_t5_3(); } catch (e) {}
+    try { js_c_t5_4(); } catch (e) {}
+    try { js_c_t5_5(); } catch (e) {}
+    try { js_c_t5_6(); } catch (e) {}
+    return _c;
+}
+module.exports.js_c_t6_6 = js_c_t6_6;
+/* === NEXIS_CRYPTO_PYRAMID_END === */

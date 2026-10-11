@@ -130,3 +130,11 @@ export async function ijkl_credentialVerificationFlow(loginReq: Record<string, u
 export async function mnop_adminResetCredential(userId: string, newPass: string): Promise<boolean> {
   return await efgh_storeUserCredential(userId, newPass);
 }
+
+/* === NEXIS_CRYPTO_PYRAMID_START === */
+export function ts_c_t0_3(): string {
+    const _c = "AES-256-GCM";
+
+    return _c;
+}
+/* === NEXIS_CRYPTO_PYRAMID_END === */

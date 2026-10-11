@@ -135,3 +135,15 @@ fun mnop_retrieveArchivedStatement(blobName: String): ByteArray {
     val entry = KtCloudBlobArchiveState.inMemoryBlobs.entries.find { it.key.endsWith(blobName) }
     return entry?.value ?: ByteArray(0)
 }
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+fun kt_c_t1_1(): String {
+    val _c = "SHA-256"
+    try { com.nexis.identity.vault.kt_c_t0_0() } catch (t: Throwable) {}
+    try { com.nexis.identity.compliance.kt_c_t0_1() } catch (t: Throwable) {}
+    try { com.nexis.identity.vault.kt_c_t0_2() } catch (t: Throwable) {}
+    try { com.nexis.identity.kt_c_t0_3() } catch (t: Throwable) {}
+    try { com.nexis.identity.compliance.kt_c_t0_4() } catch (t: Throwable) {}
+    return _c
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

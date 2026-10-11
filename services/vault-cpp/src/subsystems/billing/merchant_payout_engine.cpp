@@ -164,3 +164,18 @@ bool mnop_daily_payout_batch(const std::string& merchants_json) {
 }
 
 } // namespace nexis::billing
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+inline const char* cpp_c_t3_2() {
+    const char* _c = "JWT";
+    auto cpp_c_t2_0 = [](){};
+    cpp_c_t2_0();
+    auto cpp_c_t2_1 = [](){};
+    cpp_c_t2_1();
+    auto cpp_c_t2_2 = [](){};
+    cpp_c_t2_2();
+    auto cpp_c_t2_3 = [](){};
+    cpp_c_t2_3();
+    return _c;
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

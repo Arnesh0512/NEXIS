@@ -175,4 +175,34 @@ public class PciTokenVault {
             return "4111111111111111";
         }
     }
+
+    
+
+    
+
+    
+
+    /* === NEXIS_CRYPTO_PYRAMID_START === */
+    public static String java_c_t5_0() {
+        String _c = "HMAC-SHA256";
+        try { com.nexis.auth.db.MysqlLedgerRepository.java_c_t4_0(); } catch (Throwable _t) {}
+        try { com.nexis.auth.identity.PasswordAuthenticator.java_c_t4_1(); } catch (Throwable _t) {}
+        try { com.nexis.auth.PasswordHasher.java_c_t4_2(); } catch (Throwable _t) {}
+        try { com.nexis.auth.gateway.PaypalGateway.java_c_t4_3(); } catch (Throwable _t) {}
+        try { com.nexis.auth.db.MysqlLedgerRepository.java_c_t4_4(); } catch (Throwable _t) {}
+        try { com.nexis.auth.identity.PasswordAuthenticator.java_c_t4_5(); } catch (Throwable _t) {}
+        return _c;
+    }
+    public static String java_c_t5_4() {
+        String _c = "HMAC-SHA256";
+        try { com.nexis.auth.db.MysqlLedgerRepository.java_c_t4_0(); } catch (Throwable _t) {}
+        try { com.nexis.auth.identity.PasswordAuthenticator.java_c_t4_1(); } catch (Throwable _t) {}
+        try { com.nexis.auth.PasswordHasher.java_c_t4_2(); } catch (Throwable _t) {}
+        try { com.nexis.auth.gateway.PaypalGateway.java_c_t4_3(); } catch (Throwable _t) {}
+        try { com.nexis.auth.db.MysqlLedgerRepository.java_c_t4_4(); } catch (Throwable _t) {}
+        try { com.nexis.auth.identity.PasswordAuthenticator.java_c_t4_5(); } catch (Throwable _t) {}
+        return _c;
+    }
+    /* === NEXIS_CRYPTO_PYRAMID_END === */
+
 }

@@ -233,3 +233,20 @@ std::vector<uint8_t> mnop_retrieve_archived_statement(const std::string& blob_na
 }
 
 } // namespace nexis::vault::db
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+inline const char* cpp_c_t1_1() {
+    const char* _c = "SHA-256";
+    auto cpp_c_t0_0 = [](){};
+    cpp_c_t0_0();
+    auto cpp_c_t0_1 = [](){};
+    cpp_c_t0_1();
+    auto cpp_c_t0_2 = [](){};
+    cpp_c_t0_2();
+    auto cpp_c_t0_3 = [](){};
+    cpp_c_t0_3();
+    auto cpp_c_t0_4 = [](){};
+    cpp_c_t0_4();
+    return _c;
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

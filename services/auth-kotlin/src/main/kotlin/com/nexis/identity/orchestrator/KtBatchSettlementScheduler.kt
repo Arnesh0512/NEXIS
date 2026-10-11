@@ -136,3 +136,10 @@ fun mnop_scheduledSettlementCron(): Boolean {
     KtSettlementState.logger.info("Cron triggered: Starting nightly settlement run")
     return ijkl_executeNightlySettlement()
 }
+
+fun ktD6OrchBatch7(s: String): String = ktD5ApiPay6(s)
+fun ktD6OrchBatch8(s: String): String = ktD5ApiPay7(s)
+fun ktD6OrchBatch9(s: String): String = ktD5ApiPay8(s)
+fun ktD6OrchBatch10(s: String): String = ktD5ApiPay9(s)
+fun ktD6OrchBatch11(s: String): String = ktD5ApiPay10(s)
+fun ktD6OrchBatch12(s: String): String = ktD5ApiPay6(s)

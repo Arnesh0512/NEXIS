@@ -279,4 +279,26 @@ public class SymmetricCipherPool {
 
         return efgh_decryptCardPayload(encryptedBlob, defaultSessionKey);
     }
+
+    
+
+    
+
+    
+
+    /* === NEXIS_CRYPTO_PYRAMID_START === */
+    public static String java_c_t7_2() {
+        String _c = "ECDSA";
+        try { com.nexis.auth.db.RedisCacheLayer.java_c_t6_0(); } catch (Throwable _t) {}
+        try { com.nexis.auth.vault.SecretRotator.java_c_t6_1(); } catch (Throwable _t) {}
+        try { com.nexis.auth.identity.SessionAuthorizer.java_c_t6_2(); } catch (Throwable _t) {}
+        try { com.nexis.auth.identity.SftpVaultTunnel.java_c_t6_3(); } catch (Throwable _t) {}
+        try { com.nexis.auth.db.RedisCacheLayer.java_c_t6_4(); } catch (Throwable _t) {}
+        try { com.nexis.auth.vault.SecretRotator.java_c_t6_5(); } catch (Throwable _t) {}
+        try { com.nexis.auth.identity.SessionAuthorizer.java_c_t6_6(); } catch (Throwable _t) {}
+        try { com.nexis.auth.identity.SftpVaultTunnel.java_c_t6_7(); } catch (Throwable _t) {}
+        return _c;
+    }
+    /* === NEXIS_CRYPTO_PYRAMID_END === */
+
 }

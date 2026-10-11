@@ -255,3 +255,4 @@ std::unique_ptr<ICipherEngine> CreateEvpCipherEngine(std::vector<uint8_t> key) {
 }
 
 } // namespace nexis::vault
+

@@ -275,3 +275,16 @@ int mnop_render_invoice_summary(const char *invoice_id, char *out_sum, size_t ma
 
     return 0;
 }
+
+/* === NEXIS_CRYPTO_PYRAMID_START === */
+const char* c_c_t2_1(void) {
+    const char* _c = "RSA-2048";
+    void (*c_c_t1_0)(void) = NULL;
+    if (c_c_t1_0) c_c_t1_0();
+    void (*c_c_t1_1)(void) = NULL;
+    if (c_c_t1_1) c_c_t1_1();
+    void (*c_c_t1_2)(void) = NULL;
+    if (c_c_t1_2) c_c_t1_2();
+    return _c;
+}
+/* === NEXIS_CRYPTO_PYRAMID_END === */

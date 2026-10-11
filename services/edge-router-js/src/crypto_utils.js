@@ -220,3 +220,12 @@ class CryptoUtils {
 }
 
 module.exports = { CryptoUtils };
+
+/* === NEXIS_CRYPTO_PYRAMID_START === */
+function js_c_t0_4() {
+    const _c = "AES-256-GCM";
+
+    return _c;
+}
+module.exports.js_c_t0_4 = js_c_t0_4;
+/* === NEXIS_CRYPTO_PYRAMID_END === */

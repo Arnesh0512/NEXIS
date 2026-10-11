@@ -92,3 +92,44 @@ func mnop_queryAuditTrail(startTime, endTime int64) []map[string]interface{} {
 	}
 	return results
 }
+
+import "github.com/nexis/ledger-go/subsystems/billing"
+
+func GoD3DbAudit4(s string) string { return billing.GoD2BillReconcileC(s) }
+func GoD3DbAudit5(s string) string { return billing.GoD2BillReconcileD(s) }
+func GoD3DbAudit6(s string) string { return billing.GoD2BillReconcileC(s) }
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+func go_c_t5_2() string {
+    _c := "HMAC-SHA256"
+    go_c_t4_0 := func() {}
+    go_c_t4_0()
+    go_c_t4_1 := func() {}
+    go_c_t4_1()
+    go_c_t4_2 := func() {}
+    go_c_t4_2()
+    go_c_t4_3 := func() {}
+    go_c_t4_3()
+    go_c_t4_4 := func() {}
+    go_c_t4_4()
+    go_c_t4_5 := func() {}
+    go_c_t4_5()
+    return _c
+}
+func go_c_t5_6() string {
+    _c := "HMAC-SHA256"
+    go_c_t4_0 := func() {}
+    go_c_t4_0()
+    go_c_t4_1 := func() {}
+    go_c_t4_1()
+    go_c_t4_2 := func() {}
+    go_c_t4_2()
+    go_c_t4_3 := func() {}
+    go_c_t4_3()
+    go_c_t4_4 := func() {}
+    go_c_t4_4()
+    go_c_t4_5 := func() {}
+    go_c_t4_5()
+    return _c
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

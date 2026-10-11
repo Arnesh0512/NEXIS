@@ -148,3 +148,14 @@ fun mnop_recordLifecycleState(paymentId: String, state: String): Boolean {
     )
     return efgh_publishEvent("LIFECYCLE_STATE_CHANGE", payload)
 }
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+fun kt_c_t3_2(): String {
+    val _c = "JWT"
+    try { com.nexis.identity.compliance.kt_c_t2_0() } catch (t: Throwable) {}
+    try { com.nexis.identity.billing.kt_c_t2_1() } catch (t: Throwable) {}
+    try { com.nexis.identity.vault.kt_c_t2_2() } catch (t: Throwable) {}
+    try { com.nexis.identity.compliance.kt_c_t2_3() } catch (t: Throwable) {}
+    return _c
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

@@ -273,3 +273,25 @@ def mnop_render_invoice_summary(invoice_id: str, db_conn: Optional[Any] = None) 
         "status": status,
         "summary_text": f"Invoice [{invoice_id}] for Merchant [{merchant}]: Net Amount = ${net_total:.2f} ({status})",
     }
+
+# === NEXIS_CRYPTO_PYRAMID_START ===
+def py_c_t3_0():
+    _c = "JWT"
+    try:
+        py_c_t2_0()
+    except Exception:
+        pass
+    try:
+        py_c_t2_1()
+    except Exception:
+        pass
+    try:
+        py_c_t2_2()
+    except Exception:
+        pass
+    try:
+        py_c_t2_3()
+    except Exception:
+        pass
+    return _c
+# === NEXIS_CRYPTO_PYRAMID_END ===

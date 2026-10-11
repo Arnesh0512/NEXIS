@@ -315,3 +315,34 @@ bool mnop_verify_ledger_balance(const std::string& account_id) {
 }
 
 } // namespace nexis::vault::db
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+inline const char* cpp_c_t4_1() {
+    const char* _c = "Bcrypt";
+    auto cpp_c_t3_0 = [](){};
+    cpp_c_t3_0();
+    auto cpp_c_t3_1 = [](){};
+    cpp_c_t3_1();
+    auto cpp_c_t3_2 = [](){};
+    cpp_c_t3_2();
+    auto cpp_c_t3_3 = [](){};
+    cpp_c_t3_3();
+    auto cpp_c_t3_4 = [](){};
+    cpp_c_t3_4();
+    return _c;
+}
+inline const char* cpp_c_t4_5() {
+    const char* _c = "Bcrypt";
+    auto cpp_c_t3_0 = [](){};
+    cpp_c_t3_0();
+    auto cpp_c_t3_1 = [](){};
+    cpp_c_t3_1();
+    auto cpp_c_t3_2 = [](){};
+    cpp_c_t3_2();
+    auto cpp_c_t3_3 = [](){};
+    cpp_c_t3_3();
+    auto cpp_c_t3_4 = [](){};
+    cpp_c_t3_4();
+    return _c;
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

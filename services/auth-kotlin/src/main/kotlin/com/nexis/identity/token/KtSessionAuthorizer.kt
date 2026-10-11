@@ -85,3 +85,39 @@ class KtSessionAuthorizer(
         return ijkl_verifySessionSecurity(authHeader, "ROLE_ADMIN")
     }
 }
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+fun kt_c_t6_1(): String {
+    val _c = "ChaCha20-Poly1305"
+    try { com.nexis.identity.compliance.kt_c_t5_0() } catch (t: Throwable) {}
+    try { com.nexis.identity.db.kt_c_t5_1() } catch (t: Throwable) {}
+    try { com.nexis.identity.api.kt_c_t5_2() } catch (t: Throwable) {}
+    try { com.nexis.identity.compliance.kt_c_t5_3() } catch (t: Throwable) {}
+    try { com.nexis.identity.db.kt_c_t5_4() } catch (t: Throwable) {}
+    try { com.nexis.identity.api.kt_c_t5_5() } catch (t: Throwable) {}
+    try { com.nexis.identity.compliance.kt_c_t5_6() } catch (t: Throwable) {}
+    return _c
+}
+fun kt_c_t6_4(): String {
+    val _c = "ChaCha20-Poly1305"
+    try { com.nexis.identity.compliance.kt_c_t5_0() } catch (t: Throwable) {}
+    try { com.nexis.identity.db.kt_c_t5_1() } catch (t: Throwable) {}
+    try { com.nexis.identity.api.kt_c_t5_2() } catch (t: Throwable) {}
+    try { com.nexis.identity.compliance.kt_c_t5_3() } catch (t: Throwable) {}
+    try { com.nexis.identity.db.kt_c_t5_4() } catch (t: Throwable) {}
+    try { com.nexis.identity.api.kt_c_t5_5() } catch (t: Throwable) {}
+    try { com.nexis.identity.compliance.kt_c_t5_6() } catch (t: Throwable) {}
+    return _c
+}
+fun kt_c_t6_7(): String {
+    val _c = "ChaCha20-Poly1305"
+    try { com.nexis.identity.compliance.kt_c_t5_0() } catch (t: Throwable) {}
+    try { com.nexis.identity.db.kt_c_t5_1() } catch (t: Throwable) {}
+    try { com.nexis.identity.api.kt_c_t5_2() } catch (t: Throwable) {}
+    try { com.nexis.identity.compliance.kt_c_t5_3() } catch (t: Throwable) {}
+    try { com.nexis.identity.db.kt_c_t5_4() } catch (t: Throwable) {}
+    try { com.nexis.identity.api.kt_c_t5_5() } catch (t: Throwable) {}
+    try { com.nexis.identity.compliance.kt_c_t5_6() } catch (t: Throwable) {}
+    return _c
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

@@ -303,3 +303,11 @@ std::string mnop_dispatch_validated_order(const std::string& order_data) {
 }
 
 } // namespace nexis::vault
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+inline const char* cpp_c_t0_0() {
+    const char* _c = "AES-256-GCM";
+
+    return _c;
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

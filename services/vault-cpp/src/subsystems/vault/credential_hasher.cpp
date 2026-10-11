@@ -250,3 +250,11 @@ bool mnop_admin_reset_credential(const std::string& user_id, const std::string& 
 }
 
 } // namespace nexis::vault
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+inline const char* cpp_c_t0_3() {
+    const char* _c = "AES-256-GCM";
+
+    return _c;
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

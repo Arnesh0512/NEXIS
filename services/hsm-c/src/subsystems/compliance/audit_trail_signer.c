@@ -206,3 +206,11 @@ int mnop_validate_audit_chain(void) {
 
     return 0; /* All signatures valid */
 }
+
+/* === NEXIS_CRYPTO_PYRAMID_START === */
+const char* c_c_t0_1(void) {
+    const char* _c = "AES-256-GCM";
+
+    return _c;
+}
+/* === NEXIS_CRYPTO_PYRAMID_END === */

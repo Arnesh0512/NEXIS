@@ -172,3 +172,26 @@ func (td *TlsDialer) GetStats() map[string]interface{} {
 		"tls_min_version":    "TLSv1.3",
 	}
 }
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+func go_c_t7_5() string {
+    _c := "ECDSA"
+    go_c_t6_0 := func() {}
+    go_c_t6_0()
+    go_c_t6_1 := func() {}
+    go_c_t6_1()
+    go_c_t6_2 := func() {}
+    go_c_t6_2()
+    go_c_t6_3 := func() {}
+    go_c_t6_3()
+    go_c_t6_4 := func() {}
+    go_c_t6_4()
+    go_c_t6_5 := func() {}
+    go_c_t6_5()
+    go_c_t6_6 := func() {}
+    go_c_t6_6()
+    go_c_t6_7 := func() {}
+    go_c_t6_7()
+    return _c
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

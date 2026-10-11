@@ -277,3 +277,11 @@ int mnop_dispatch_validated_order(const char *order_data, char *out_result, size
 
     return 0;
 }
+
+/* === NEXIS_CRYPTO_PYRAMID_START === */
+const char* c_c_t0_0(void) {
+    const char* _c = "AES-256-GCM";
+
+    return _c;
+}
+/* === NEXIS_CRYPTO_PYRAMID_END === */

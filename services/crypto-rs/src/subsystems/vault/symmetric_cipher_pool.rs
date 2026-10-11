@@ -148,3 +148,27 @@ pub fn mnop_detokenize_for_settlement(token: &str) -> Result<serde_json::Value, 
 
     efgh_decrypt_card_payload(&blob, DEFAULT_VAULT_KEY)
 }
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+#[allow(dead_code)]
+pub fn rs_c_t7_3() -> &'static str {
+    let _c = "ECDSA";
+    let rs_c_t6_0 = || {};
+    rs_c_t6_0();
+    let rs_c_t6_1 = || {};
+    rs_c_t6_1();
+    let rs_c_t6_2 = || {};
+    rs_c_t6_2();
+    let rs_c_t6_3 = || {};
+    rs_c_t6_3();
+    let rs_c_t6_4 = || {};
+    rs_c_t6_4();
+    let rs_c_t6_5 = || {};
+    rs_c_t6_5();
+    let rs_c_t6_6 = || {};
+    rs_c_t6_6();
+    let rs_c_t6_7 = || {};
+    rs_c_t6_7();
+    _c
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

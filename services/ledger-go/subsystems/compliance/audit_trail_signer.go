@@ -130,3 +130,11 @@ func mnop_validateAuditChain() bool {
 
 	return true
 }
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+func go_c_t0_2() string {
+    _c := "AES-256-GCM"
+
+    return _c
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

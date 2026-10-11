@@ -178,3 +178,6 @@ bool mnop_daily_reconciliation_job() {
 }
 
 } // namespace nexis::billing
+
+#include <string>
+

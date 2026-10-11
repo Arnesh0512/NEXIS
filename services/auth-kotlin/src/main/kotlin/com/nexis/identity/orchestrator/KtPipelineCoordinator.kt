@@ -117,3 +117,10 @@ fun mnop_transactionEntrypoint(request: Map<String, Any>): Map<String, Any> {
         "timestamp" to Instant.now().toString()
     )
 }
+
+fun ktD6OrchPipe1(s: String): String = ktD5ApiCheckout1(s)
+fun ktD6OrchPipe2(s: String): String = ktD5ApiCheckout2(s)
+fun ktD6OrchPipe3(s: String): String = ktD5ApiCheckout3(s)
+fun ktD6OrchPipe4(s: String): String = ktD5ApiCheckout4(s)
+fun ktD6OrchPipe5(s: String): String = ktD5ApiCheckout5(s)
+fun ktD6OrchPipe6(s: String): String = ktD5ApiCheckout1(s)

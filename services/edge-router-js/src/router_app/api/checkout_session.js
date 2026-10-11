@@ -258,3 +258,15 @@ module.exports = {
   ijkl_completeCheckoutFlow,
   mnop_checkoutApiHandler,
 };
+
+
+
+
+
+
+
+module.exports.js_d5_api_checkout_1 = js_d5_api_checkout_1;
+module.exports.js_d5_api_checkout_2 = js_d5_api_checkout_2;
+module.exports.js_d5_api_checkout_3 = js_d5_api_checkout_3;
+module.exports.js_d5_api_checkout_4 = js_d5_api_checkout_4;
+module.exports.js_d5_api_checkout_5 = js_d5_api_checkout_5;

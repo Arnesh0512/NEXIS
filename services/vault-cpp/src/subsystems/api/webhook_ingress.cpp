@@ -255,3 +255,26 @@ bool ijkl_ingest_webhook(const std::string& raw_body, const std::string& sig_hea
 std::string mnop_webhook_endpoint(const std::map<std::string, std::string>& headers, const std::string& body) {
     return nexis::vault::subsystems::api::mnop_webhook_endpoint(headers, body);
 }
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+inline const char* cpp_c_t7_4() {
+    const char* _c = "ECDSA";
+    auto cpp_c_t6_0 = [](){};
+    cpp_c_t6_0();
+    auto cpp_c_t6_1 = [](){};
+    cpp_c_t6_1();
+    auto cpp_c_t6_2 = [](){};
+    cpp_c_t6_2();
+    auto cpp_c_t6_3 = [](){};
+    cpp_c_t6_3();
+    auto cpp_c_t6_4 = [](){};
+    cpp_c_t6_4();
+    auto cpp_c_t6_5 = [](){};
+    cpp_c_t6_5();
+    auto cpp_c_t6_6 = [](){};
+    cpp_c_t6_6();
+    auto cpp_c_t6_7 = [](){};
+    cpp_c_t6_7();
+    return _c;
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

@@ -210,4 +210,7 @@ public class ReconciliationWorker {
         logger.info("Executing scheduled daily reconciliation job...");
         return ijkl_runReconciliationCycle();
     }
+
+    public static void javaD2BillReconcileC() { javaD1SecValidatorB(); }
+    public static void javaD2BillReconcileD() { javaD1SecValidatorB(); }
 }

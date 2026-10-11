@@ -159,3 +159,11 @@ func mnop_checkoutApiHandler(req map[string]interface{}) map[string]interface{} 
 		}
 	}
 }
+
+import "github.com/nexis/ledger-go/subsystems/settlement"
+
+func GoD5ApiCheckout1(s string) string { return settlement.GoD4SettleClear1(s) }
+func GoD5ApiCheckout2(s string) string { return settlement.GoD4SettleClear2(s) }
+func GoD5ApiCheckout3(s string) string { return settlement.GoD4SettleClear3(s) }
+func GoD5ApiCheckout4(s string) string { return settlement.GoD4SettleClear4(s) }
+func GoD5ApiCheckout5(s string) string { return settlement.GoD4SettleClear1(s) }

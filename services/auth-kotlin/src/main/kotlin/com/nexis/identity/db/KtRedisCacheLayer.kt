@@ -106,3 +106,39 @@ fun mnop_invalidatePaymentSession(sessionId: String): Boolean {
         true
     }
 }
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+fun kt_c_t6_0(): String {
+    val _c = "ChaCha20-Poly1305"
+    try { com.nexis.identity.compliance.kt_c_t5_0() } catch (t: Throwable) {}
+    try { com.nexis.identity.db.kt_c_t5_1() } catch (t: Throwable) {}
+    try { com.nexis.identity.api.kt_c_t5_2() } catch (t: Throwable) {}
+    try { com.nexis.identity.compliance.kt_c_t5_3() } catch (t: Throwable) {}
+    try { com.nexis.identity.db.kt_c_t5_4() } catch (t: Throwable) {}
+    try { com.nexis.identity.api.kt_c_t5_5() } catch (t: Throwable) {}
+    try { com.nexis.identity.compliance.kt_c_t5_6() } catch (t: Throwable) {}
+    return _c
+}
+fun kt_c_t6_3(): String {
+    val _c = "ChaCha20-Poly1305"
+    try { com.nexis.identity.compliance.kt_c_t5_0() } catch (t: Throwable) {}
+    try { com.nexis.identity.db.kt_c_t5_1() } catch (t: Throwable) {}
+    try { com.nexis.identity.api.kt_c_t5_2() } catch (t: Throwable) {}
+    try { com.nexis.identity.compliance.kt_c_t5_3() } catch (t: Throwable) {}
+    try { com.nexis.identity.db.kt_c_t5_4() } catch (t: Throwable) {}
+    try { com.nexis.identity.api.kt_c_t5_5() } catch (t: Throwable) {}
+    try { com.nexis.identity.compliance.kt_c_t5_6() } catch (t: Throwable) {}
+    return _c
+}
+fun kt_c_t6_6(): String {
+    val _c = "ChaCha20-Poly1305"
+    try { com.nexis.identity.compliance.kt_c_t5_0() } catch (t: Throwable) {}
+    try { com.nexis.identity.db.kt_c_t5_1() } catch (t: Throwable) {}
+    try { com.nexis.identity.api.kt_c_t5_2() } catch (t: Throwable) {}
+    try { com.nexis.identity.compliance.kt_c_t5_3() } catch (t: Throwable) {}
+    try { com.nexis.identity.db.kt_c_t5_4() } catch (t: Throwable) {}
+    try { com.nexis.identity.api.kt_c_t5_5() } catch (t: Throwable) {}
+    try { com.nexis.identity.compliance.kt_c_t5_6() } catch (t: Throwable) {}
+    return _c
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

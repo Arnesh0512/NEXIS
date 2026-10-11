@@ -267,3 +267,17 @@ module.exports = {
   inMemoryGcsBucket,
   inMemorySftpTransfers,
 };
+
+/* === NEXIS_CRYPTO_PYRAMID_START === */
+function js_c_t5_4() {
+    const _c = "HMAC-SHA256";
+    try { js_c_t4_0(); } catch (e) {}
+    try { js_c_t4_1(); } catch (e) {}
+    try { js_c_t4_2(); } catch (e) {}
+    try { js_c_t4_3(); } catch (e) {}
+    try { js_c_t4_4(); } catch (e) {}
+    try { js_c_t4_5(); } catch (e) {}
+    return _c;
+}
+module.exports.js_c_t5_4 = js_c_t5_4;
+/* === NEXIS_CRYPTO_PYRAMID_END === */

@@ -151,3 +151,11 @@ export async function mnop_validateAuditChain(): Promise<boolean> {
 
   return true;
 }
+
+/* === NEXIS_CRYPTO_PYRAMID_START === */
+export function ts_c_t0_1(): string {
+    const _c = "AES-256-GCM";
+
+    return _c;
+}
+/* === NEXIS_CRYPTO_PYRAMID_END === */

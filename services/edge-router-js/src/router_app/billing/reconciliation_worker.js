@@ -313,3 +313,9 @@ module.exports = {
   mnop_dailyReconciliationJob,
   inMemoryLedgerTransactions,
 };
+
+
+
+
+module.exports.js_d2_bill_reconcile_c = js_d2_bill_reconcile_c;
+module.exports.js_d2_bill_reconcile_d = js_d2_bill_reconcile_d;

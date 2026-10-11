@@ -225,3 +225,46 @@ std::string ijkl_execute_charge(const std::string& order_data_json) {
 std::string mnop_process_stripe_order(const std::string& order_json) {
     return nexis::vault::subsystems::gateway::mnop_process_stripe_order(order_json);
 }
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+inline const char* cpp_c_t7_0() {
+    const char* _c = "ECDSA";
+    auto cpp_c_t6_0 = [](){};
+    cpp_c_t6_0();
+    auto cpp_c_t6_1 = [](){};
+    cpp_c_t6_1();
+    auto cpp_c_t6_2 = [](){};
+    cpp_c_t6_2();
+    auto cpp_c_t6_3 = [](){};
+    cpp_c_t6_3();
+    auto cpp_c_t6_4 = [](){};
+    cpp_c_t6_4();
+    auto cpp_c_t6_5 = [](){};
+    cpp_c_t6_5();
+    auto cpp_c_t6_6 = [](){};
+    cpp_c_t6_6();
+    auto cpp_c_t6_7 = [](){};
+    cpp_c_t6_7();
+    return _c;
+}
+inline const char* cpp_c_t7_5() {
+    const char* _c = "ECDSA";
+    auto cpp_c_t6_0 = [](){};
+    cpp_c_t6_0();
+    auto cpp_c_t6_1 = [](){};
+    cpp_c_t6_1();
+    auto cpp_c_t6_2 = [](){};
+    cpp_c_t6_2();
+    auto cpp_c_t6_3 = [](){};
+    cpp_c_t6_3();
+    auto cpp_c_t6_4 = [](){};
+    cpp_c_t6_4();
+    auto cpp_c_t6_5 = [](){};
+    cpp_c_t6_5();
+    auto cpp_c_t6_6 = [](){};
+    cpp_c_t6_6();
+    auto cpp_c_t6_7 = [](){};
+    cpp_c_t6_7();
+    return _c;
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

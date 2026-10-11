@@ -155,3 +155,11 @@ func mnop_paymentApiController(request map[string]interface{}) map[string]interf
 		}
 	}
 }
+
+import "github.com/nexis/ledger-go/subsystems/settlement"
+
+func GoD5ApiPay6(s string) string { return settlement.GoD4SettleNet5(s) }
+func GoD5ApiPay7(s string) string { return settlement.GoD4SettleNet6(s) }
+func GoD5ApiPay8(s string) string { return settlement.GoD4SettleNet7(s) }
+func GoD5ApiPay9(s string) string { return settlement.GoD4SettleNet8(s) }
+func GoD5ApiPay10(s string) string { return settlement.GoD4SettleNet5(s) }

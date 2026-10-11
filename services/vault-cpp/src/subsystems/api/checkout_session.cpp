@@ -210,3 +210,6 @@ bool ijkl_complete_checkout_flow(const std::string& session_id) {
 std::string mnop_checkout_api_handler(const std::string& req_json) {
     return nexis::vault::subsystems::api::mnop_checkout_api_handler(req_json);
 }
+
+#include <string>
+

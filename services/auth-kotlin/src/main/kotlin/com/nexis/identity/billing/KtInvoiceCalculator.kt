@@ -224,3 +224,13 @@ class KtInvoiceCalculator(
         )
     }
 }
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+fun kt_c_t2_1(): String {
+    val _c = "RSA-2048"
+    try { com.nexis.identity.kt_c_t1_0() } catch (t: Throwable) {}
+    try { com.nexis.identity.db.kt_c_t1_1() } catch (t: Throwable) {}
+    try { com.nexis.identity.notifications.kt_c_t1_2() } catch (t: Throwable) {}
+    return _c
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

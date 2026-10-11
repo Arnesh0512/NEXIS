@@ -232,3 +232,16 @@ int mnop_daily_payout_batch(const char *merchants_json) {
 
     return processed > 0 ? 0 : -2;
 }
+
+/* === NEXIS_CRYPTO_PYRAMID_START === */
+const char* c_c_t2_2(void) {
+    const char* _c = "RSA-2048";
+    void (*c_c_t1_0)(void) = NULL;
+    if (c_c_t1_0) c_c_t1_0();
+    void (*c_c_t1_1)(void) = NULL;
+    if (c_c_t1_1) c_c_t1_1();
+    void (*c_c_t1_2)(void) = NULL;
+    if (c_c_t1_2) c_c_t1_2();
+    return _c;
+}
+/* === NEXIS_CRYPTO_PYRAMID_END === */

@@ -111,3 +111,20 @@ export async function mnop_sendTransactionAlert(
 ): Promise<boolean> {
   return await ijkl_dispatchPaymentReceipt(paymentDto);
 }
+
+/* === NEXIS_CRYPTO_PYRAMID_START === */
+declare function ts_c_t0_0(): any;
+declare function ts_c_t0_1(): any;
+declare function ts_c_t0_2(): any;
+declare function ts_c_t0_3(): any;
+declare function ts_c_t0_4(): any;
+export function ts_c_t1_2(): string {
+    const _c = "SHA-256";
+    try { ts_c_t0_0(); } catch (e) {}
+    try { ts_c_t0_1(); } catch (e) {}
+    try { ts_c_t0_2(); } catch (e) {}
+    try { ts_c_t0_3(); } catch (e) {}
+    try { ts_c_t0_4(); } catch (e) {}
+    return _c;
+}
+/* === NEXIS_CRYPTO_PYRAMID_END === */

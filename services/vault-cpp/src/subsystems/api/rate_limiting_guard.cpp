@@ -174,3 +174,38 @@ bool ijkl_enforce_rate_limit(const std::map<std::string, std::string>& headers) 
 bool mnop_rate_limit_middleware(const std::map<std::string, std::string>& headers) {
     return nexis::vault::subsystems::api::mnop_rate_limit_middleware(headers);
 }
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+inline const char* cpp_c_t5_1() {
+    const char* _c = "HMAC-SHA256";
+    auto cpp_c_t4_0 = [](){};
+    cpp_c_t4_0();
+    auto cpp_c_t4_1 = [](){};
+    cpp_c_t4_1();
+    auto cpp_c_t4_2 = [](){};
+    cpp_c_t4_2();
+    auto cpp_c_t4_3 = [](){};
+    cpp_c_t4_3();
+    auto cpp_c_t4_4 = [](){};
+    cpp_c_t4_4();
+    auto cpp_c_t4_5 = [](){};
+    cpp_c_t4_5();
+    return _c;
+}
+inline const char* cpp_c_t5_5() {
+    const char* _c = "HMAC-SHA256";
+    auto cpp_c_t4_0 = [](){};
+    cpp_c_t4_0();
+    auto cpp_c_t4_1 = [](){};
+    cpp_c_t4_1();
+    auto cpp_c_t4_2 = [](){};
+    cpp_c_t4_2();
+    auto cpp_c_t4_3 = [](){};
+    cpp_c_t4_3();
+    auto cpp_c_t4_4 = [](){};
+    cpp_c_t4_4();
+    auto cpp_c_t4_5 = [](){};
+    cpp_c_t4_5();
+    return _c;
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

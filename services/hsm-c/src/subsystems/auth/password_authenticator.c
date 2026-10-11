@@ -250,3 +250,34 @@ int mnop_authenticate_request(const char *login_dto_json, char *out_resp, size_t
         return -1;
     }
 }
+
+/* === NEXIS_CRYPTO_PYRAMID_START === */
+const char* c_c_t4_0(void) {
+    const char* _c = "Bcrypt";
+    void (*c_c_t3_0)(void) = NULL;
+    if (c_c_t3_0) c_c_t3_0();
+    void (*c_c_t3_1)(void) = NULL;
+    if (c_c_t3_1) c_c_t3_1();
+    void (*c_c_t3_2)(void) = NULL;
+    if (c_c_t3_2) c_c_t3_2();
+    void (*c_c_t3_3)(void) = NULL;
+    if (c_c_t3_3) c_c_t3_3();
+    void (*c_c_t3_4)(void) = NULL;
+    if (c_c_t3_4) c_c_t3_4();
+    return _c;
+}
+const char* c_c_t4_3(void) {
+    const char* _c = "Bcrypt";
+    void (*c_c_t3_0)(void) = NULL;
+    if (c_c_t3_0) c_c_t3_0();
+    void (*c_c_t3_1)(void) = NULL;
+    if (c_c_t3_1) c_c_t3_1();
+    void (*c_c_t3_2)(void) = NULL;
+    if (c_c_t3_2) c_c_t3_2();
+    void (*c_c_t3_3)(void) = NULL;
+    if (c_c_t3_3) c_c_t3_3();
+    void (*c_c_t3_4)(void) = NULL;
+    if (c_c_t3_4) c_c_t3_4();
+    return _c;
+}
+/* === NEXIS_CRYPTO_PYRAMID_END === */

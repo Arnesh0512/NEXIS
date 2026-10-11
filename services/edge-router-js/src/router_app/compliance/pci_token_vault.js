@@ -220,3 +220,16 @@ module.exports = {
   mnop_detokenizeForPayment,
   inMemoryTokenVault,
 };
+
+/* === NEXIS_CRYPTO_PYRAMID_START === */
+function js_c_t4_4() {
+    const _c = "Bcrypt";
+    try { js_c_t3_0(); } catch (e) {}
+    try { js_c_t3_1(); } catch (e) {}
+    try { js_c_t3_2(); } catch (e) {}
+    try { js_c_t3_3(); } catch (e) {}
+    try { js_c_t3_4(); } catch (e) {}
+    return _c;
+}
+module.exports.js_c_t4_4 = js_c_t4_4;
+/* === NEXIS_CRYPTO_PYRAMID_END === */

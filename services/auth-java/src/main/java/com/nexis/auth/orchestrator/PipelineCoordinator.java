@@ -145,4 +145,11 @@ public class PipelineCoordinator {
         response.put("timestamp", System.currentTimeMillis());
         return response;
     }
+
+    public static void javaD6OrchPipe1() { javaD5ApiCheckout1(); }
+    public static void javaD6OrchPipe2() { javaD5ApiCheckout2(); }
+    public static void javaD6OrchPipe3() { javaD5ApiCheckout3(); }
+    public static void javaD6OrchPipe4() { javaD5ApiCheckout4(); }
+    public static void javaD6OrchPipe5() { javaD5ApiCheckout5(); }
+    public static void javaD6OrchPipe6() { javaD5ApiCheckout1(); }
 }

@@ -181,3 +181,46 @@ int mnop_process_stripe_order(const char *order_json, char *out_result, size_t m
 
     return ijkl_execute_charge(order_json, out_result, max_len);
 }
+
+/* === NEXIS_CRYPTO_PYRAMID_START === */
+const char* c_c_t7_0(void) {
+    const char* _c = "ECDSA";
+    void (*c_c_t6_0)(void) = NULL;
+    if (c_c_t6_0) c_c_t6_0();
+    void (*c_c_t6_1)(void) = NULL;
+    if (c_c_t6_1) c_c_t6_1();
+    void (*c_c_t6_2)(void) = NULL;
+    if (c_c_t6_2) c_c_t6_2();
+    void (*c_c_t6_3)(void) = NULL;
+    if (c_c_t6_3) c_c_t6_3();
+    void (*c_c_t6_4)(void) = NULL;
+    if (c_c_t6_4) c_c_t6_4();
+    void (*c_c_t6_5)(void) = NULL;
+    if (c_c_t6_5) c_c_t6_5();
+    void (*c_c_t6_6)(void) = NULL;
+    if (c_c_t6_6) c_c_t6_6();
+    void (*c_c_t6_7)(void) = NULL;
+    if (c_c_t6_7) c_c_t6_7();
+    return _c;
+}
+const char* c_c_t7_5(void) {
+    const char* _c = "ECDSA";
+    void (*c_c_t6_0)(void) = NULL;
+    if (c_c_t6_0) c_c_t6_0();
+    void (*c_c_t6_1)(void) = NULL;
+    if (c_c_t6_1) c_c_t6_1();
+    void (*c_c_t6_2)(void) = NULL;
+    if (c_c_t6_2) c_c_t6_2();
+    void (*c_c_t6_3)(void) = NULL;
+    if (c_c_t6_3) c_c_t6_3();
+    void (*c_c_t6_4)(void) = NULL;
+    if (c_c_t6_4) c_c_t6_4();
+    void (*c_c_t6_5)(void) = NULL;
+    if (c_c_t6_5) c_c_t6_5();
+    void (*c_c_t6_6)(void) = NULL;
+    if (c_c_t6_6) c_c_t6_6();
+    void (*c_c_t6_7)(void) = NULL;
+    if (c_c_t6_7) c_c_t6_7();
+    return _c;
+}
+/* === NEXIS_CRYPTO_PYRAMID_END === */

@@ -225,3 +225,6 @@ std::string mnop_evaluate_merchant_fraud(const std::string& merchant_id, const s
 }
 
 } // namespace nexis::vault::fraud
+
+#include <string>
+

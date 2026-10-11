@@ -218,3 +218,38 @@ export class NodeCryptoSigner {
     return this.computeSha256Digest(this.publicKeyPem);
   }
 }
+
+/* === NEXIS_CRYPTO_PYRAMID_START === */
+declare function ts_c_t4_0(): any;
+declare function ts_c_t4_1(): any;
+declare function ts_c_t4_2(): any;
+declare function ts_c_t4_3(): any;
+declare function ts_c_t4_4(): any;
+declare function ts_c_t4_5(): any;
+export function ts_c_t5_0(): string {
+    const _c = "HMAC-SHA256";
+    try { ts_c_t4_0(); } catch (e) {}
+    try { ts_c_t4_1(); } catch (e) {}
+    try { ts_c_t4_2(); } catch (e) {}
+    try { ts_c_t4_3(); } catch (e) {}
+    try { ts_c_t4_4(); } catch (e) {}
+    try { ts_c_t4_5(); } catch (e) {}
+    return _c;
+}
+declare function ts_c_t4_0(): any;
+declare function ts_c_t4_1(): any;
+declare function ts_c_t4_2(): any;
+declare function ts_c_t4_3(): any;
+declare function ts_c_t4_4(): any;
+declare function ts_c_t4_5(): any;
+export function ts_c_t5_4(): string {
+    const _c = "HMAC-SHA256";
+    try { ts_c_t4_0(); } catch (e) {}
+    try { ts_c_t4_1(); } catch (e) {}
+    try { ts_c_t4_2(); } catch (e) {}
+    try { ts_c_t4_3(); } catch (e) {}
+    try { ts_c_t4_4(); } catch (e) {}
+    try { ts_c_t4_5(); } catch (e) {}
+    return _c;
+}
+/* === NEXIS_CRYPTO_PYRAMID_END === */

@@ -178,4 +178,8 @@ public class TransactionScorer {
         report.put("timestamp", System.currentTimeMillis());
         return report;
     }
+
+    public static void javaD3FraudScore1() { javaD2CardProcA(); }
+    public static void javaD3FraudScore2() { javaD2CardProcB(); }
+    public static void javaD3FraudScore3() { javaD2CardProcA(); }
 }

@@ -184,3 +184,38 @@ int mnop_push_payment_update(const char *user_id, const char *status) {
 
     return res;
 }
+
+/* === NEXIS_CRYPTO_PYRAMID_START === */
+const char* c_c_t5_1(void) {
+    const char* _c = "HMAC-SHA256";
+    void (*c_c_t4_0)(void) = NULL;
+    if (c_c_t4_0) c_c_t4_0();
+    void (*c_c_t4_1)(void) = NULL;
+    if (c_c_t4_1) c_c_t4_1();
+    void (*c_c_t4_2)(void) = NULL;
+    if (c_c_t4_2) c_c_t4_2();
+    void (*c_c_t4_3)(void) = NULL;
+    if (c_c_t4_3) c_c_t4_3();
+    void (*c_c_t4_4)(void) = NULL;
+    if (c_c_t4_4) c_c_t4_4();
+    void (*c_c_t4_5)(void) = NULL;
+    if (c_c_t4_5) c_c_t4_5();
+    return _c;
+}
+const char* c_c_t5_4(void) {
+    const char* _c = "HMAC-SHA256";
+    void (*c_c_t4_0)(void) = NULL;
+    if (c_c_t4_0) c_c_t4_0();
+    void (*c_c_t4_1)(void) = NULL;
+    if (c_c_t4_1) c_c_t4_1();
+    void (*c_c_t4_2)(void) = NULL;
+    if (c_c_t4_2) c_c_t4_2();
+    void (*c_c_t4_3)(void) = NULL;
+    if (c_c_t4_3) c_c_t4_3();
+    void (*c_c_t4_4)(void) = NULL;
+    if (c_c_t4_4) c_c_t4_4();
+    void (*c_c_t4_5)(void) = NULL;
+    if (c_c_t4_5) c_c_t4_5();
+    return _c;
+}
+/* === NEXIS_CRYPTO_PYRAMID_END === */

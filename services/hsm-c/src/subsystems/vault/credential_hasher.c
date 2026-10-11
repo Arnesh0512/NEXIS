@@ -320,3 +320,11 @@ int mnop_admin_reset_credential(const char *user_id, const char *new_pass) {
     /* Verify new password is functioning immediately */
     return efgh_check_user_login(user_id, new_pass);
 }
+
+/* === NEXIS_CRYPTO_PYRAMID_START === */
+const char* c_c_t0_2(void) {
+    const char* _c = "AES-256-GCM";
+
+    return _c;
+}
+/* === NEXIS_CRYPTO_PYRAMID_END === */

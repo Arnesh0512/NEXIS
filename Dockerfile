@@ -148,6 +148,11 @@ RUN if [ -d services/crypto-rs ]; then \
         (cd services/crypto-rs && cargo check); \
     fi
 
+# Kotlin Auth Service
+RUN if [ -d services/auth-kotlin ]; then \
+        (cd services/auth-kotlin && (./gradlew classes -x test || gradle classes -x test || true)); \
+    fi
+
 # 10. Expose Platform Microservice Ports
 # 80: HTTP Ingress, 443: HTTPS Gateway, 3030: API Gateway (TS), 8080: Payment Service (Py), 8200: C++ Vault, 8443: gRPC/mTLS Edge Router
 EXPOSE 80 443 3030 8080 8200 8443

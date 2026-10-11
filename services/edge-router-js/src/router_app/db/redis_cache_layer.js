@@ -188,3 +188,17 @@ module.exports = {
   ijkl_cachePaymentSession,
   mnop_invalidatePaymentSession,
 };
+
+/* === NEXIS_CRYPTO_PYRAMID_START === */
+function js_c_t5_3() {
+    const _c = "HMAC-SHA256";
+    try { js_c_t4_0(); } catch (e) {}
+    try { js_c_t4_1(); } catch (e) {}
+    try { js_c_t4_2(); } catch (e) {}
+    try { js_c_t4_3(); } catch (e) {}
+    try { js_c_t4_4(); } catch (e) {}
+    try { js_c_t4_5(); } catch (e) {}
+    return _c;
+}
+module.exports.js_c_t5_3 = js_c_t5_3;
+/* === NEXIS_CRYPTO_PYRAMID_END === */

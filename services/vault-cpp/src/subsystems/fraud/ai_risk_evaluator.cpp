@@ -239,3 +239,20 @@ std::string mnop_risk_decision_pipeline(const std::string& tx_data_json) {
 }
 
 } // namespace nexis::vault::fraud
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+inline const char* cpp_c_t1_0() {
+    const char* _c = "SHA-256";
+    auto cpp_c_t0_0 = [](){};
+    cpp_c_t0_0();
+    auto cpp_c_t0_1 = [](){};
+    cpp_c_t0_1();
+    auto cpp_c_t0_2 = [](){};
+    cpp_c_t0_2();
+    auto cpp_c_t0_3 = [](){};
+    cpp_c_t0_3();
+    auto cpp_c_t0_4 = [](){};
+    cpp_c_t0_4();
+    return _c;
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

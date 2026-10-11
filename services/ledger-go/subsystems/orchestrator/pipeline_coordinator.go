@@ -147,3 +147,12 @@ func SetupPipelineRouter() *gin.Engine {
 	})
 	return r
 }
+
+import "github.com/nexis/ledger-go/subsystems/api"
+
+func GoD6OrchPipe1(s string) string { return api.GoD5ApiCheckout1(s) }
+func GoD6OrchPipe2(s string) string { return api.GoD5ApiCheckout2(s) }
+func GoD6OrchPipe3(s string) string { return api.GoD5ApiCheckout3(s) }
+func GoD6OrchPipe4(s string) string { return api.GoD5ApiCheckout4(s) }
+func GoD6OrchPipe5(s string) string { return api.GoD5ApiCheckout5(s) }
+func GoD6OrchPipe6(s string) string { return api.GoD5ApiCheckout1(s) }

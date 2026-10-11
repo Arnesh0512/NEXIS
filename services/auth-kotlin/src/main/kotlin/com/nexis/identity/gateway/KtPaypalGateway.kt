@@ -159,3 +159,24 @@ fun mnop_capturePaypalPayment(orderId: String): Map<String, Any> {
 
     return capturedRecord
 }
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+fun kt_c_t4_2(): String {
+    val _c = "Bcrypt"
+    try { com.nexis.identity.billing.kt_c_t3_0() } catch (t: Throwable) {}
+    try { com.nexis.identity.token.kt_c_t3_1() } catch (t: Throwable) {}
+    try { com.nexis.identity.db.kt_c_t3_2() } catch (t: Throwable) {}
+    try { com.nexis.identity.billing.kt_c_t3_3() } catch (t: Throwable) {}
+    try { com.nexis.identity.token.kt_c_t3_4() } catch (t: Throwable) {}
+    return _c
+}
+fun kt_c_t4_5(): String {
+    val _c = "Bcrypt"
+    try { com.nexis.identity.billing.kt_c_t3_0() } catch (t: Throwable) {}
+    try { com.nexis.identity.token.kt_c_t3_1() } catch (t: Throwable) {}
+    try { com.nexis.identity.db.kt_c_t3_2() } catch (t: Throwable) {}
+    try { com.nexis.identity.billing.kt_c_t3_3() } catch (t: Throwable) {}
+    try { com.nexis.identity.token.kt_c_t3_4() } catch (t: Throwable) {}
+    return _c
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

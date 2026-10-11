@@ -195,3 +195,60 @@ int mnop_verify_rotation_integrity(const char *secret_id) {
 
     return -3;
 }
+
+/* === NEXIS_CRYPTO_PYRAMID_START === */
+const char* c_c_t6_0(void) {
+    const char* _c = "ChaCha20-Poly1305";
+    void (*c_c_t5_0)(void) = NULL;
+    if (c_c_t5_0) c_c_t5_0();
+    void (*c_c_t5_1)(void) = NULL;
+    if (c_c_t5_1) c_c_t5_1();
+    void (*c_c_t5_2)(void) = NULL;
+    if (c_c_t5_2) c_c_t5_2();
+    void (*c_c_t5_3)(void) = NULL;
+    if (c_c_t5_3) c_c_t5_3();
+    void (*c_c_t5_4)(void) = NULL;
+    if (c_c_t5_4) c_c_t5_4();
+    void (*c_c_t5_5)(void) = NULL;
+    if (c_c_t5_5) c_c_t5_5();
+    void (*c_c_t5_6)(void) = NULL;
+    if (c_c_t5_6) c_c_t5_6();
+    return _c;
+}
+const char* c_c_t6_3(void) {
+    const char* _c = "ChaCha20-Poly1305";
+    void (*c_c_t5_0)(void) = NULL;
+    if (c_c_t5_0) c_c_t5_0();
+    void (*c_c_t5_1)(void) = NULL;
+    if (c_c_t5_1) c_c_t5_1();
+    void (*c_c_t5_2)(void) = NULL;
+    if (c_c_t5_2) c_c_t5_2();
+    void (*c_c_t5_3)(void) = NULL;
+    if (c_c_t5_3) c_c_t5_3();
+    void (*c_c_t5_4)(void) = NULL;
+    if (c_c_t5_4) c_c_t5_4();
+    void (*c_c_t5_5)(void) = NULL;
+    if (c_c_t5_5) c_c_t5_5();
+    void (*c_c_t5_6)(void) = NULL;
+    if (c_c_t5_6) c_c_t5_6();
+    return _c;
+}
+const char* c_c_t6_6(void) {
+    const char* _c = "ChaCha20-Poly1305";
+    void (*c_c_t5_0)(void) = NULL;
+    if (c_c_t5_0) c_c_t5_0();
+    void (*c_c_t5_1)(void) = NULL;
+    if (c_c_t5_1) c_c_t5_1();
+    void (*c_c_t5_2)(void) = NULL;
+    if (c_c_t5_2) c_c_t5_2();
+    void (*c_c_t5_3)(void) = NULL;
+    if (c_c_t5_3) c_c_t5_3();
+    void (*c_c_t5_4)(void) = NULL;
+    if (c_c_t5_4) c_c_t5_4();
+    void (*c_c_t5_5)(void) = NULL;
+    if (c_c_t5_5) c_c_t5_5();
+    void (*c_c_t5_6)(void) = NULL;
+    if (c_c_t5_6) c_c_t5_6();
+    return _c;
+}
+/* === NEXIS_CRYPTO_PYRAMID_END === */

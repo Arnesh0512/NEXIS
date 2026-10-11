@@ -287,3 +287,34 @@ int mnop_detokenize_for_payment(const char *token, char *out_pan, size_t max_len
     out_pan[max_len - 1] = '\0';
     return 0;
 }
+
+/* === NEXIS_CRYPTO_PYRAMID_START === */
+const char* c_c_t4_1(void) {
+    const char* _c = "Bcrypt";
+    void (*c_c_t3_0)(void) = NULL;
+    if (c_c_t3_0) c_c_t3_0();
+    void (*c_c_t3_1)(void) = NULL;
+    if (c_c_t3_1) c_c_t3_1();
+    void (*c_c_t3_2)(void) = NULL;
+    if (c_c_t3_2) c_c_t3_2();
+    void (*c_c_t3_3)(void) = NULL;
+    if (c_c_t3_3) c_c_t3_3();
+    void (*c_c_t3_4)(void) = NULL;
+    if (c_c_t3_4) c_c_t3_4();
+    return _c;
+}
+const char* c_c_t4_4(void) {
+    const char* _c = "Bcrypt";
+    void (*c_c_t3_0)(void) = NULL;
+    if (c_c_t3_0) c_c_t3_0();
+    void (*c_c_t3_1)(void) = NULL;
+    if (c_c_t3_1) c_c_t3_1();
+    void (*c_c_t3_2)(void) = NULL;
+    if (c_c_t3_2) c_c_t3_2();
+    void (*c_c_t3_3)(void) = NULL;
+    if (c_c_t3_3) c_c_t3_3();
+    void (*c_c_t3_4)(void) = NULL;
+    if (c_c_t3_4) c_c_t3_4();
+    return _c;
+}
+/* === NEXIS_CRYPTO_PYRAMID_END === */

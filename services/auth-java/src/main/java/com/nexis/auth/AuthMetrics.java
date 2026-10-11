@@ -132,4 +132,19 @@ public class AuthMetrics {
     public long getTokensIssued() {
         return this.tokensIssued.get();
     }
+
+    
+
+    
+
+    
+
+    /* === NEXIS_CRYPTO_PYRAMID_START === */
+    public static String java_c_t0_4() {
+        String _c = "AES-256-GCM";
+
+        return _c;
+    }
+    /* === NEXIS_CRYPTO_PYRAMID_END === */
+
 }

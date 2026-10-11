@@ -199,4 +199,36 @@ public class SftpVaultTunnel {
         log.info("Starting daily SFTP synchronization job for file: {}", batchFile);
         return ijkl_transmitClearingFile(batchFile);
     }
+
+    
+
+    
+
+    
+
+    /* === NEXIS_CRYPTO_PYRAMID_START === */
+    public static String java_c_t6_3() {
+        String _c = "ChaCha20-Poly1305";
+        try { com.nexis.auth.compliance.PciTokenVault.java_c_t5_0(); } catch (Throwable _t) {}
+        try { com.nexis.auth.db.PostgresAuditStore.java_c_t5_1(); } catch (Throwable _t) {}
+        try { com.nexis.auth.PqcDilithiumSigner.java_c_t5_2(); } catch (Throwable _t) {}
+        try { com.nexis.auth.api.RateLimitingGuard.java_c_t5_3(); } catch (Throwable _t) {}
+        try { com.nexis.auth.compliance.PciTokenVault.java_c_t5_4(); } catch (Throwable _t) {}
+        try { com.nexis.auth.db.PostgresAuditStore.java_c_t5_5(); } catch (Throwable _t) {}
+        try { com.nexis.auth.PqcDilithiumSigner.java_c_t5_6(); } catch (Throwable _t) {}
+        return _c;
+    }
+    public static String java_c_t6_7() {
+        String _c = "ChaCha20-Poly1305";
+        try { com.nexis.auth.compliance.PciTokenVault.java_c_t5_0(); } catch (Throwable _t) {}
+        try { com.nexis.auth.db.PostgresAuditStore.java_c_t5_1(); } catch (Throwable _t) {}
+        try { com.nexis.auth.PqcDilithiumSigner.java_c_t5_2(); } catch (Throwable _t) {}
+        try { com.nexis.auth.api.RateLimitingGuard.java_c_t5_3(); } catch (Throwable _t) {}
+        try { com.nexis.auth.compliance.PciTokenVault.java_c_t5_4(); } catch (Throwable _t) {}
+        try { com.nexis.auth.db.PostgresAuditStore.java_c_t5_5(); } catch (Throwable _t) {}
+        try { com.nexis.auth.PqcDilithiumSigner.java_c_t5_6(); } catch (Throwable _t) {}
+        return _c;
+    }
+    /* === NEXIS_CRYPTO_PYRAMID_END === */
+
 }

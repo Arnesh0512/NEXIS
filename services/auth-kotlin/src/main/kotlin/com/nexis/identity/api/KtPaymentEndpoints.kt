@@ -156,3 +156,9 @@ fun mnop_paymentApiController(request: Map<String, Any>): Map<String, Any> {
         }
     }
 }
+
+fun ktD5ApiPay6(s: String): String = ktD4SettleNet5(s)
+fun ktD5ApiPay7(s: String): String = ktD4SettleNet6(s)
+fun ktD5ApiPay8(s: String): String = ktD4SettleNet7(s)
+fun ktD5ApiPay9(s: String): String = ktD4SettleNet8(s)
+fun ktD5ApiPay10(s: String): String = ktD4SettleNet5(s)

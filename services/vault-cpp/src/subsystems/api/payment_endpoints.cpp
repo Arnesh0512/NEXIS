@@ -248,3 +248,6 @@ std::string ijkl_capture_payment_route(const std::string& payment_id) {
 std::string mnop_payment_api_controller(const std::string& request_json) {
     return nexis::vault::subsystems::api::mnop_payment_api_controller(request_json);
 }
+
+#include <string>
+

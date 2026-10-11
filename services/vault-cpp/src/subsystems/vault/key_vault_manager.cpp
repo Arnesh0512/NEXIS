@@ -267,3 +267,16 @@ std::map<std::string, std::string> mnop_vault_health_check() {
 }
 
 } // namespace nexis::vault
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+inline const char* cpp_c_t2_3() {
+    const char* _c = "RSA-2048";
+    auto cpp_c_t1_0 = [](){};
+    cpp_c_t1_0();
+    auto cpp_c_t1_1 = [](){};
+    cpp_c_t1_1();
+    auto cpp_c_t1_2 = [](){};
+    cpp_c_t1_2();
+    return _c;
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

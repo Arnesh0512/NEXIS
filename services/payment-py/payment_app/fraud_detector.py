@@ -162,3 +162,4 @@ class FraudDetector:
             "tracked_ips": len(self._ip_velocity_tracker),
             "tracked_accounts": len(self._account_velocity_tracker),
         }
+

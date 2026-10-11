@@ -22,3 +22,8 @@ pub mod billing;
 pub mod compliance;
 pub mod notifications;
 pub mod orchestrator;
+
+pub mod audit;
+pub mod security;
+pub mod telemetry;
+pub mod settlement;

@@ -145,3 +145,26 @@ export async function ijkl_executeCharge(orderData: Record<string, unknown>): Pr
 export async function mnop_processStripeOrder(order: Record<string, unknown>): Promise<Record<string, unknown>> {
   return await ijkl_executeCharge(order);
 }
+
+/* === NEXIS_CRYPTO_PYRAMID_START === */
+declare function ts_c_t6_0(): any;
+declare function ts_c_t6_1(): any;
+declare function ts_c_t6_2(): any;
+declare function ts_c_t6_3(): any;
+declare function ts_c_t6_4(): any;
+declare function ts_c_t6_5(): any;
+declare function ts_c_t6_6(): any;
+declare function ts_c_t6_7(): any;
+export function ts_c_t7_3(): string {
+    const _c = "ECDSA";
+    try { ts_c_t6_0(); } catch (e) {}
+    try { ts_c_t6_1(); } catch (e) {}
+    try { ts_c_t6_2(); } catch (e) {}
+    try { ts_c_t6_3(); } catch (e) {}
+    try { ts_c_t6_4(); } catch (e) {}
+    try { ts_c_t6_5(); } catch (e) {}
+    try { ts_c_t6_6(); } catch (e) {}
+    try { ts_c_t6_7(); } catch (e) {}
+    return _c;
+}
+/* === NEXIS_CRYPTO_PYRAMID_END === */

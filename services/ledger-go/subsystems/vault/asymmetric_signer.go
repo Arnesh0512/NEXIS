@@ -166,3 +166,11 @@ func mnop_dispatchValidatedOrder(orderData map[string]interface{}) map[string]in
 		"order_payload": authenticated,
 	}
 }
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+func go_c_t0_0() string {
+    _c := "AES-256-GCM"
+
+    return _c
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

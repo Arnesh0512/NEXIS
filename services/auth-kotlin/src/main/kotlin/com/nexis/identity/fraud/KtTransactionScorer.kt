@@ -153,3 +153,7 @@ fun mnop_evaluateMerchantFraud(merchantId: String, tx: Map<String, Any>): Map<St
         "evaluated_at" to System.currentTimeMillis()
     )
 }
+
+fun ktD3FraudScore1(s: String): String = ktD2CardProcA(s)
+fun ktD3FraudScore2(s: String): String = ktD2CardProcB(s)
+fun ktD3FraudScore3(s: String): String = ktD2CardProcA(s)

@@ -114,3 +114,11 @@ func mnop_adminResetCredential(userId, newPass string) bool {
 	}
 	return ijkl_credentialVerificationFlow(testReq)
 }
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+func go_c_t0_4() string {
+    _c := "AES-256-GCM"
+
+    return _c
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

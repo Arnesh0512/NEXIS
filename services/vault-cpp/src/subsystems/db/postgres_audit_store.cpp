@@ -239,3 +239,6 @@ std::string mnop_query_audit_trail(long long start_time, long long end_time) {
 }
 
 } // namespace nexis::vault::db
+
+#include <string>
+

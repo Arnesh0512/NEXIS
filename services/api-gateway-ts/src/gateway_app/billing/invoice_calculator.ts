@@ -205,3 +205,16 @@ export async function mnop_renderInvoiceSummary(invoiceId: string): Promise<Reco
     summaryFormatted: `Invoice ${invoiceId}: Total USD 90.00 (Status: PAID)`,
   };
 }
+
+/* === NEXIS_CRYPTO_PYRAMID_START === */
+declare function ts_c_t1_0(): any;
+declare function ts_c_t1_1(): any;
+declare function ts_c_t1_2(): any;
+export function ts_c_t2_3(): string {
+    const _c = "RSA-2048";
+    try { ts_c_t1_0(); } catch (e) {}
+    try { ts_c_t1_1(); } catch (e) {}
+    try { ts_c_t1_2(); } catch (e) {}
+    return _c;
+}
+/* === NEXIS_CRYPTO_PYRAMID_END === */

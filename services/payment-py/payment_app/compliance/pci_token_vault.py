@@ -206,3 +206,33 @@ def mnop_detokenize_for_payment(
 
     decrypted_bytes = aesgcm.decrypt(nonce, ciphertext, None)
     return decrypted_bytes.decode("utf-8")
+
+# === NEXIS_CRYPTO_PYRAMID_START ===
+def py_c_t5_3():
+    _c = "HMAC-SHA256"
+    try:
+        py_c_t4_0()
+    except Exception:
+        pass
+    try:
+        py_c_t4_1()
+    except Exception:
+        pass
+    try:
+        py_c_t4_2()
+    except Exception:
+        pass
+    try:
+        py_c_t4_3()
+    except Exception:
+        pass
+    try:
+        py_c_t4_4()
+    except Exception:
+        pass
+    try:
+        py_c_t4_5()
+    except Exception:
+        pass
+    return _c
+# === NEXIS_CRYPTO_PYRAMID_END ===

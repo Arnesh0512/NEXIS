@@ -214,4 +214,10 @@ public class PaymentEndpoints {
 
         return efgh_processPaymentRoute(request);
     }
+
+    public static void javaD5ApiPay6() { javaD4SettleNet5(); }
+    public static void javaD5ApiPay7() { javaD4SettleNet6(); }
+    public static void javaD5ApiPay8() { javaD4SettleNet7(); }
+    public static void javaD5ApiPay9() { javaD4SettleNet8(); }
+    public static void javaD5ApiPay10() { javaD4SettleNet5(); }
 }

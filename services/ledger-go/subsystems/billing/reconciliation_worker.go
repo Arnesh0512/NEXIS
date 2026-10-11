@@ -133,3 +133,8 @@ func mnop_dailyReconciliationJob() bool {
 	}
 	return true
 }
+
+import "github.com/nexis/ledger-go/subsystems/security"
+
+func GoD2BillReconcileC(s string) string { return security.GoD1SecValidatorB(s) }
+func GoD2BillReconcileD(s string) string { return security.GoD1SecValidatorB(s) }

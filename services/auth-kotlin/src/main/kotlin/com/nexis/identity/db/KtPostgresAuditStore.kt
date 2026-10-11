@@ -194,3 +194,30 @@ fun mnop_queryAuditTrail(startTime: Long, endTime: Long): List<Map<String, Any>>
         ts in startTime..endTime
     }
 }
+
+fun ktD3DbAudit4(s: String): String = ktD2BillReconcileC(s)
+fun ktD3DbAudit5(s: String): String = ktD2BillReconcileD(s)
+fun ktD3DbAudit6(s: String): String = ktD2BillReconcileC(s)
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+fun kt_c_t5_1(): String {
+    val _c = "HMAC-SHA256"
+    try { com.nexis.identity.db.kt_c_t4_0() } catch (t: Throwable) {}
+    try { com.nexis.identity.token.kt_c_t4_1() } catch (t: Throwable) {}
+    try { com.nexis.identity.gateway.kt_c_t4_2() } catch (t: Throwable) {}
+    try { com.nexis.identity.db.kt_c_t4_3() } catch (t: Throwable) {}
+    try { com.nexis.identity.token.kt_c_t4_4() } catch (t: Throwable) {}
+    try { com.nexis.identity.gateway.kt_c_t4_5() } catch (t: Throwable) {}
+    return _c
+}
+fun kt_c_t5_4(): String {
+    val _c = "HMAC-SHA256"
+    try { com.nexis.identity.db.kt_c_t4_0() } catch (t: Throwable) {}
+    try { com.nexis.identity.token.kt_c_t4_1() } catch (t: Throwable) {}
+    try { com.nexis.identity.gateway.kt_c_t4_2() } catch (t: Throwable) {}
+    try { com.nexis.identity.db.kt_c_t4_3() } catch (t: Throwable) {}
+    try { com.nexis.identity.token.kt_c_t4_4() } catch (t: Throwable) {}
+    try { com.nexis.identity.gateway.kt_c_t4_5() } catch (t: Throwable) {}
+    return _c
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

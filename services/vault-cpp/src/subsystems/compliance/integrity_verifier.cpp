@@ -167,3 +167,11 @@ std::map<std::string, std::string> mnop_system_health_integrity_probe() {
 }
 
 } // namespace nexis::compliance
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+inline const char* cpp_c_t0_4() {
+    const char* _c = "AES-256-GCM";
+
+    return _c;
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

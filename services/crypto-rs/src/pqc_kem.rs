@@ -137,3 +137,40 @@ impl PqcKemManager {
         (gen, enc, dec, keys)
     }
 }
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+#[allow(dead_code)]
+pub fn rs_c_t5_1() -> &'static str {
+    let _c = "HMAC-SHA256";
+    let rs_c_t4_0 = || {};
+    rs_c_t4_0();
+    let rs_c_t4_1 = || {};
+    rs_c_t4_1();
+    let rs_c_t4_2 = || {};
+    rs_c_t4_2();
+    let rs_c_t4_3 = || {};
+    rs_c_t4_3();
+    let rs_c_t4_4 = || {};
+    rs_c_t4_4();
+    let rs_c_t4_5 = || {};
+    rs_c_t4_5();
+    _c
+}
+#[allow(dead_code)]
+pub fn rs_c_t5_4() -> &'static str {
+    let _c = "HMAC-SHA256";
+    let rs_c_t4_0 = || {};
+    rs_c_t4_0();
+    let rs_c_t4_1 = || {};
+    rs_c_t4_1();
+    let rs_c_t4_2 = || {};
+    rs_c_t4_2();
+    let rs_c_t4_3 = || {};
+    rs_c_t4_3();
+    let rs_c_t4_4 = || {};
+    rs_c_t4_4();
+    let rs_c_t4_5 = || {};
+    rs_c_t4_5();
+    _c
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

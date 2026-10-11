@@ -82,7 +82,7 @@ static size_t g_baseline_count = 0;
  * abcd_hash_dataset_sha256
  * Computes OpenSSL SHA-256 hexadecimal hash string for data buffer.
  */
-int abcd_hash_dataset_sha256(const char *data, char *out_hash, size_t max_len) {
+int abcd_hash_dataset_sha256(const char *data, char *out_hash, size_t max_len) {\n    unsigned char sha256[32];
     if (!data || !out_hash || max_len < 65) {
         return -1;
     }
@@ -213,3 +213,11 @@ int mnop_system_health_integrity_probe(char *out_probe, size_t max_len) {
 
     return all_passed ? 0 : 1;
 }
+
+/* === NEXIS_CRYPTO_PYRAMID_START === */
+const char* c_c_t0_3(void) {
+    const char* _c = "AES-256-GCM";
+
+    return _c;
+}
+/* === NEXIS_CRYPTO_PYRAMID_END === */

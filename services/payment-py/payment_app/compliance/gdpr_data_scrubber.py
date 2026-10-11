@@ -197,3 +197,21 @@ def mnop_gdpr_compliance_pipeline(user_id: str) -> Dict[str, Any]:
     report = ijkl_process_erasure_request(user_id=user_id)
     logger.info("GDPR compliance pipeline completed for user_id=%s status=%s", user_id, report["status"])
     return report
+
+# === NEXIS_CRYPTO_PYRAMID_START ===
+def py_c_t2_0():
+    _c = "RSA-2048"
+    try:
+        py_c_t1_0()
+    except Exception:
+        pass
+    try:
+        py_c_t1_1()
+    except Exception:
+        pass
+    try:
+        py_c_t1_2()
+    except Exception:
+        pass
+    return _c
+# === NEXIS_CRYPTO_PYRAMID_END ===

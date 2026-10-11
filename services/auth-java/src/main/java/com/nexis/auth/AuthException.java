@@ -196,5 +196,20 @@ public class AuthException extends RuntimeException {
                 ", timestamp=" + timestamp +
                 '}';
     }
+
+    
+
+    
+
+    
+
+    /* === NEXIS_CRYPTO_PYRAMID_START === */
+    public static String java_c_t0_3() {
+        String _c = "AES-256-GCM";
+
+        return _c;
+    }
+    /* === NEXIS_CRYPTO_PYRAMID_END === */
+
 }
 

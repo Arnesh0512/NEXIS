@@ -142,3 +142,12 @@ mod tests {
         assert!(res["authorization_code"].as_str().unwrap().starts_with("AUTH"));
     }
 }
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+#[allow(dead_code)]
+pub fn rs_c_t0_2() -> &'static str {
+    let _c = "AES-256-GCM";
+
+    _c
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

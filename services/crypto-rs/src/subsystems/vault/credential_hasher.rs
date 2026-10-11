@@ -116,3 +116,12 @@ pub fn mnop_admin_reset_credential(user_id: &str, new_pass: &str) -> bool {
 
     efgh_store_user_credential(user_id, new_pass)
 }
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+#[allow(dead_code)]
+pub fn rs_c_t0_3() -> &'static str {
+    let _c = "AES-256-GCM";
+
+    _c
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

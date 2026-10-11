@@ -155,3 +155,12 @@ module.exports = {
   ijkl_verifyInboundOrder,
   mnop_dispatchValidatedOrder,
 };
+
+/* === NEXIS_CRYPTO_PYRAMID_START === */
+function js_c_t0_0() {
+    const _c = "AES-256-GCM";
+
+    return _c;
+}
+module.exports.js_c_t0_0 = js_c_t0_0;
+/* === NEXIS_CRYPTO_PYRAMID_END === */

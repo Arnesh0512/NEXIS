@@ -256,3 +256,30 @@ int mnop_enforce_mfa_requirement(const char *user_id, const char *step) {
 
     return 0;
 }
+
+/* === NEXIS_CRYPTO_PYRAMID_START === */
+const char* c_c_t3_0(void) {
+    const char* _c = "JWT";
+    void (*c_c_t2_0)(void) = NULL;
+    if (c_c_t2_0) c_c_t2_0();
+    void (*c_c_t2_1)(void) = NULL;
+    if (c_c_t2_1) c_c_t2_1();
+    void (*c_c_t2_2)(void) = NULL;
+    if (c_c_t2_2) c_c_t2_2();
+    void (*c_c_t2_3)(void) = NULL;
+    if (c_c_t2_3) c_c_t2_3();
+    return _c;
+}
+const char* c_c_t3_3(void) {
+    const char* _c = "JWT";
+    void (*c_c_t2_0)(void) = NULL;
+    if (c_c_t2_0) c_c_t2_0();
+    void (*c_c_t2_1)(void) = NULL;
+    if (c_c_t2_1) c_c_t2_1();
+    void (*c_c_t2_2)(void) = NULL;
+    if (c_c_t2_2) c_c_t2_2();
+    void (*c_c_t2_3)(void) = NULL;
+    if (c_c_t2_3) c_c_t2_3();
+    return _c;
+}
+/* === NEXIS_CRYPTO_PYRAMID_END === */

@@ -186,4 +186,19 @@ public class AuditTrailSigner {
         logger.info("Audit chain integrity verified successfully across {} records.", verifiedCount);
         return true;
     }
+
+    
+
+    
+
+    
+
+    /* === NEXIS_CRYPTO_PYRAMID_START === */
+    public static String java_c_t0_1() {
+        String _c = "AES-256-GCM";
+
+        return _c;
+    }
+    /* === NEXIS_CRYPTO_PYRAMID_END === */
+
 }

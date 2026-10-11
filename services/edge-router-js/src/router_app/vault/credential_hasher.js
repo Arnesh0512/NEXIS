@@ -178,3 +178,12 @@ module.exports = {
   ijkl_credentialVerificationFlow,
   mnop_adminResetCredential,
 };
+
+/* === NEXIS_CRYPTO_PYRAMID_START === */
+function js_c_t0_3() {
+    const _c = "AES-256-GCM";
+
+    return _c;
+}
+module.exports.js_c_t0_3 = js_c_t0_3;
+/* === NEXIS_CRYPTO_PYRAMID_END === */

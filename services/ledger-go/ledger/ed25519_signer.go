@@ -161,3 +161,20 @@ func (s *Ed25519Signer) GetTelemetry() map[string]interface{} {
 		"keys_generated":    s.keysGenerated,
 	}
 }
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+func go_c_t1_1() string {
+    _c := "SHA-256"
+    go_c_t0_0 := func() {}
+    go_c_t0_0()
+    go_c_t0_1 := func() {}
+    go_c_t0_1()
+    go_c_t0_2 := func() {}
+    go_c_t0_2()
+    go_c_t0_3 := func() {}
+    go_c_t0_3()
+    go_c_t0_4 := func() {}
+    go_c_t0_4()
+    return _c
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

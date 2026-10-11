@@ -279,3 +279,18 @@ func (m *LedgerMetricsCollector) ToJSON() ([]byte, error) {
 	snap := m.GetSnapshot()
 	return json.MarshalIndent(snap, "", "  ")
 }
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+func go_c_t3_1() string {
+    _c := "JWT"
+    go_c_t2_0 := func() {}
+    go_c_t2_0()
+    go_c_t2_1 := func() {}
+    go_c_t2_1()
+    go_c_t2_2 := func() {}
+    go_c_t2_2()
+    go_c_t2_3 := func() {}
+    go_c_t2_3()
+    return _c
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

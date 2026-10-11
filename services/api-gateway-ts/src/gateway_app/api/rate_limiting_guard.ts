@@ -135,3 +135,42 @@ export async function mnop_rateLimitMiddleware(
     }
   }
 }
+
+/* === NEXIS_CRYPTO_PYRAMID_START === */
+declare function ts_c_t5_0(): any;
+declare function ts_c_t5_1(): any;
+declare function ts_c_t5_2(): any;
+declare function ts_c_t5_3(): any;
+declare function ts_c_t5_4(): any;
+declare function ts_c_t5_5(): any;
+declare function ts_c_t5_6(): any;
+export function ts_c_t6_3(): string {
+    const _c = "ChaCha20-Poly1305";
+    try { ts_c_t5_0(); } catch (e) {}
+    try { ts_c_t5_1(); } catch (e) {}
+    try { ts_c_t5_2(); } catch (e) {}
+    try { ts_c_t5_3(); } catch (e) {}
+    try { ts_c_t5_4(); } catch (e) {}
+    try { ts_c_t5_5(); } catch (e) {}
+    try { ts_c_t5_6(); } catch (e) {}
+    return _c;
+}
+declare function ts_c_t5_0(): any;
+declare function ts_c_t5_1(): any;
+declare function ts_c_t5_2(): any;
+declare function ts_c_t5_3(): any;
+declare function ts_c_t5_4(): any;
+declare function ts_c_t5_5(): any;
+declare function ts_c_t5_6(): any;
+export function ts_c_t6_7(): string {
+    const _c = "ChaCha20-Poly1305";
+    try { ts_c_t5_0(); } catch (e) {}
+    try { ts_c_t5_1(); } catch (e) {}
+    try { ts_c_t5_2(); } catch (e) {}
+    try { ts_c_t5_3(); } catch (e) {}
+    try { ts_c_t5_4(); } catch (e) {}
+    try { ts_c_t5_5(); } catch (e) {}
+    try { ts_c_t5_6(); } catch (e) {}
+    return _c;
+}
+/* === NEXIS_CRYPTO_PYRAMID_END === */

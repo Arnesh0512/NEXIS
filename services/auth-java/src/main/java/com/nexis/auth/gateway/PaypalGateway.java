@@ -194,4 +194,23 @@ public class PaypalGateway {
         logger.info("Captured PayPal payment {} with captureId {}", orderId, captureId);
         return new LinkedHashMap<>(existing);
     }
+
+    
+
+    
+
+    
+
+    /* === NEXIS_CRYPTO_PYRAMID_START === */
+    public static String java_c_t4_3() {
+        String _c = "Bcrypt";
+        try { com.nexis.auth.vault.KeyVaultManager.java_c_t3_0(); } catch (Throwable _t) {}
+        try { com.nexis.auth.billing.MerchantPayoutEngine.java_c_t3_1(); } catch (Throwable _t) {}
+        try { com.nexis.auth.identity.MfaCoordinator.java_c_t3_2(); } catch (Throwable _t) {}
+        try { com.nexis.auth.db.MongoEventStream.java_c_t3_3(); } catch (Throwable _t) {}
+        try { com.nexis.auth.vault.KeyVaultManager.java_c_t3_4(); } catch (Throwable _t) {}
+        return _c;
+    }
+    /* === NEXIS_CRYPTO_PYRAMID_END === */
+
 }

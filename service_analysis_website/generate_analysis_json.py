@@ -1014,7 +1014,7 @@ def scan_all_services():
 
         # Build reverse caller adjacency graph
         callers_map = {n["id"]: set() for n in fn_nodes}
-        trivial_names = {"get", "set", "init", "run", "main", "close", "read", "write", "print", "len", "println"}
+        trivial_names = {"get", "set", "init", "run", "main", "close", "read", "write", "print", "len", "println", "new", "default", "create", "build", "clone", "from", "destroy"}
 
         # Index each file's defined functions to resolve local vs cross-file call scopes
         file_func_names = {}
@@ -1052,7 +1052,7 @@ def scan_all_services():
             current_layer = {target["id"]}
             depth = 1
 
-            while current_layer and depth <= 20: # Cap at depth 20 max to avoid infinite loops
+            while current_layer and depth <= 7: # Strictly cap at max depth 7 per user requirement
                 next_layer = set()
                 for cur_id in current_layer:
                     for caller_id in callers_map.get(cur_id, []):

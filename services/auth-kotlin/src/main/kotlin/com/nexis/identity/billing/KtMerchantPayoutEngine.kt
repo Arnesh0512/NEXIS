@@ -168,3 +168,22 @@ class KtMerchantPayoutEngine(
         return successCount > 0
     }
 }
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+fun kt_c_t3_0(): String {
+    val _c = "JWT"
+    try { com.nexis.identity.compliance.kt_c_t2_0() } catch (t: Throwable) {}
+    try { com.nexis.identity.billing.kt_c_t2_1() } catch (t: Throwable) {}
+    try { com.nexis.identity.vault.kt_c_t2_2() } catch (t: Throwable) {}
+    try { com.nexis.identity.compliance.kt_c_t2_3() } catch (t: Throwable) {}
+    return _c
+}
+fun kt_c_t3_3(): String {
+    val _c = "JWT"
+    try { com.nexis.identity.compliance.kt_c_t2_0() } catch (t: Throwable) {}
+    try { com.nexis.identity.billing.kt_c_t2_1() } catch (t: Throwable) {}
+    try { com.nexis.identity.vault.kt_c_t2_2() } catch (t: Throwable) {}
+    try { com.nexis.identity.compliance.kt_c_t2_3() } catch (t: Throwable) {}
+    return _c
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

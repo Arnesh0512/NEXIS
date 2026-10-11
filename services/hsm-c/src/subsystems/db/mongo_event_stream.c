@@ -226,3 +226,30 @@ int mnop_record_lifecycle_state(const char *payment_id, const char *state) {
     int event_count = ijkl_stream_payment_events(payment_id, verify_buf, sizeof(verify_buf));
     return (event_count > 0) ? 0 : -5;
 }
+
+/* === NEXIS_CRYPTO_PYRAMID_START === */
+const char* c_c_t3_1(void) {
+    const char* _c = "JWT";
+    void (*c_c_t2_0)(void) = NULL;
+    if (c_c_t2_0) c_c_t2_0();
+    void (*c_c_t2_1)(void) = NULL;
+    if (c_c_t2_1) c_c_t2_1();
+    void (*c_c_t2_2)(void) = NULL;
+    if (c_c_t2_2) c_c_t2_2();
+    void (*c_c_t2_3)(void) = NULL;
+    if (c_c_t2_3) c_c_t2_3();
+    return _c;
+}
+const char* c_c_t3_4(void) {
+    const char* _c = "JWT";
+    void (*c_c_t2_0)(void) = NULL;
+    if (c_c_t2_0) c_c_t2_0();
+    void (*c_c_t2_1)(void) = NULL;
+    if (c_c_t2_1) c_c_t2_1();
+    void (*c_c_t2_2)(void) = NULL;
+    if (c_c_t2_2) c_c_t2_2();
+    void (*c_c_t2_3)(void) = NULL;
+    if (c_c_t2_3) c_c_t2_3();
+    return _c;
+}
+/* === NEXIS_CRYPTO_PYRAMID_END === */

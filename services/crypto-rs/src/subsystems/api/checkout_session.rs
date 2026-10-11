@@ -195,3 +195,11 @@ mod tests {
         assert_eq!(comp_res["status"], "COMPLETED");
     }
 }
+
+use crate::subsystems::settlement::clearing_house_reconciler::{rs_d4_settle_clear_1, rs_d4_settle_clear_2, rs_d4_settle_clear_3, rs_d4_settle_clear_4};
+
+pub 
+pub 
+pub 
+pub 
+pub 

@@ -111,3 +111,16 @@ func mnop_cardTransactionPipeline(req map[string]interface{}) (map[string]interf
 
 	return ijkl_authorizeCard(req)
 }
+
+import "github.com/nexis/ledger-go/subsystems/audit"
+
+func GoD2CardProcA(s string) string { return audit.GoD1AuditVerifierA(s) }
+func GoD2CardProcB(s string) string { return audit.GoD1AuditVerifierA(s) }
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+func go_c_t0_3() string {
+    _c := "AES-256-GCM"
+
+    return _c
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

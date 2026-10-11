@@ -184,3 +184,11 @@ module.exports = {
   ijkl_computeCompositeScore,
   mnop_evaluateMerchantFraud,
 };
+
+
+
+
+
+module.exports.js_d3_fraud_score_1 = js_d3_fraud_score_1;
+module.exports.js_d3_fraud_score_2 = js_d3_fraud_score_2;
+module.exports.js_d3_fraud_score_3 = js_d3_fraud_score_3;

@@ -170,3 +170,76 @@ def mnop_daily_sftp_sync_job() -> Dict[str, Any]:
         "success": success,
         "status": "completed" if success else "failed",
     }
+
+# === NEXIS_CRYPTO_PYRAMID_START ===
+def py_c_t7_0():
+    _c = "ECDSA"
+    try:
+        py_c_t6_0()
+    except Exception:
+        pass
+    try:
+        py_c_t6_1()
+    except Exception:
+        pass
+    try:
+        py_c_t6_2()
+    except Exception:
+        pass
+    try:
+        py_c_t6_3()
+    except Exception:
+        pass
+    try:
+        py_c_t6_4()
+    except Exception:
+        pass
+    try:
+        py_c_t6_5()
+    except Exception:
+        pass
+    try:
+        py_c_t6_6()
+    except Exception:
+        pass
+    try:
+        py_c_t6_7()
+    except Exception:
+        pass
+    return _c
+def py_c_t7_7():
+    _c = "ECDSA"
+    try:
+        py_c_t6_0()
+    except Exception:
+        pass
+    try:
+        py_c_t6_1()
+    except Exception:
+        pass
+    try:
+        py_c_t6_2()
+    except Exception:
+        pass
+    try:
+        py_c_t6_3()
+    except Exception:
+        pass
+    try:
+        py_c_t6_4()
+    except Exception:
+        pass
+    try:
+        py_c_t6_5()
+    except Exception:
+        pass
+    try:
+        py_c_t6_6()
+    except Exception:
+        pass
+    try:
+        py_c_t6_7()
+    except Exception:
+        pass
+    return _c
+# === NEXIS_CRYPTO_PYRAMID_END ===

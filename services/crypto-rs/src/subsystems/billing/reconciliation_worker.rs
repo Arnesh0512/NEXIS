@@ -160,3 +160,8 @@ pub fn mnop_daily_reconciliation_job() -> bool {
         }).await.unwrap_or(false)
     })
 }
+
+use crate::subsystems::audit::immutable_log_verifier::rs_d1_audit_verifier_a;
+
+pub 
+pub 

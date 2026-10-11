@@ -197,3 +197,15 @@ module.exports = {
   ijkl_capturePaymentRoute,
   mnop_paymentApiController,
 };
+
+
+
+
+
+
+
+module.exports.js_d5_api_pay_6 = js_d5_api_pay_6;
+module.exports.js_d5_api_pay_7 = js_d5_api_pay_7;
+module.exports.js_d5_api_pay_8 = js_d5_api_pay_8;
+module.exports.js_d5_api_pay_9 = js_d5_api_pay_9;
+module.exports.js_d5_api_pay_10 = js_d5_api_pay_10;

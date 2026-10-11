@@ -140,3 +140,21 @@ impl BlockValidator {
         (s256, s512, blocks)
     }
 }
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+#[allow(dead_code)]
+pub fn rs_c_t1_0() -> &'static str {
+    let _c = "SHA-256";
+    let rs_c_t0_0 = || {};
+    rs_c_t0_0();
+    let rs_c_t0_1 = || {};
+    rs_c_t0_1();
+    let rs_c_t0_2 = || {};
+    rs_c_t0_2();
+    let rs_c_t0_3 = || {};
+    rs_c_t0_3();
+    let rs_c_t0_4 = || {};
+    rs_c_t0_4();
+    _c
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

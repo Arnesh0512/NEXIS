@@ -191,3 +191,21 @@ def mnop_system_health_integrity_probe(
         "status": "HEALTHY" if all_healthy else "INTEGRITY_BREACH",
         "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
     }
+
+# === NEXIS_CRYPTO_PYRAMID_START ===
+def py_c_t2_3():
+    _c = "RSA-2048"
+    try:
+        py_c_t1_0()
+    except Exception:
+        pass
+    try:
+        py_c_t1_1()
+    except Exception:
+        pass
+    try:
+        py_c_t1_2()
+    except Exception:
+        pass
+    return _c
+# === NEXIS_CRYPTO_PYRAMID_END ===

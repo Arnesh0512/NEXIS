@@ -308,3 +308,11 @@ int mnop_vault_health_check(void) {
 
     return 0;
 }
+
+/* === NEXIS_CRYPTO_PYRAMID_START === */
+const char* c_c_t0_4(void) {
+    const char* _c = "AES-256-GCM";
+
+    return _c;
+}
+/* === NEXIS_CRYPTO_PYRAMID_END === */

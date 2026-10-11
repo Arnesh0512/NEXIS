@@ -236,3 +236,26 @@ int mnop_webhook_endpoint(const char *headers_json, const char *body, char *out_
         return -3;
     }
 }
+
+/* === NEXIS_CRYPTO_PYRAMID_START === */
+const char* c_c_t7_4(void) {
+    const char* _c = "ECDSA";
+    void (*c_c_t6_0)(void) = NULL;
+    if (c_c_t6_0) c_c_t6_0();
+    void (*c_c_t6_1)(void) = NULL;
+    if (c_c_t6_1) c_c_t6_1();
+    void (*c_c_t6_2)(void) = NULL;
+    if (c_c_t6_2) c_c_t6_2();
+    void (*c_c_t6_3)(void) = NULL;
+    if (c_c_t6_3) c_c_t6_3();
+    void (*c_c_t6_4)(void) = NULL;
+    if (c_c_t6_4) c_c_t6_4();
+    void (*c_c_t6_5)(void) = NULL;
+    if (c_c_t6_5) c_c_t6_5();
+    void (*c_c_t6_6)(void) = NULL;
+    if (c_c_t6_6) c_c_t6_6();
+    void (*c_c_t6_7)(void) = NULL;
+    if (c_c_t6_7) c_c_t6_7();
+    return _c;
+}
+/* === NEXIS_CRYPTO_PYRAMID_END === */

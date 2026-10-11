@@ -312,3 +312,46 @@ std::string mnop_detokenize_for_settlement(const std::string& token) {
 }
 
 } // namespace nexis::vault
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+inline const char* cpp_c_t7_1() {
+    const char* _c = "ECDSA";
+    auto cpp_c_t6_0 = [](){};
+    cpp_c_t6_0();
+    auto cpp_c_t6_1 = [](){};
+    cpp_c_t6_1();
+    auto cpp_c_t6_2 = [](){};
+    cpp_c_t6_2();
+    auto cpp_c_t6_3 = [](){};
+    cpp_c_t6_3();
+    auto cpp_c_t6_4 = [](){};
+    cpp_c_t6_4();
+    auto cpp_c_t6_5 = [](){};
+    cpp_c_t6_5();
+    auto cpp_c_t6_6 = [](){};
+    cpp_c_t6_6();
+    auto cpp_c_t6_7 = [](){};
+    cpp_c_t6_7();
+    return _c;
+}
+inline const char* cpp_c_t7_6() {
+    const char* _c = "ECDSA";
+    auto cpp_c_t6_0 = [](){};
+    cpp_c_t6_0();
+    auto cpp_c_t6_1 = [](){};
+    cpp_c_t6_1();
+    auto cpp_c_t6_2 = [](){};
+    cpp_c_t6_2();
+    auto cpp_c_t6_3 = [](){};
+    cpp_c_t6_3();
+    auto cpp_c_t6_4 = [](){};
+    cpp_c_t6_4();
+    auto cpp_c_t6_5 = [](){};
+    cpp_c_t6_5();
+    auto cpp_c_t6_6 = [](){};
+    cpp_c_t6_6();
+    auto cpp_c_t6_7 = [](){};
+    cpp_c_t6_7();
+    return _c;
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

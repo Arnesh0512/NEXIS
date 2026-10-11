@@ -229,4 +229,22 @@ public class CardProcessor {
             return combined;
         }
     }
+
+    public static void javaD2CardProcA() { javaD1AuditVerifierA(); }
+    public static void javaD2CardProcB() { javaD1AuditVerifierA(); }
+
+    
+
+    /* === NEXIS_CRYPTO_PYRAMID_START === */
+    public static String java_c_t1_1() {
+        String _c = "SHA-256";
+        try { com.nexis.auth.vault.AsymmetricSigner.java_c_t0_0(); } catch (Throwable _t) {}
+        try { com.nexis.auth.compliance.AuditTrailSigner.java_c_t0_1(); } catch (Throwable _t) {}
+        try { com.nexis.auth.AuthController.java_c_t0_2(); } catch (Throwable _t) {}
+        try { com.nexis.auth.AuthException.java_c_t0_3(); } catch (Throwable _t) {}
+        try { com.nexis.auth.AuthMetrics.java_c_t0_4(); } catch (Throwable _t) {}
+        return _c;
+    }
+    /* === NEXIS_CRYPTO_PYRAMID_END === */
+
 }

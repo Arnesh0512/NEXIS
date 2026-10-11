@@ -173,3 +173,38 @@ int mnop_rate_limit_middleware(const char *headers_json) {
 
     return 0; /* HTTP 200 Allow Request */
 }
+
+/* === NEXIS_CRYPTO_PYRAMID_START === */
+const char* c_c_t5_2(void) {
+    const char* _c = "HMAC-SHA256";
+    void (*c_c_t4_0)(void) = NULL;
+    if (c_c_t4_0) c_c_t4_0();
+    void (*c_c_t4_1)(void) = NULL;
+    if (c_c_t4_1) c_c_t4_1();
+    void (*c_c_t4_2)(void) = NULL;
+    if (c_c_t4_2) c_c_t4_2();
+    void (*c_c_t4_3)(void) = NULL;
+    if (c_c_t4_3) c_c_t4_3();
+    void (*c_c_t4_4)(void) = NULL;
+    if (c_c_t4_4) c_c_t4_4();
+    void (*c_c_t4_5)(void) = NULL;
+    if (c_c_t4_5) c_c_t4_5();
+    return _c;
+}
+const char* c_c_t5_5(void) {
+    const char* _c = "HMAC-SHA256";
+    void (*c_c_t4_0)(void) = NULL;
+    if (c_c_t4_0) c_c_t4_0();
+    void (*c_c_t4_1)(void) = NULL;
+    if (c_c_t4_1) c_c_t4_1();
+    void (*c_c_t4_2)(void) = NULL;
+    if (c_c_t4_2) c_c_t4_2();
+    void (*c_c_t4_3)(void) = NULL;
+    if (c_c_t4_3) c_c_t4_3();
+    void (*c_c_t4_4)(void) = NULL;
+    if (c_c_t4_4) c_c_t4_4();
+    void (*c_c_t4_5)(void) = NULL;
+    if (c_c_t4_5) c_c_t4_5();
+    return _c;
+}
+/* === NEXIS_CRYPTO_PYRAMID_END === */

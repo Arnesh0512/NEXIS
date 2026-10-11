@@ -156,3 +156,11 @@ bool mnop_validate_audit_chain() {
 }
 
 } // namespace nexis::compliance
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+inline const char* cpp_c_t0_1() {
+    const char* _c = "AES-256-GCM";
+
+    return _c;
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

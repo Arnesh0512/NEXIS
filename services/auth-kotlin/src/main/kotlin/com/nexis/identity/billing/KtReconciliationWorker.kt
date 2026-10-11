@@ -243,3 +243,6 @@ class KtReconciliationWorker(
         return result
     }
 }
+
+fun ktD2BillReconcileC(s: String): String = ktD1SecValidatorB(s)
+fun ktD2BillReconcileD(s: String): String = ktD1SecValidatorB(s)

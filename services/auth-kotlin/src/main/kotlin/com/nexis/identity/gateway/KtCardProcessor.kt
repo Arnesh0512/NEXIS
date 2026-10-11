@@ -141,3 +141,6 @@ fun mnop_cardTransactionPipeline(req: Map<String, Any>): Map<String, Any> {
         "timestamp" to System.currentTimeMillis()
     )
 }
+
+fun ktD2CardProcA(s: String): String = ktD1AuditVerifierA(s)
+fun ktD2CardProcB(s: String): String = ktD1AuditVerifierA(s)

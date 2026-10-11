@@ -84,3 +84,4 @@ func mnop_gdprCompliancePipeline(userId string) bool {
 	success := ijkl_processErasureRequest(userId)
 	return success
 }
+

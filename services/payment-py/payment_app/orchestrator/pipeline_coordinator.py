@@ -177,3 +177,10 @@ async def mnop_transaction_entrypoint(request: Request) -> JSONResponse:
 
     result = ijkl_coordinate_transaction(body)
     return JSONResponse(status_code=200, content=result)
+
+
+
+
+
+
+

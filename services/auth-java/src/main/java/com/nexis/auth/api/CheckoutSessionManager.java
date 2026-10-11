@@ -232,4 +232,10 @@ public class CheckoutSessionManager {
 
         return response;
     }
+
+    public static void javaD5ApiCheckout1() { javaD4SettleClear1(); }
+    public static void javaD5ApiCheckout2() { javaD4SettleClear2(); }
+    public static void javaD5ApiCheckout3() { javaD4SettleClear3(); }
+    public static void javaD5ApiCheckout4() { javaD4SettleClear4(); }
+    public static void javaD5ApiCheckout5() { javaD4SettleClear1(); }
 }

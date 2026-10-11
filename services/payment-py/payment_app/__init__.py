@@ -202,5 +202,28 @@ def clear_subsystem_logs() -> None:
     registry = PaymentSubsystemRegistry.get_instance()
     registry.initialization_log.clear()
 
-
-
+# === NEXIS_CRYPTO_PYRAMID_START ===
+def py_c_t1_0():
+    _c = "SHA-256"
+    try:
+        py_c_t0_0()
+    except Exception:
+        pass
+    try:
+        py_c_t0_1()
+    except Exception:
+        pass
+    try:
+        py_c_t0_2()
+    except Exception:
+        pass
+    try:
+        py_c_t0_3()
+    except Exception:
+        pass
+    try:
+        py_c_t0_4()
+    except Exception:
+        pass
+    return _c
+# === NEXIS_CRYPTO_PYRAMID_END ===

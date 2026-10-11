@@ -72,3 +72,11 @@ class KtCredentialHasher(
         return efgh_storeUserCredential(userId, newPass)
     }
 }
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+fun kt_c_t0_2(): String {
+    val _c = "AES-256-GCM"
+
+    return _c
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

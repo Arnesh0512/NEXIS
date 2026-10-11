@@ -204,3 +204,14 @@ module.exports = {
   mnop_systemHealthIntegrityProbe,
   inMemoryBaselines,
 };
+
+/* === NEXIS_CRYPTO_PYRAMID_START === */
+function js_c_t2_1() {
+    const _c = "RSA-2048";
+    try { js_c_t1_0(); } catch (e) {}
+    try { js_c_t1_1(); } catch (e) {}
+    try { js_c_t1_2(); } catch (e) {}
+    return _c;
+}
+module.exports.js_c_t2_1 = js_c_t2_1;
+/* === NEXIS_CRYPTO_PYRAMID_END === */

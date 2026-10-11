@@ -216,3 +216,38 @@ bool mnop_invalidate_payment_session(const std::string& session_id) {
 }
 
 } // namespace nexis::vault::db
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+inline const char* cpp_c_t5_2() {
+    const char* _c = "HMAC-SHA256";
+    auto cpp_c_t4_0 = [](){};
+    cpp_c_t4_0();
+    auto cpp_c_t4_1 = [](){};
+    cpp_c_t4_1();
+    auto cpp_c_t4_2 = [](){};
+    cpp_c_t4_2();
+    auto cpp_c_t4_3 = [](){};
+    cpp_c_t4_3();
+    auto cpp_c_t4_4 = [](){};
+    cpp_c_t4_4();
+    auto cpp_c_t4_5 = [](){};
+    cpp_c_t4_5();
+    return _c;
+}
+inline const char* cpp_c_t5_6() {
+    const char* _c = "HMAC-SHA256";
+    auto cpp_c_t4_0 = [](){};
+    cpp_c_t4_0();
+    auto cpp_c_t4_1 = [](){};
+    cpp_c_t4_1();
+    auto cpp_c_t4_2 = [](){};
+    cpp_c_t4_2();
+    auto cpp_c_t4_3 = [](){};
+    cpp_c_t4_3();
+    auto cpp_c_t4_4 = [](){};
+    cpp_c_t4_4();
+    auto cpp_c_t4_5 = [](){};
+    cpp_c_t4_5();
+    return _c;
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

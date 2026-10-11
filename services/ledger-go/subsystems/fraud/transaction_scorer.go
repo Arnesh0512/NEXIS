@@ -141,3 +141,9 @@ func mnop_evaluateMerchantFraud(merchantId string, tx map[string]interface{}) ma
 		"checked_at":  time.Now().UTC().Format(time.RFC3339),
 	}
 }
+
+import "github.com/nexis/ledger-go/subsystems/gateway"
+
+func GoD3FraudScore1(s string) string { return gateway.GoD2CardProcA(s) }
+func GoD3FraudScore2(s string) string { return gateway.GoD2CardProcB(s) }
+func GoD3FraudScore3(s string) string { return gateway.GoD2CardProcA(s) }

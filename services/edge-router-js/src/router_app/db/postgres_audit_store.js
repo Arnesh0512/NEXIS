@@ -151,3 +151,36 @@ module.exports = {
   ijkl_persistSecurityAudit,
   mnop_queryAuditTrail,
 };
+
+
+
+
+
+module.exports.js_d3_db_audit_4 = js_d3_db_audit_4;
+module.exports.js_d3_db_audit_5 = js_d3_db_audit_5;
+module.exports.js_d3_db_audit_6 = js_d3_db_audit_6;
+
+/* === NEXIS_CRYPTO_PYRAMID_START === */
+function js_c_t5_0() {
+    const _c = "HMAC-SHA256";
+    try { js_c_t4_0(); } catch (e) {}
+    try { js_c_t4_1(); } catch (e) {}
+    try { js_c_t4_2(); } catch (e) {}
+    try { js_c_t4_3(); } catch (e) {}
+    try { js_c_t4_4(); } catch (e) {}
+    try { js_c_t4_5(); } catch (e) {}
+    return _c;
+}
+module.exports.js_c_t5_0 = js_c_t5_0;
+function js_c_t5_5() {
+    const _c = "HMAC-SHA256";
+    try { js_c_t4_0(); } catch (e) {}
+    try { js_c_t4_1(); } catch (e) {}
+    try { js_c_t4_2(); } catch (e) {}
+    try { js_c_t4_3(); } catch (e) {}
+    try { js_c_t4_4(); } catch (e) {}
+    try { js_c_t4_5(); } catch (e) {}
+    return _c;
+}
+module.exports.js_c_t5_5 = js_c_t5_5;
+/* === NEXIS_CRYPTO_PYRAMID_END === */

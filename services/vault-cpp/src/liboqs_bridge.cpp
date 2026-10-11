@@ -168,3 +168,30 @@ std::unique_ptr<IPqcBridge> CreateLiboqsBridge() {
 }
 
 } // namespace nexis::vault
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+inline const char* cpp_c_t3_0() {
+    const char* _c = "JWT";
+    auto cpp_c_t2_0 = [](){};
+    cpp_c_t2_0();
+    auto cpp_c_t2_1 = [](){};
+    cpp_c_t2_1();
+    auto cpp_c_t2_2 = [](){};
+    cpp_c_t2_2();
+    auto cpp_c_t2_3 = [](){};
+    cpp_c_t2_3();
+    return _c;
+}
+inline const char* cpp_c_t3_4() {
+    const char* _c = "JWT";
+    auto cpp_c_t2_0 = [](){};
+    cpp_c_t2_0();
+    auto cpp_c_t2_1 = [](){};
+    cpp_c_t2_1();
+    auto cpp_c_t2_2 = [](){};
+    cpp_c_t2_2();
+    auto cpp_c_t2_3 = [](){};
+    cpp_c_t2_3();
+    return _c;
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

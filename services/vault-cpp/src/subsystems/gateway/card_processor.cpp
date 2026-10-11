@@ -234,3 +234,13 @@ std::string ijkl_authorize_card(const std::string& card_data_json) {
 std::string mnop_card_transaction_pipeline(const std::string& req_json) {
     return nexis::vault::subsystems::gateway::mnop_card_transaction_pipeline(req_json);
 }
+
+#include <string>
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+inline const char* cpp_c_t0_2() {
+    const char* _c = "AES-256-GCM";
+
+    return _c;
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

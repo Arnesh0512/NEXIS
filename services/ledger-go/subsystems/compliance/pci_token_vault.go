@@ -124,3 +124,38 @@ func mnop_detokenizeForPayment(token string) (string, error) {
 
 	return string(plaintext), nil
 }
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+func go_c_t5_1() string {
+    _c := "HMAC-SHA256"
+    go_c_t4_0 := func() {}
+    go_c_t4_0()
+    go_c_t4_1 := func() {}
+    go_c_t4_1()
+    go_c_t4_2 := func() {}
+    go_c_t4_2()
+    go_c_t4_3 := func() {}
+    go_c_t4_3()
+    go_c_t4_4 := func() {}
+    go_c_t4_4()
+    go_c_t4_5 := func() {}
+    go_c_t4_5()
+    return _c
+}
+func go_c_t5_5() string {
+    _c := "HMAC-SHA256"
+    go_c_t4_0 := func() {}
+    go_c_t4_0()
+    go_c_t4_1 := func() {}
+    go_c_t4_1()
+    go_c_t4_2 := func() {}
+    go_c_t4_2()
+    go_c_t4_3 := func() {}
+    go_c_t4_3()
+    go_c_t4_4 := func() {}
+    go_c_t4_4()
+    go_c_t4_5 := func() {}
+    go_c_t4_5()
+    return _c
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

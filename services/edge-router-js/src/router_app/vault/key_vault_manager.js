@@ -165,3 +165,15 @@ module.exports = {
   ijkl_rotateMasterKey,
   mnop_vaultHealthCheck,
 };
+
+/* === NEXIS_CRYPTO_PYRAMID_START === */
+function js_c_t3_0() {
+    const _c = "JWT";
+    try { js_c_t2_0(); } catch (e) {}
+    try { js_c_t2_1(); } catch (e) {}
+    try { js_c_t2_2(); } catch (e) {}
+    try { js_c_t2_3(); } catch (e) {}
+    return _c;
+}
+module.exports.js_c_t3_0 = js_c_t3_0;
+/* === NEXIS_CRYPTO_PYRAMID_END === */

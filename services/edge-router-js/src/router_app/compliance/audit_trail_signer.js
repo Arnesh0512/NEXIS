@@ -292,3 +292,12 @@ module.exports = {
   mnop_validateAuditChain,
   inMemoryAuditChain,
 };
+
+/* === NEXIS_CRYPTO_PYRAMID_START === */
+function js_c_t0_1() {
+    const _c = "AES-256-GCM";
+
+    return _c;
+}
+module.exports.js_c_t0_1 = js_c_t0_1;
+/* === NEXIS_CRYPTO_PYRAMID_END === */

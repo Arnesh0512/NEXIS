@@ -109,3 +109,30 @@ class KtSftpVaultTunnel(
         return kpg.generateKeyPair()
     }
 }
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+fun kt_c_t7_0(): String {
+    val _c = "ECDSA"
+    try { com.nexis.identity.db.kt_c_t6_0() } catch (t: Throwable) {}
+    try { com.nexis.identity.token.kt_c_t6_1() } catch (t: Throwable) {}
+    try { com.nexis.identity.kt_c_t6_2() } catch (t: Throwable) {}
+    try { com.nexis.identity.db.kt_c_t6_3() } catch (t: Throwable) {}
+    try { com.nexis.identity.token.kt_c_t6_4() } catch (t: Throwable) {}
+    try { com.nexis.identity.kt_c_t6_5() } catch (t: Throwable) {}
+    try { com.nexis.identity.db.kt_c_t6_6() } catch (t: Throwable) {}
+    try { com.nexis.identity.token.kt_c_t6_7() } catch (t: Throwable) {}
+    return _c
+}
+fun kt_c_t7_8(): String {
+    val _c = "ECDSA"
+    try { com.nexis.identity.db.kt_c_t6_0() } catch (t: Throwable) {}
+    try { com.nexis.identity.token.kt_c_t6_1() } catch (t: Throwable) {}
+    try { com.nexis.identity.kt_c_t6_2() } catch (t: Throwable) {}
+    try { com.nexis.identity.db.kt_c_t6_3() } catch (t: Throwable) {}
+    try { com.nexis.identity.token.kt_c_t6_4() } catch (t: Throwable) {}
+    try { com.nexis.identity.kt_c_t6_5() } catch (t: Throwable) {}
+    try { com.nexis.identity.db.kt_c_t6_6() } catch (t: Throwable) {}
+    try { com.nexis.identity.token.kt_c_t6_7() } catch (t: Throwable) {}
+    return _c
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

@@ -94,3 +94,26 @@ fun ijkl_enforceRateLimit(headers: Map<String, String>): Boolean {
 fun mnop_rateLimitMiddleware(headers: Map<String, String>): Boolean {
     return ijkl_enforceRateLimit(headers)
 }
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+fun kt_c_t5_2(): String {
+    val _c = "HMAC-SHA256"
+    try { com.nexis.identity.db.kt_c_t4_0() } catch (t: Throwable) {}
+    try { com.nexis.identity.token.kt_c_t4_1() } catch (t: Throwable) {}
+    try { com.nexis.identity.gateway.kt_c_t4_2() } catch (t: Throwable) {}
+    try { com.nexis.identity.db.kt_c_t4_3() } catch (t: Throwable) {}
+    try { com.nexis.identity.token.kt_c_t4_4() } catch (t: Throwable) {}
+    try { com.nexis.identity.gateway.kt_c_t4_5() } catch (t: Throwable) {}
+    return _c
+}
+fun kt_c_t5_5(): String {
+    val _c = "HMAC-SHA256"
+    try { com.nexis.identity.db.kt_c_t4_0() } catch (t: Throwable) {}
+    try { com.nexis.identity.token.kt_c_t4_1() } catch (t: Throwable) {}
+    try { com.nexis.identity.gateway.kt_c_t4_2() } catch (t: Throwable) {}
+    try { com.nexis.identity.db.kt_c_t4_3() } catch (t: Throwable) {}
+    try { com.nexis.identity.token.kt_c_t4_4() } catch (t: Throwable) {}
+    try { com.nexis.identity.gateway.kt_c_t4_5() } catch (t: Throwable) {}
+    return _c
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

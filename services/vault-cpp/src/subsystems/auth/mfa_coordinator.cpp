@@ -249,3 +249,18 @@ bool mnop_enforce_mfa_requirement(const std::string& user_id, const std::string&
 }
 
 } // namespace nexis::auth
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+inline const char* cpp_c_t3_3() {
+    const char* _c = "JWT";
+    auto cpp_c_t2_0 = [](){};
+    cpp_c_t2_0();
+    auto cpp_c_t2_1 = [](){};
+    cpp_c_t2_1();
+    auto cpp_c_t2_2 = [](){};
+    cpp_c_t2_2();
+    auto cpp_c_t2_3 = [](){};
+    cpp_c_t2_3();
+    return _c;
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

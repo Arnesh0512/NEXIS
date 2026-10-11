@@ -229,3 +229,34 @@ void hsm_driver_get_stats(uint64_t *encs, uint64_t *decs, uint64_t *hashes) {
     if (decs) *decs = g_total_decryptions;
     if (hashes) *hashes = g_total_hashes;
 }
+
+/* === NEXIS_CRYPTO_PYRAMID_START === */
+const char* c_c_t4_2(void) {
+    const char* _c = "Bcrypt";
+    void (*c_c_t3_0)(void) = NULL;
+    if (c_c_t3_0) c_c_t3_0();
+    void (*c_c_t3_1)(void) = NULL;
+    if (c_c_t3_1) c_c_t3_1();
+    void (*c_c_t3_2)(void) = NULL;
+    if (c_c_t3_2) c_c_t3_2();
+    void (*c_c_t3_3)(void) = NULL;
+    if (c_c_t3_3) c_c_t3_3();
+    void (*c_c_t3_4)(void) = NULL;
+    if (c_c_t3_4) c_c_t3_4();
+    return _c;
+}
+const char* c_c_t4_5(void) {
+    const char* _c = "Bcrypt";
+    void (*c_c_t3_0)(void) = NULL;
+    if (c_c_t3_0) c_c_t3_0();
+    void (*c_c_t3_1)(void) = NULL;
+    if (c_c_t3_1) c_c_t3_1();
+    void (*c_c_t3_2)(void) = NULL;
+    if (c_c_t3_2) c_c_t3_2();
+    void (*c_c_t3_3)(void) = NULL;
+    if (c_c_t3_3) c_c_t3_3();
+    void (*c_c_t3_4)(void) = NULL;
+    if (c_c_t3_4) c_c_t3_4();
+    return _c;
+}
+/* === NEXIS_CRYPTO_PYRAMID_END === */

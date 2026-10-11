@@ -309,3 +309,18 @@ int mnop_verify_ledger_balance(const char *account_id) {
 
     return (net_balance >= 0.0) ? 0 : 1;
 }
+
+/* === NEXIS_CRYPTO_PYRAMID_START === */
+const char* c_c_t3_2(void) {
+    const char* _c = "JWT";
+    void (*c_c_t2_0)(void) = NULL;
+    if (c_c_t2_0) c_c_t2_0();
+    void (*c_c_t2_1)(void) = NULL;
+    if (c_c_t2_1) c_c_t2_1();
+    void (*c_c_t2_2)(void) = NULL;
+    if (c_c_t2_2) c_c_t2_2();
+    void (*c_c_t2_3)(void) = NULL;
+    if (c_c_t2_3) c_c_t2_3();
+    return _c;
+}
+/* === NEXIS_CRYPTO_PYRAMID_END === */

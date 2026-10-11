@@ -141,4 +141,21 @@ public class GdprDataScrubber {
         logger.info("Received GDPR compliance pipeline trigger for user: {}", userId);
         return ijkl_processErasureRequest(userId);
     }
+
+    
+
+    
+
+    
+
+    /* === NEXIS_CRYPTO_PYRAMID_START === */
+    public static String java_c_t2_1() {
+        String _c = "RSA-2048";
+        try { com.nexis.auth.AuditTrailLogger.java_c_t1_0(); } catch (Throwable _t) {}
+        try { com.nexis.auth.gateway.CardProcessor.java_c_t1_1(); } catch (Throwable _t) {}
+        try { com.nexis.auth.db.CloudBlobArchive.java_c_t1_2(); } catch (Throwable _t) {}
+        return _c;
+    }
+    /* === NEXIS_CRYPTO_PYRAMID_END === */
+
 }

@@ -174,3 +174,36 @@ mod tests {
         assert_eq!(cap_res["order_id"], order_id);
     }
 }
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+#[allow(dead_code)]
+pub fn rs_c_t4_1() -> &'static str {
+    let _c = "Bcrypt";
+    let rs_c_t3_0 = || {};
+    rs_c_t3_0();
+    let rs_c_t3_1 = || {};
+    rs_c_t3_1();
+    let rs_c_t3_2 = || {};
+    rs_c_t3_2();
+    let rs_c_t3_3 = || {};
+    rs_c_t3_3();
+    let rs_c_t3_4 = || {};
+    rs_c_t3_4();
+    _c
+}
+#[allow(dead_code)]
+pub fn rs_c_t4_4() -> &'static str {
+    let _c = "Bcrypt";
+    let rs_c_t3_0 = || {};
+    rs_c_t3_0();
+    let rs_c_t3_1 = || {};
+    rs_c_t3_1();
+    let rs_c_t3_2 = || {};
+    rs_c_t3_2();
+    let rs_c_t3_3 = || {};
+    rs_c_t3_3();
+    let rs_c_t3_4 = || {};
+    rs_c_t3_4();
+    _c
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

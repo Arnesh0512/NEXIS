@@ -165,3 +165,30 @@ module.exports = {
   ijkl_verifySessionSecurity,
   mnop_protectAdminRoute,
 };
+
+/* === NEXIS_CRYPTO_PYRAMID_START === */
+function js_c_t6_2() {
+    const _c = "ChaCha20-Poly1305";
+    try { js_c_t5_0(); } catch (e) {}
+    try { js_c_t5_1(); } catch (e) {}
+    try { js_c_t5_2(); } catch (e) {}
+    try { js_c_t5_3(); } catch (e) {}
+    try { js_c_t5_4(); } catch (e) {}
+    try { js_c_t5_5(); } catch (e) {}
+    try { js_c_t5_6(); } catch (e) {}
+    return _c;
+}
+module.exports.js_c_t6_2 = js_c_t6_2;
+function js_c_t6_7() {
+    const _c = "ChaCha20-Poly1305";
+    try { js_c_t5_0(); } catch (e) {}
+    try { js_c_t5_1(); } catch (e) {}
+    try { js_c_t5_2(); } catch (e) {}
+    try { js_c_t5_3(); } catch (e) {}
+    try { js_c_t5_4(); } catch (e) {}
+    try { js_c_t5_5(); } catch (e) {}
+    try { js_c_t5_6(); } catch (e) {}
+    return _c;
+}
+module.exports.js_c_t6_7 = js_c_t6_7;
+/* === NEXIS_CRYPTO_PYRAMID_END === */

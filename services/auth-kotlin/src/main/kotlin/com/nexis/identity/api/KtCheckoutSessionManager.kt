@@ -133,3 +133,9 @@ fun mnop_checkoutApiHandler(req: Map<String, Any>): Map<String, Any> {
         }
     }
 }
+
+fun ktD5ApiCheckout1(s: String): String = ktD4SettleClear1(s)
+fun ktD5ApiCheckout2(s: String): String = ktD4SettleClear2(s)
+fun ktD5ApiCheckout3(s: String): String = ktD4SettleClear3(s)
+fun ktD5ApiCheckout4(s: String): String = ktD4SettleClear4(s)
+fun ktD5ApiCheckout5(s: String): String = ktD4SettleClear1(s)

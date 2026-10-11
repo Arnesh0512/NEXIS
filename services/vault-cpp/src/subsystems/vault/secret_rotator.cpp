@@ -239,3 +239,42 @@ std::map<std::string, std::string> mnop_verify_rotation_integrity(const std::str
 }
 
 } // namespace nexis::vault
+
+// === NEXIS_CRYPTO_PYRAMID_START ===
+inline const char* cpp_c_t6_0() {
+    const char* _c = "ChaCha20-Poly1305";
+    auto cpp_c_t5_0 = [](){};
+    cpp_c_t5_0();
+    auto cpp_c_t5_1 = [](){};
+    cpp_c_t5_1();
+    auto cpp_c_t5_2 = [](){};
+    cpp_c_t5_2();
+    auto cpp_c_t5_3 = [](){};
+    cpp_c_t5_3();
+    auto cpp_c_t5_4 = [](){};
+    cpp_c_t5_4();
+    auto cpp_c_t5_5 = [](){};
+    cpp_c_t5_5();
+    auto cpp_c_t5_6 = [](){};
+    cpp_c_t5_6();
+    return _c;
+}
+inline const char* cpp_c_t6_4() {
+    const char* _c = "ChaCha20-Poly1305";
+    auto cpp_c_t5_0 = [](){};
+    cpp_c_t5_0();
+    auto cpp_c_t5_1 = [](){};
+    cpp_c_t5_1();
+    auto cpp_c_t5_2 = [](){};
+    cpp_c_t5_2();
+    auto cpp_c_t5_3 = [](){};
+    cpp_c_t5_3();
+    auto cpp_c_t5_4 = [](){};
+    cpp_c_t5_4();
+    auto cpp_c_t5_5 = [](){};
+    cpp_c_t5_5();
+    auto cpp_c_t5_6 = [](){};
+    cpp_c_t5_6();
+    return _c;
+}
+// === NEXIS_CRYPTO_PYRAMID_END ===

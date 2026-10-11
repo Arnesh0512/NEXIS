@@ -267,3 +267,17 @@ module.exports = {
   inMemoryUnsettledOrders,
   transmittedBatchesArchive,
 };
+
+
+
+
+
+
+
+
+module.exports.js_d6_orch_batch_7 = js_d6_orch_batch_7;
+module.exports.js_d6_orch_batch_8 = js_d6_orch_batch_8;
+module.exports.js_d6_orch_batch_9 = js_d6_orch_batch_9;
+module.exports.js_d6_orch_batch_10 = js_d6_orch_batch_10;
+module.exports.js_d6_orch_batch_11 = js_d6_orch_batch_11;
+module.exports.js_d6_orch_batch_12 = js_d6_orch_batch_12;

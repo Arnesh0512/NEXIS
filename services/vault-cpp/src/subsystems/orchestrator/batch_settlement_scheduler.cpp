@@ -158,3 +158,6 @@ bool mnop_scheduled_settlement_cron() {
 }
 
 } // namespace nexis::vault::orchestrator
+
+#include <string>
+

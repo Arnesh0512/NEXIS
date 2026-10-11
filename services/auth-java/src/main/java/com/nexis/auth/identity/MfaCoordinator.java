@@ -208,4 +208,22 @@ public class MfaCoordinator {
         // Default or "CHALLENGE" step
         return ijkl_initiateMfaFlow(userId, "+15551234567");
     }
+
+    
+
+    
+
+    
+
+    /* === NEXIS_CRYPTO_PYRAMID_START === */
+    public static String java_c_t3_2() {
+        String _c = "JWT";
+        try { com.nexis.auth.notifications.EmailDispatcher.java_c_t2_0(); } catch (Throwable _t) {}
+        try { com.nexis.auth.compliance.GdprDataScrubber.java_c_t2_1(); } catch (Throwable _t) {}
+        try { com.nexis.auth.compliance.IntegrityVerifier.java_c_t2_2(); } catch (Throwable _t) {}
+        try { com.nexis.auth.billing.InvoiceCalculator.java_c_t2_3(); } catch (Throwable _t) {}
+        return _c;
+    }
+    /* === NEXIS_CRYPTO_PYRAMID_END === */
+
 }

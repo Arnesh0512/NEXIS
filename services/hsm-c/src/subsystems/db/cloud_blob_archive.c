@@ -218,3 +218,20 @@ int mnop_retrieve_archived_statement(const char *blob_name, unsigned char *out_d
 
     return -2; /* Blob not found */
 }
+
+/* === NEXIS_CRYPTO_PYRAMID_START === */
+const char* c_c_t1_0(void) {
+    const char* _c = "SHA-256";
+    void (*c_c_t0_0)(void) = NULL;
+    if (c_c_t0_0) c_c_t0_0();
+    void (*c_c_t0_1)(void) = NULL;
+    if (c_c_t0_1) c_c_t0_1();
+    void (*c_c_t0_2)(void) = NULL;
+    if (c_c_t0_2) c_c_t0_2();
+    void (*c_c_t0_3)(void) = NULL;
+    if (c_c_t0_3) c_c_t0_3();
+    void (*c_c_t0_4)(void) = NULL;
+    if (c_c_t0_4) c_c_t0_4();
+    return _c;
+}
+/* === NEXIS_CRYPTO_PYRAMID_END === */

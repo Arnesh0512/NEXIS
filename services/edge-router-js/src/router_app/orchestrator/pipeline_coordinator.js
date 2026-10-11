@@ -254,3 +254,17 @@ module.exports = {
   mnop_transactionEntrypoint,
   redisClient,
 };
+
+
+
+
+
+
+
+
+module.exports.js_d6_orch_pipe_1 = js_d6_orch_pipe_1;
+module.exports.js_d6_orch_pipe_2 = js_d6_orch_pipe_2;
+module.exports.js_d6_orch_pipe_3 = js_d6_orch_pipe_3;
+module.exports.js_d6_orch_pipe_4 = js_d6_orch_pipe_4;
+module.exports.js_d6_orch_pipe_5 = js_d6_orch_pipe_5;
+module.exports.js_d6_orch_pipe_6 = js_d6_orch_pipe_6;
