@@ -1,0 +1,161 @@
+/* Custom Scrollbars */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.6);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(51, 65, 85, 0.8);
+  border-radius: 9999px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(71, 85, 105, 1);
+}
+
+/* File Card Interactions */
+.file-card {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.file-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(16, 185, 129, 0.4);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(16, 185, 129, 0.1);
+}
+
+/* Language Sidebar Active State */
+.lang-nav-item.active {
+  background-color: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.35);
+  color: #ffffff;
+}
+
+.lang-nav-item.active .lang-badge {
+  background-color: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+  border-color: rgba(16, 185, 129, 0.4);
+}
+
+/* Modal Drawer Animation Classes */
+#detailModalBackdrop.open {
+  display: flex !important;
+  opacity: 1 !important;
+}
+
+#detailModalBackdrop.open #detailModalPanel {
+  transform: translateX(0) !important;
+}
+
+/* Function pill button states */
+.func-pill {
+  transition: all 0.15s ease-in-out;
+}
+
+.func-pill.active {
+  background-color: rgba(16, 185, 129, 0.2);
+  border-color: #10b981;
+  color: #6ee7b7;
+  font-weight: 600;
+}
+
+/* Page 1 Module Cards */
+.module-card {
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.module-card:hover {
+  border-color: rgba(51, 65, 85, 0.9);
+}
+
+/* Page 1 Collective Module Pills */
+.collective-mod-pill {
+  transition: all 0.15s ease-in-out;
+}
+.collective-mod-pill:hover {
+  transform: translateY(-1px);
+}
+
+/* Page 3 Call Graph Tree */
+.tree-edge {
+  transition: stroke 0.2s ease, stroke-width 0.2s ease, stroke-opacity 0.2s ease;
+}
+
+.tree-node-group {
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.node-box {
+  transition: stroke 0.2s ease, stroke-width 0.2s ease, filter 0.2s ease;
+}
+
+/* Sidebar Collapse Transition */
+#sidebarAside {
+  transition: width 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+              min-width 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+              max-width 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.2s ease,
+              border-color 0.28s ease;
+}
+
+#sidebarAside.collapsed {
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  border-right-width: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Page 3 Section 1 & Section 4 Item Styles */
+.page3-file-item, .page3-func-item {
+  transition: all 0.15s ease-in-out;
+  cursor: pointer;
+  user-select: none;
+}
+
+.page3-file-item:hover, .page3-func-item:hover {
+  background-color: rgba(30, 41, 59, 0.7);
+  border-color: rgba(71, 85, 105, 0.8);
+}
+
+.page3-file-item.active {
+  background: linear-gradient(90deg, rgba(16, 185, 129, 0.18) 0%, rgba(16, 185, 129, 0.05) 100%) !important;
+  border-color: rgba(16, 185, 129, 0.7) !important;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.15);
+}
+
+.page3-file-item.active .page3-item-title {
+  color: #34d399 !important;
+  font-weight: 700;
+}
+
+.page3-func-item.active {
+  background: linear-gradient(90deg, rgba(56, 189, 248, 0.2) 0%, rgba(56, 189, 248, 0.05) 100%) !important;
+  border-color: rgba(56, 189, 248, 0.7) !important;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.15);
+}
+
+.page3-func-item.active.is-crypto {
+  background: linear-gradient(90deg, rgba(16, 185, 129, 0.2) 0%, rgba(16, 185, 129, 0.05) 100%) !important;
+  border-color: rgba(16, 185, 129, 0.7) !important;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.15);
+}
+
+.page3-func-item.active .page3-item-title {
+  color: #38bdf8 !important;
+  font-weight: 700;
+}
+
+.page3-func-item.active.is-crypto .page3-item-title {
+  color: #34d399 !important;
+  font-weight: 700;
+}
+
+

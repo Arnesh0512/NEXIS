@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEXIS // Multi-Language Service & AST Explorer</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2310b981' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polygon points='12 2 2 7 12 12 22 7 12 2'></polygon><polyline points='2 17 12 22 22 17'></polyline><polyline points='2 12 12 17 22 12'></polyline></svg>">
+
+  <!-- Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              200: '#a7f3d0',
+              300: '#6ee7b7',
+              400: '#34d399',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              800: '#065f46',
+              900: '#064e3b',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- D3.js Local Library for Tree & Call Graph -->
+  <script src="lib/d3.min.js"></script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Embedded Data Bundle (fallback for direct file:// browsing) -->
+  <script src="data/services_data.js"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex antialiased selection:bg-emerald-500 selection:text-white">
+
+  <!-- Fixed Left Sidebar (9 Languages) -->
+  <aside id="sidebarAside" class="w-72 bg-slate-900/95 border-r border-slate-800 flex flex-col shrink-0 h-screen sticky top-0 z-20 overflow-hidden">
+    <!-- Platform Branding Header -->
+    <div class="h-16 px-5 border-b border-slate-800 flex items-center justify-between shrink-0">
+      <div class="flex items-center space-x-3">
+        <div class="w-9 h-9 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+          <i data-lucide="layers" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="font-bold tracking-tight text-white text-base">NEXIS</span>
+            <span class="px-1.5 py-0.5 rounded text-[10px] font-mono font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">SERVICES</span>
+          </div>
+          <p class="text-[11px] text-slate-400 font-medium">9-Language AST Explorer</p>
+        </div>
+      </div>
+      <!-- Internal Sidebar Collapse Button -->
+      <button 
+        id="btnSidebarCollapse" 
+        class="w-7 h-7 rounded-md hover:bg-slate-800 border border-transparent hover:border-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition-colors cursor-pointer"
+        title="Hide Languages Sidebar"
+        aria-label="Hide Languages Sidebar"
+      >
+        <i data-lucide="panel-left-close" class="w-4 h-4"></i>
+      </button>
+    </div>
+
+    <!-- Global Stats Overview -->
+    <div class="p-4 border-b border-slate-800/80 bg-slate-900/50">
+      <div class="grid grid-cols-2 gap-2 text-xs">
+        <div class="bg-slate-800/60 p-2 rounded-md border border-slate-700/50">
+          <span class="text-slate-400 block text-[10px] uppercase font-mono tracking-wider">Total Files</span>
+          <span id="statTotalFiles" class="font-bold text-white text-sm">604</span>
+        </div>
+        <div class="bg-slate-800/60 p-2 rounded-md border border-slate-700/50">
+          <span class="text-slate-400 block text-[10px] uppercase font-mono tracking-wider">Languages</span>
+          <span class="font-bold text-emerald-400 text-sm">9 Services</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Label -->
+    <div class="px-5 pt-4 pb-2">
+      <span class="text-[11px] font-mono font-semibold text-slate-400 uppercase tracking-wider">Select Language</span>
+    </div>
+
+    <!-- 9 Language Navigation Menu -->
+    <nav class="flex-1 overflow-y-auto px-3 space-y-1.5 pb-4 custom-scrollbar" id="languageNavList">
+      <!-- Populated dynamically via app.js -->
+    </nav>
+
+    <!-- Sidebar Footer -->
+    <div class="p-3 border-t border-slate-800/80 text-[11px] text-slate-500 font-mono flex items-center justify-between">
+      <span>Desktop / nexis</span>
+      <span class="text-emerald-500">v2.4.0</span>
+    </div>
+  </aside>
+
+  <!-- Main Content Stage -->
+  <main class="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
+    <!-- High-Level Website Topbar -->
+    <header class="h-16 bg-slate-900/90 backdrop-blur border-b border-slate-800 px-6 lg:px-8 flex items-center justify-between shrink-0">
+      <!-- High-Level Left: Active Language & Service Info -->
+      <div class="flex items-center space-x-3.5">
+        <!-- Sidebar Hide/Show Toggle Button -->
+        <button 
+          id="btnToggleSidebar" 
+          class="w-9 h-9 rounded-lg bg-slate-800/90 hover:bg-slate-700 border border-slate-700 hover:border-slate-600 flex items-center justify-center text-slate-300 hover:text-white transition-all shadow-sm cursor-pointer shrink-0"
+          title="Toggle Languages Sidebar"
+          aria-label="Toggle Languages Sidebar"
+        >
+          <i data-lucide="panel-left" class="w-4 h-4 text-emerald-400"></i>
+        </button>
+
+        <div id="activeLangIcon" class="w-8 h-8 rounded-md bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
+          <i data-lucide="code-2" class="w-4 h-4"></i>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <h1 id="activeLangTitle" class="text-lg font-bold text-white">TypeScript</h1>
+            <span id="activeServiceBadge" class="px-2 py-0.5 rounded text-xs font-mono bg-slate-800 text-slate-300 border border-slate-700">api-gateway-ts</span>
+          </div>
+          <p id="activeLangSubtitle" class="text-xs text-slate-400">Showing 76 files present in services/api-gateway-ts</p>
+        </div>
+      </div>
+
+      <!-- High-Level Right: Search Filter -->
+      <div class="flex items-center space-x-3">
+        <!-- Live Search Input -->
+        <div class="relative w-72">
+          <i data-lucide="search" class="w-4 h-4 absolute left-3 top-2.5 text-slate-400"></i>
+          <input 
+            type="text" 
+            id="fileSearchInput" 
+            placeholder="Search files or modules..." 
+            class="w-full pl-9 pr-4 py-1.5 bg-slate-950/70 border border-slate-700/80 rounded-lg text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors"
+          />
+        </div>
+      </div>
+    </header>
+
+    <!-- Language Top Bar (Dedicated topbar for each language, not high-level website topbar) -->
+    <div id="languageTopBar" class="bg-slate-900/95 border-b border-slate-800 px-8 py-2.5 flex items-center justify-between shrink-0">
+      <!-- 3 Page Navigation Tabs -->
+      <div class="flex items-center space-x-2">
+        <button id="navBtnPage1" class="lang-nav-tab px-3.5 py-1.5 rounded-lg text-xs font-mono font-medium flex items-center space-x-2 border border-transparent text-slate-400 hover:text-white hover:bg-slate-800 transition-colors" data-page="page1">
+          <i data-lucide="layers" class="w-3.5 h-3.5 text-emerald-400"></i>
+          <span>1. Modules Overview</span>
+        </button>
+        <button id="navBtnPage2" class="lang-nav-tab active px-3.5 py-1.5 rounded-lg text-xs font-mono font-medium flex items-center space-x-2 border border-emerald-500/40 bg-emerald-500/15 text-emerald-300 font-semibold transition-colors" data-page="page2">
+          <i data-lucide="file-code" class="w-3.5 h-3.5 text-emerald-400"></i>
+          <span>2. Files & Functions</span>
+        </button>
+        <button id="navBtnPage3" class="lang-nav-tab px-3.5 py-1.5 rounded-lg text-xs font-mono font-medium flex items-center space-x-2 border border-transparent text-slate-400 hover:text-white hover:bg-slate-800 transition-colors" data-page="page3">
+          <i data-lucide="git-fork" class="w-3.5 h-3.5 text-sky-400"></i>
+          <span>3. Call Graph Tree</span>
+        </button>
+      </div>
+
+      <!-- Language Topbar Right: Quick Metrics -->
+      <div class="flex items-center space-x-3 text-xs font-mono text-slate-400">
+        <span id="langTopBarStats" class="flex items-center space-x-2 bg-slate-950/70 border border-slate-800 px-3 py-1 rounded-lg">
+          <!-- Populated dynamically via app.js -->
+        </span>
+      </div>
+    </div>
+
+    <!-- Multi-Page View Container -->
+    <div class="flex-1 flex flex-col min-h-0 overflow-hidden relative">
+
+      <!-- PAGE 1: Modules Overview (filename at top, hover location, 4 module categories with toggle buttons) -->
+      <div id="page1View" class="page-view flex-1 overflow-y-auto p-8 custom-scrollbar hidden">
+        <div class="mb-6 flex items-center justify-between flex-wrap gap-4 bg-slate-900/60 border border-slate-800 p-4 rounded-xl">
+          <div>
+            <h2 class="text-sm font-semibold text-slate-200 flex items-center space-x-2">
+              <span>Imported Modules Telemetry</span>
+              <span id="page1CountBadge" class="px-2 py-0.5 rounded-full text-xs font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">76 files</span>
+            </h2>
+            <p class="text-xs text-slate-400 mt-1">
+              Toggle category buttons below to filter modules on cards. Hover file name to view location.
+            </p>
+          </div>
+
+          <!-- 4 Category Filter Buttons (Default: All 4 ON) -->
+          <div class="flex items-center flex-wrap gap-2">
+            <!-- 1. Crypto (Standard Crypto - Green) -->
+            <button id="filterBtnStdCrypto" class="cat-filter-btn px-3 py-1.5 rounded-lg text-xs font-mono font-semibold flex items-center space-x-1.5 border transition-all active bg-emerald-500/15 border-emerald-500/40 text-emerald-300" data-cat="stdCrypto" title="Toggle Standard Crypto modules">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 indicator-dot shadow-sm shadow-emerald-400/50"></span>
+              <span>Crypto</span>
+            </button>
+
+            <!-- 2. Non-Crypto (Standard Non-Crypto - Blue) -->
+            <button id="filterBtnStdNonCrypto" class="cat-filter-btn px-3 py-1.5 rounded-lg text-xs font-mono font-semibold flex items-center space-x-1.5 border transition-all active bg-sky-500/15 border-sky-500/40 text-sky-300" data-cat="stdNonCrypto" title="Toggle Standard Non-Crypto modules">
+              <span class="w-2 h-2 rounded-full bg-sky-400 indicator-dot shadow-sm shadow-sky-400/50"></span>
+              <span>Non-Crypto</span>
+            </button>
+
+            <!-- 3. User Defined Crypto (Yellow) -->
+            <button id="filterBtnUserCrypto" class="cat-filter-btn px-3 py-1.5 rounded-lg text-xs font-mono font-semibold flex items-center space-x-1.5 border transition-all active bg-amber-500/15 border-amber-500/40 text-amber-300" data-cat="userCrypto" title="Toggle User Defined Crypto modules">
+              <span class="w-2 h-2 rounded-full bg-amber-400 indicator-dot shadow-sm shadow-amber-400/50"></span>
+              <span>User Crypto</span>
+            </button>
+
+            <!-- 4. User Defined Non-Crypto (Pink) -->
+            <button id="filterBtnUserNonCrypto" class="cat-filter-btn px-3 py-1.5 rounded-lg text-xs font-mono font-semibold flex items-center space-x-1.5 border transition-all active bg-pink-500/15 border-pink-500/40 text-pink-300" data-cat="userNonCrypto" title="Toggle User Defined Non-Crypto modules">
+              <span class="w-2 h-2 rounded-full bg-pink-400 indicator-dot shadow-sm shadow-pink-400/50"></span>
+              <span>User Non-Crypto</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Page 1 3:1 Split Layout (3 parts File Cards, 1 part Collective Modules) -->
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
+          
+          <!-- 3 Parts: File Cards Grid (75% on lg screens) -->
+          <div class="lg:col-span-3">
+            <div id="page1CardsGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+              <!-- Rendered dynamically via app.js -->
+            </div>
+          </div>
+
+          <!-- 1 Part: Collective Modules Directory (25% on lg screens) -->
+          <div class="lg:col-span-1 lg:sticky lg:top-4">
+            <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-4 shadow-xl space-y-4 backdrop-blur">
+              <!-- Collective Header -->
+              <div class="border-b border-slate-800/80 pb-3 flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                  <div class="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
+                    <i data-lucide="layers" class="w-3.5 h-3.5"></i>
+                  </div>
+                  <div>
+                    <h3 class="text-xs font-bold font-mono text-white tracking-wide">All Modules</h3>
+                    <p class="text-[10px] text-slate-400">Collective directory</p>
+                  </div>
+                </div>
+                <span id="page1CollectiveBadge" class="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-slate-800 text-emerald-400 border border-slate-700">0</span>
+              </div>
+
+              <!-- Collective Modules Container -->
+              <div id="page1CollectiveModulesContainer" class="space-y-4 max-h-[calc(100vh-270px)] overflow-y-auto custom-scrollbar pr-1">
+                <!-- Rendered dynamically via app.js -->
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- PAGE 2: Files & Functions (Current View with Sort Dropdown & Crypto Only Toggle Native to Page 2) -->
+      <div id="page2View" class="page-view flex-1 overflow-y-auto p-8 custom-scrollbar">
+        <!-- Page 2 Topbar containing Sort Controls and Native Crypto Only Toggle -->
+        <div class="mb-6 flex items-center justify-between flex-wrap gap-4 bg-slate-900/60 border border-slate-800 p-4 rounded-xl">
+          <div>
+            <h2 class="text-sm font-semibold text-slate-200 flex items-center space-x-2">
+              <span>Files in this Language</span>
+              <span id="cardCountBadge" class="px-2 py-0.5 rounded-full text-xs font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">76</span>
+            </h2>
+            <p class="text-xs text-slate-400 mt-0.5">Click any file card to inspect imports, LOC, and deep reverse call graphs.</p>
+          </div>
+
+          <!-- Controls native to Page 2 -->
+          <div class="flex items-center space-x-3">
+            <!-- Native Page 2 Sort Control -->
+            <div class="flex items-center space-x-2">
+              <label for="fileSortSelect" class="text-xs text-slate-400 font-mono flex items-center space-x-1 shrink-0">
+                <i data-lucide="arrow-up-down" class="w-3.5 h-3.5 text-slate-400"></i>
+                <span>Sort:</span>
+              </label>
+              <select 
+                id="fileSortSelect" 
+                class="bg-slate-950/70 border border-slate-700/80 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 font-mono focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors cursor-pointer"
+              >
+                <option value="depth_desc">Max Call Depth (2nd: Crypto) 🔥</option>
+                <option value="crypto_desc">Crypto Artifacts Count (2nd: Depth) 🛡️</option>
+                <option value="name_asc" selected>File Name (A - Z)</option>
+                <option value="loc_desc">Lines of Code (LOC)</option>
+                <option value="funcs_desc">Number of Functions</option>
+              </select>
+            </div>
+
+            <!-- Native Page 2 Crypto Only Toggle Switch -->
+            <label class="flex items-center space-x-2 cursor-pointer bg-slate-950/70 border border-slate-700/80 rounded-lg px-2.5 py-1.5 hover:border-emerald-500/50 transition-colors" title="Toggle to show only files with cryptographic functions">
+              <input type="checkbox" id="cryptoOnlyToggle" class="sr-only peer">
+              <div class="w-8 h-4 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-emerald-500 relative"></div>
+              <span class="text-xs font-mono text-slate-300 select-none flex items-center space-x-1.5">
+                <i data-lucide="shield" class="w-3.5 h-3.5 text-emerald-400"></i>
+                <span>Crypto Only</span>
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Dynamic File Cards Grid -->
+        <div id="fileCardsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3.5">
+          <!-- Rendered dynamically via app.js -->
+        </div>
+      </div>
+
+      <!-- PAGE 3: Call Graph Tree (Nodes = Function Names, Edges = Caller -> Callee, Green = Crypto, Blue = Non-Crypto) -->
+      <div id="page3View" class="page-view flex-1 flex flex-col min-h-0 overflow-hidden bg-slate-950 hidden">
+        <!-- Page 3 Sub-bar / Graph Controls -->
+        <div class="p-3 border-b border-slate-800 bg-slate-900/80 flex items-center justify-between flex-wrap gap-2.5 shrink-0">
+          <div class="flex items-center space-x-3 text-xs font-mono">
+            <div class="flex items-center space-x-1.5">
+              <span class="w-3 h-3 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></span>
+              <span class="font-semibold text-slate-200">Crypto</span>
+            </div>
+            <span class="text-slate-700">|</span>
+            <div class="flex items-center space-x-1.5">
+              <span class="w-3 h-3 rounded-full bg-sky-400 shadow-sm shadow-sky-400/50"></span>
+              <span class="font-semibold text-slate-200">Non-Crypto</span>
+            </div>
+            <span class="text-slate-700">|</span>
+            <div class="hidden md:flex items-center space-x-1.5 text-[11px] text-slate-400">
+              <span class="px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800 font-bold">Dark = Target (D0)</span>
+              <i data-lucide="arrow-right" class="w-3 h-3 text-slate-500"></i>
+              <span class="px-1.5 py-0.5 rounded bg-emerald-400 text-emerald-950 font-bold">Lighter = Callers (D1+)</span>
+            </div>
+          </div>
+
+          <!-- Graph Action Controls -->
+          <div class="flex items-center space-x-2 flex-wrap gap-y-2">
+            <!-- Node & Link Metrics Badge -->
+            <span id="page3NodeEdgeBadge" class="px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-slate-950/90 text-emerald-400 border border-slate-800">
+              0 Nodes / 0 Calls
+            </span>
+
+            <!-- Focused / Connected Node Highlight Badge -->
+            <button id="page3SelectionBadge" class="hidden px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-amber-950/80 text-amber-300 border border-amber-700/80 items-center space-x-1.5 cursor-pointer hover:bg-amber-900/80 transition-colors shadow-sm" title="Click to clear highlighted node connections">
+            </button>
+
+            <!-- Layout Mode Switcher -->
+            <button id="btnToggleLayout" class="px-2.5 py-1 rounded-lg text-xs font-mono font-semibold flex items-center space-x-1.5 border border-slate-700 bg-slate-800 text-slate-200 hover:text-white hover:bg-slate-700 transition-colors" title="Toggle Layout Mode (Organic Network vs Hierarchical DAG)">
+              <i data-lucide="git-merge" class="w-3.5 h-3.5 text-sky-400"></i>
+              <span id="btnToggleLayoutText">Organic Network</span>
+            </button>
+
+            <!-- Zoom Buttons -->
+            <div class="flex items-center bg-slate-800/80 border border-slate-700 rounded-lg p-0.5 space-x-1">
+              <button id="btnZoomIn" class="p-1 hover:bg-slate-700 text-slate-300 rounded text-xs" title="Zoom In">
+                <i data-lucide="zoom-in" class="w-3.5 h-3.5"></i>
+              </button>
+              <button id="btnZoomOut" class="p-1 hover:bg-slate-700 text-slate-300 rounded text-xs" title="Zoom Out">
+                <i data-lucide="zoom-out" class="w-3.5 h-3.5"></i>
+              </button>
+              <button id="btnZoomFit" class="p-1 hover:bg-slate-700 text-slate-300 rounded text-xs" title="Fit to Screen">
+                <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4-Section Layout Grid/Flex: Section 1 (Files) | Sections 2&3 (Merged Graph) | Section 4 (Functions) -->
+        <div class="flex-1 flex min-h-0 overflow-hidden relative">
+
+          <!-- SECTION 1: Files in Current Service -->
+          <div id="page3FilesSection" class="w-64 xl:w-72 2xl:w-80 border-r border-slate-800 bg-slate-900/90 flex flex-col shrink-0 min-h-0">
+            <!-- Section 1 Header -->
+            <div class="p-3 border-b border-slate-800/90 flex flex-col gap-2 shrink-0 bg-slate-900">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                  <i data-lucide="files" class="w-4 h-4 text-emerald-400"></i>
+                  <span class="text-xs font-bold text-slate-200 uppercase tracking-wider font-mono">1. Files</span>
+                </div>
+                <span id="page3FilesCountBadge" class="px-2 py-0.5 rounded text-[11px] font-mono font-semibold bg-slate-800 text-slate-300 border border-slate-700">0</span>
+              </div>
+              <div class="relative">
+                <i data-lucide="search" class="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-slate-400"></i>
+                <input 
+                  type="text" 
+                  id="page3FileSearch" 
+                  placeholder="Filter files..." 
+                  class="w-full pl-8 pr-2.5 py-1.5 bg-slate-950 border border-slate-700/80 rounded-lg text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-mono"
+                />
+              </div>
+            </div>
+            <!-- Section 1 Files List (Top option: All Files) -->
+            <div id="page3FilesList" class="flex-1 overflow-y-auto custom-scrollbar p-2 space-y-1">
+              <!-- Rendered via app.js -->
+            </div>
+          </div>
+
+          <!-- SECTIONS 2 & 3: Merged Interactive Call Graph Canvas -->
+          <div id="treeCanvasWrapper" class="flex-1 min-w-0 h-full relative overflow-hidden bg-slate-950">
+            <svg id="callTreeSvg" class="w-full h-full cursor-grab active:cursor-grabbing"></svg>
+            
+            <!-- Floating Node Tooltip (Hover) -->
+            <div id="treeNodeTooltip" class="absolute pointer-events-none hidden z-30 bg-slate-900/95 border border-slate-700/80 p-3.5 rounded-xl shadow-2xl backdrop-blur-md max-w-sm text-xs font-mono transition-opacity duration-150"></div>
+          </div>
+
+          <!-- SECTION 4: Functions in Selected File -->
+          <div id="page3FuncsSection" class="w-64 xl:w-72 2xl:w-80 border-l border-slate-800 bg-slate-900/90 flex flex-col shrink-0 min-h-0">
+            <!-- Section 4 Header -->
+            <div class="p-3 border-b border-slate-800/90 flex flex-col gap-2 shrink-0 bg-slate-900">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                  <i data-lucide="code-2" class="w-4 h-4 text-sky-400"></i>
+                  <span class="text-xs font-bold text-slate-200 uppercase tracking-wider font-mono">4. Functions</span>
+                </div>
+                <span id="page3FuncsCountBadge" class="px-2 py-0.5 rounded text-[11px] font-mono font-semibold bg-slate-800 text-slate-300 border border-slate-700">0</span>
+              </div>
+              <div class="text-[11px] text-slate-400 font-mono truncate" id="page3FuncsFileScopeText">
+                Scope: All Files
+              </div>
+              <div class="relative">
+                <i data-lucide="search" class="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-slate-400"></i>
+                <input 
+                  type="text" 
+                  id="page3FuncSearch" 
+                  placeholder="Filter functions..." 
+                  class="w-full pl-8 pr-2.5 py-1.5 bg-slate-950 border border-slate-700/80 rounded-lg text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-sky-500 font-mono"
+                />
+              </div>
+            </div>
+            <!-- Section 4 Functions List (Top option: All Functions of File) -->
+            <div id="page3FuncsList" class="flex-1 overflow-y-auto custom-scrollbar p-2 space-y-1">
+              <!-- Rendered via app.js -->
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- File Detail Modal Drawer -->
+  <div id="detailModalBackdrop" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex justify-end hidden opacity-0 transition-opacity duration-300">
+    <div id="detailModalPanel" class="w-full max-w-3xl bg-slate-900 border-l border-slate-800 h-full flex flex-col shadow-2xl transform translate-x-full transition-transform duration-300">
+      
+      <!-- Modal Header -->
+      <div class="p-6 border-b border-slate-800 flex items-start justify-between bg-slate-900/90">
+        <div class="flex items-start space-x-3.5">
+          <div class="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0 mt-0.5">
+            <i data-lucide="file-code" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="flex items-center space-x-2 flex-wrap gap-y-1">
+              <h3 id="modalFileName" class="text-lg font-bold text-white font-mono break-all">filename.ext</h3>
+              <span id="modalLangBadge" class="px-2 py-0.5 text-xs font-semibold rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Python</span>
+            </div>
+            <p id="modalFilePath" class="text-xs text-slate-400 font-mono mt-1 break-all">services/path/to/file</p>
+          </div>
+        </div>
+        <button id="btnCloseModal" class="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Modal Body (Scrollable) -->
+      <div class="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
+        
+        <!-- Quick Stats Overview -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="bg-slate-950/60 p-3.5 rounded-lg border border-slate-800">
+            <span class="text-[11px] font-mono text-slate-400 block uppercase tracking-wider">Lines of Code (LOC)</span>
+            <span id="modalLOC" class="text-xl font-extrabold text-white font-mono">0</span>
+          </div>
+          <div class="bg-slate-950/60 p-3.5 rounded-lg border border-slate-800">
+            <span class="text-[11px] font-mono text-slate-400 block uppercase tracking-wider">Functions</span>
+            <span id="modalFuncCount" class="text-xl font-extrabold text-emerald-400 font-mono">0</span>
+          </div>
+          <div class="bg-slate-950/60 p-3.5 rounded-lg border border-slate-800">
+            <span class="text-[11px] font-mono text-slate-400 block uppercase tracking-wider">Max Call Depth</span>
+            <span id="modalMaxDepth" class="text-xl font-extrabold text-teal-400 font-mono">0</span>
+          </div>
+          <div class="bg-slate-950/60 p-3.5 rounded-lg border border-slate-800">
+            <span class="text-[11px] font-mono text-slate-400 block uppercase tracking-wider">Imported Modules</span>
+            <span id="modalTotalImports" class="text-xl font-extrabold text-slate-200 font-mono">0</span>
+          </div>
+        </div>
+
+        <!-- Section 1: Modules Imported -->
+        <div class="bg-slate-950/40 p-4 rounded-xl border border-slate-800 space-y-4">
+          <h4 class="text-xs font-mono font-bold text-slate-300 uppercase tracking-wider flex items-center space-x-2">
+            <i data-lucide="box" class="w-4 h-4 text-emerald-400"></i>
+            <span>1. Modules Imported</span>
+          </h4>
+
+          <!-- Non-User Defined Imports -->
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-semibold text-slate-300 flex items-center space-x-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                <span>External & Standard Library (Not User Defined)</span>
+              </span>
+              <span id="nonUserImportsCount" class="text-[11px] font-mono text-slate-400">0 modules</span>
+            </div>
+            <div id="nonUserImportsList" class="flex flex-wrap gap-1.5">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          <!-- User Defined Imports -->
+          <div class="pt-3 border-t border-slate-800/80">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-semibold text-slate-300 flex items-center space-x-1.5">
+                <span class="w-2 h-2 rounded-full bg-teal-400"></span>
+                <span>Internal Project Modules (User Defined)</span>
+              </span>
+              <span id="userImportsCount" class="text-[11px] font-mono text-slate-400">0 modules</span>
+            </div>
+            <div id="userImportsList" class="flex flex-wrap gap-1.5">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2: Functions & Deep Call Inspector -->
+        <div class="bg-slate-950/40 p-4 rounded-xl border border-slate-800 space-y-4">
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <h4 class="text-xs font-mono font-bold text-slate-300 uppercase tracking-wider flex items-center space-x-2">
+              <i data-lucide="git-commit" class="w-4 h-4 text-emerald-400"></i>
+              <span>2. Functions & Call Graph</span>
+              <span id="functionCountBadge" class="ml-2 px-2 py-0.5 rounded text-[10px] font-mono bg-slate-800 text-slate-300 border border-slate-700 hidden"></span>
+            </h4>
+            
+            <!-- Modal Toggle: Crypto Functions Only in File X -->
+            <label class="flex items-center space-x-2 cursor-pointer bg-slate-900 border border-slate-700/80 rounded-lg px-2.5 py-1 hover:border-emerald-500/50 transition-colors" title="Hide non-crypto functions in this file">
+              <input type="checkbox" id="modalCryptoOnlyToggle" class="sr-only peer">
+              <div class="w-7 h-3.5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-emerald-500 relative"></div>
+              <span class="text-[11px] font-mono text-slate-300 select-none flex items-center space-x-1">
+                <i data-lucide="shield" class="w-3 h-3 text-emerald-400"></i>
+                <span>Crypto Functions Only</span>
+              </span>
+            </label>
+          </div>
+
+          <!-- Function Names Pill Selector -->
+          <div>
+            <div id="functionPillList" class="flex flex-wrap gap-2 max-h-48 overflow-y-auto p-1 custom-scrollbar">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          <!-- Selected Function Deep Details Panel -->
+          <div id="functionDetailPanel" class="mt-4 p-4 rounded-lg bg-slate-900 border border-slate-700/80 space-y-4">
+            <!-- Selected Function Title & Lines -->
+            <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+              <div>
+                <span class="text-[10px] font-mono uppercase text-slate-400 block">Inspected Function</span>
+                <span id="detailFunctionName" class="text-sm font-bold text-emerald-300 font-mono">function_name()</span>
+              </div>
+              <span id="detailFunctionLines" class="px-2 py-0.5 rounded text-[11px] font-mono bg-slate-800 text-slate-300 border border-slate-700">Lines 0 - 0</span>
+            </div>
+
+            <!-- Cryptographic Artifacts Used -->
+            <div>
+              <span class="text-[11px] font-mono font-semibold uppercase text-slate-400 tracking-wider flex items-center space-x-1.5 mb-2">
+                <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400"></i>
+                <span>Cryptographic Artifacts Used Inside</span>
+              </span>
+              <div id="detailCryptoArtifactsList" class="flex flex-wrap gap-1.5">
+                <!-- Rendered dynamically -->
+              </div>
+            </div>
+
+            <!-- Function Calls Inside It & Originating Modules -->
+            <div>
+              <span class="text-[11px] font-mono font-semibold uppercase text-slate-400 tracking-wider flex items-center space-x-1.5 mb-2">
+                <i data-lucide="corner-down-right" class="w-3.5 h-3.5 text-slate-400"></i>
+                <span>External / Internal Functions Called Inside</span>
+              </span>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs font-mono">
+                  <thead>
+                    <tr class="border-b border-slate-800 text-slate-400 text-[10px] uppercase">
+                      <th class="py-2 px-2.5">Function Invoked</th>
+                      <th class="py-2 px-2.5">Call Type</th>
+                      <th class="py-2 px-2.5">Originating Module / Header</th>
+                    </tr>
+                  </thead>
+                  <tbody id="detailCallsTableBody" class="divide-y divide-slate-800/60">
+                    <!-- Rendered dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- 3. Functions Calling This Function (Multi-Depth Hierarchy) -->
+            <div class="pt-3 border-t border-slate-800 space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] font-mono font-semibold uppercase text-slate-300 tracking-wider flex items-center space-x-1.5">
+                  <i data-lucide="git-pull-request" class="w-3.5 h-3.5 text-teal-400"></i>
+                  <span>Functions Calling This Function (Caller Depth Hierarchy)</span>
+                </span>
+                <span id="detailCallerSummaryBadge" class="px-2 py-0.5 rounded text-[10px] font-mono bg-teal-950/60 text-teal-300 border border-teal-800/60">0 Callers</span>
+              </div>
+              <p class="text-[11px] text-slate-400 font-mono">
+                Reverse call hierarchy showing direct callers (Depth 1) and transitive indirect callers at Depth 2, Depth 3, etc.
+              </p>
+
+              <!-- Level-by-level Depth Cards & Caller Lists -->
+              <div id="detailCallerDepthsContainer" class="space-y-2.5">
+                <!-- Rendered dynamically -->
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Application Logic -->
+  <script src="app.js"></script>
+</body>
+</html>
